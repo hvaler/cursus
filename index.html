@@ -3,261 +3,121 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WebMCP gate check</title>
+<title>Cursus — a course planner that can say no</title>
 <style>
   :root {
-    --ink: #16161a; --paper: #fbfbf9; --line: #d9d7d0;
-    --ok: #1a7f4b; --no: #b03a2e; --dim: #6b6b73;
+    --ink:#15151a; --paper:#fcfcfa; --line:#dcdad3; --soft:#f2f1ec;
+    --ok:#1a7f4b; --no:#b03a2e; --dim:#6e6e78; --accent:#5b4bd6;
     font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   }
   @media (prefers-color-scheme: dark) {
-    :root { --ink: #ecebe6; --paper: #17171a; --line: #34343a;
-            --ok: #5bbd8a; --no: #e8836f; --dim: #9a9aa3; }
+    :root { --ink:#eceae4; --paper:#141417; --line:#32323a; --soft:#1c1c21;
+            --ok:#5ec08d; --no:#e8836f; --dim:#95959f; --accent:#9b8cff; }
   }
-  * { box-sizing: border-box; }
-  body { margin: 0; padding: 2rem 1.25rem 4rem; background: var(--paper); color: var(--ink);
-         line-height: 1.55; }
-  main { max-width: 46rem; margin: 0 auto; }
-  h1 { font-size: 1.15rem; margin: 0 0 .25rem; letter-spacing: -.01em; }
-  p.sub { margin: 0 0 1.75rem; color: var(--dim); font-size: .82rem; }
-  #status { border: 1px solid var(--line); padding: .9rem 1rem; margin-bottom: 1.5rem;
-            font-size: .85rem; }
-  #status b { display: block; margin-bottom: .3rem; }
-  .yes { color: var(--ok); } .nope { color: var(--no); }
-  h2 { font-size: .78rem; text-transform: uppercase; letter-spacing: .09em;
-       color: var(--dim); margin: 2rem 0 .6rem; font-weight: 600; }
-  ol.tools { margin: 0; padding-left: 1.2rem; font-size: .85rem; }
-  ol.tools li { margin-bottom: .5rem; }
-  code { background: color-mix(in srgb, var(--ink) 8%, transparent); padding: .1em .35em; }
-  #log { border: 1px solid var(--line); min-height: 8rem; padding: .85rem 1rem;
-         font-size: .8rem; white-space: pre-wrap; overflow-x: auto; }
-  #log:empty::after { content: "No tool has been called yet."; color: var(--dim); }
-  .call { padding: .45rem 0; border-bottom: 1px dotted var(--line); }
-  .call:last-child { border-bottom: 0; }
-  .t { color: var(--dim); }
-  .agent { background: var(--ok); color: var(--paper); padding: .05em .4em; font-weight: 700; }
-  .button { background: color-mix(in srgb, var(--dim) 30%, transparent); color: var(--ink);
-            padding: .05em .4em; }
-  #tally { font-size: .85rem; margin: 0 0 .6rem; line-height: 1.7; }
-  .src-agent  { background: var(--ok);  color: var(--paper); padding: .05em .4em; font-weight: 700; }
-  .src-webmcp { background: #7a5cd6;    color: #fff;         padding: .05em .4em; font-weight: 700; }
-  .src-button { background: color-mix(in srgb, var(--dim) 30%, transparent); padding: .05em .4em; }
-  .dimtxt { color: var(--dim); }
-  button { font: inherit; font-size: .8rem; padding: .45rem .8rem; cursor: pointer;
-           border: 1px solid var(--line); background: transparent; color: var(--ink); }
-  .sim { margin-top: .75rem; display: flex; gap: .5rem; flex-wrap: wrap; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:1.6rem 1.2rem 5rem; background:var(--paper); color:var(--ink);
+         line-height:1.5; font-size:14px; }
+  main { max-width:70rem; margin:0 auto; }
+  h1 { font-size:1.2rem; margin:0 0 .2rem; letter-spacing:-.01em; }
+  p.sub { margin:0 0 1.4rem; color:var(--dim); font-size:.82rem; max-width:52rem; }
+  h2 { font-size:.72rem; text-transform:uppercase; letter-spacing:.1em; color:var(--dim);
+       margin:1.6rem 0 .5rem; font-weight:600; }
+  code { background:var(--soft); padding:.1em .35em; }
+  .ok{color:var(--ok)} .no{color:var(--no)} .dim{color:var(--dim)} .over{color:var(--no)}
+  #status { border:1px solid var(--line); padding:.75rem .9rem; margin-bottom:1rem; font-size:.82rem; }
+  #status b { display:block; margin-bottom:.2rem; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; }
+  @media (max-width:860px){ .cols{grid-template-columns:1fr} }
+
+  #plan { display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; }
+  .term { border:1px solid var(--line); padding:.5rem .55rem; min-height:5.5rem; }
+  .term-head { display:flex; justify-content:space-between; font-size:.75rem; margin-bottom:.3rem; }
+  .gauge { height:3px; background:var(--soft); margin-bottom:.45rem; }
+  .gauge i { display:block; height:3px; background:var(--accent); }
+  .chip { display:inline-block; background:var(--soft); padding:.1rem .35rem; margin:0 .2rem .2rem 0;
+          font-size:.72rem; }
+  .empty { color:var(--dim); font-size:.75rem; }
+
+  .track { border-left:2px solid var(--line); padding:.25rem .55rem; margin-bottom:.35rem; font-size:.78rem; }
+  .track.open { border-left-color:var(--ok); }
+  .track.shut { border-left-color:var(--no); opacity:.75; }
+  .track b { display:block; }
+
+  #catalogue { max-height:22rem; overflow:auto; border:1px solid var(--line); padding:.35rem; }
+  .course { display:block; width:100%; text-align:left; font:inherit; font-size:.75rem;
+            background:transparent; border:0; border-bottom:1px solid var(--line);
+            padding:.35rem .4rem; cursor:pointer; color:var(--ink); }
+  .course:last-child{border-bottom:0}
+  .course:hover { background:var(--soft); }
+  .course.held { background:color-mix(in srgb, var(--ok) 16%, transparent); }
+  .course .meta { display:block; color:var(--dim); font-size:.7rem; }
+
+  #trace { max-height:22rem; overflow:auto; border:1px solid var(--line); padding:.5rem .6rem; }
+  .call { padding:.4rem 0; border-bottom:1px dotted var(--line); font-size:.75rem; }
+  .call:last-child{border-bottom:0}
+  .call .result { white-space:pre-wrap; margin-top:.2rem; color:var(--ink); }
+  .call.refused .result { color:var(--no); }
+  .src { padding:.05em .4em; font-weight:700; font-size:.68rem; margin-right:.3rem; }
+  .src-agent { background:var(--ok); color:var(--paper); }
+  .src-page  { background:color-mix(in srgb, var(--dim) 30%, transparent); }
+
+  #timeline { display:flex; flex-wrap:wrap; gap:.3rem; }
+  .step { font:inherit; font-size:.72rem; padding:.25rem .5rem; cursor:pointer;
+          border:1px solid var(--line); background:transparent; color:var(--ink); }
+  .step:hover { border-color:var(--accent); color:var(--accent); }
+  .step.zero { border-style:dashed; }
+
+  .tooldef { font-size:.73rem; padding:.3rem 0; border-bottom:1px dotted var(--line); }
+  .tooldef b { display:block; }
+  button#simulate { font:inherit; font-size:.78rem; padding:.4rem .8rem; cursor:pointer;
+                    border:1px solid var(--accent); background:transparent; color:var(--accent); }
+  #trace-count { font-size:.72rem; color:var(--dim); margin:.3rem 0 .4rem; }
 </style>
 </head>
 <body>
 <main>
-  <h1>WebMCP gate check</h1>
-  <p class="sub">Day-27 gate. Not a product. Two questions: can an agent call a tool on this page,
-    and does a refusal read well when it does.</p>
+  <h1>Cursus</h1>
+  <p class="sub">A course planner whose tools can refuse, can say what a choice closes off two
+    years before it bites, and can be rewound. Built for
+    <a href="https://webmcp.devpost.com/">The WebMCP Challenge</a>. Work in progress —
+    <a href="https://github.com/hvaler/cursus">source</a>.</p>
 
   <div id="status"><b>Checking…</b></div>
 
-  <h2>Registered tools</h2>
-  <ol class="tools">
-    <li><code>ping</code> — returns the time. Proves a call arrives and a result goes back.</li>
-    <li><code>enrol</code> — takes a course code. <b>Refuses <code>ADV-301</code></b> for a missing
-      prerequisite, and accepts anything else. Proves a refusal is a normal string result the
-      agent can read and act on, not an exception.</li>
-  </ol>
+  <div class="cols">
+    <section>
+      <h2>The plan <span id="totals" class="dim"></span></h2>
+      <div id="plan"></div>
 
-  <div class="sim">
-    <button id="b1">Simulate ping</button>
-    <button id="b2">Simulate enrol ADV-301 (refused)</button>
-    <button id="b3">Simulate enrol CALC-101 (accepted)</button>
-    <button id="b4"><b>Call ping through WebMCP</b> (executeTool)</button>
-    <button id="b5"><b>Inspect the API</b></button>
+      <h2>Specialisations still reachable</h2>
+      <div id="tracks"></div>
+
+      <h2>What has happened — click to rewind</h2>
+      <div id="timeline"></div>
+
+      <h2>Catalogue — click to add or remove</h2>
+      <div id="catalogue"></div>
+    </section>
+
+    <section>
+      <h2>Tool calls, live</h2>
+      <p id="trace-count"></p>
+      <div id="trace"></div>
+
+      <h2>No agent in this browser?</h2>
+      <p class="sub" style="margin:0 0 .5rem">This walks through the same tools an agent would
+        call, by the same contract. It is labelled <b>page</b>, never <b>AGENT</b>.</p>
+      <button id="simulate">Run the scripted walk-through</button>
+
+      <h2>The tools this page registers</h2>
+      <div id="tool-list"></div>
+    </section>
   </div>
-
-  <h2>Tool calls, live</h2>
-  <p id="tally" class="nope">Calls that came from an agent: 0 — the gate is NOT passed yet.</p>
-  <div id="log"></div>
 </main>
 
-<script>
-const logEl = document.getElementById('log');
-const statusEl = document.getElementById('status');
-
-let agentCalls = 0;
-let webmcpCalls = 0;
-
-function log(source, tool, input, result, refused) {
-  const t = new Date().toLocaleTimeString();
-  const fromAgent = source === 'agent';
-  if (fromAgent) agentCalls++;
-  if (source === 'webmcp') webmcpCalls++;
-  renderTally();
-  const d = document.createElement('div');
-  d.className = 'call';
-  d.innerHTML =
-    `<span class="src-${source}">${source === 'agent' ? 'AGENT' : source}</span> ` +
-    `<span class="t">${t}</span>  <b>${tool}</b>(${JSON.stringify(input ?? {})})\n` +
-    `  → <span class="${refused ? 'nope' : 'yes'}">${result}</span>`;
-  logEl.appendChild(d);
-  logEl.scrollTop = logEl.scrollHeight;
-}
-
-function renderTally() {
-  const el = document.getElementById('tally');
-  const a = `Through an <b>agent</b>: ${agentCalls}` +
-            (agentCalls ? ' — <b>gate passed</b>.' : ' — gate NOT passed.');
-  const w = `Through <b>document.modelContext.executeTool</b>: ${webmcpCalls}` +
-            (webmcpCalls ? ' — the tool is really registered.' : '.');
-  el.innerHTML = `<span class="${agentCalls ? 'yes' : 'nope'}">${a}</span><br>` +
-                 `<span class="${webmcpCalls ? 'yes' : 'dimtxt'}">${w}</span>`;
-}
-
-// --- the two tool bodies, shared by the agent path and the simulate buttons ----------
-// One contract, two callers. The buttons are a fallback for a browser without WebMCP;
-// they must never be a second implementation.
-function doPing() {
-  return `pong — ${new Date().toISOString()}. This page answered, so the tool call arrived.`;
-}
-
-function doEnrol({ course }) {
-  const code = String(course ?? '').toUpperCase().trim();
-  if (code === 'ADV-301') {
-    return 'Refused. ADV-301 (Advanced Calculus) requires CALC-101, which is not completed and ' +
-           'not in the plan. To unblock it: enrol CALC-101 first. ' +
-           'Rule: PREREQ_NOT_MET. The plan was not changed.';
-  }
-  if (!code) return 'Refused. No course code was given. Rule: MISSING_ARGUMENT.';
-  return `Enrolled ${code}. The plan now contains: ${code}. Total credits: 6.`;
-}
-
-const isRefusal = (s) => s.startsWith('Refused.');
-
-// executeTool wants the object registerTool returned, not the tool's name.
-// Found the hard way on 2026-08-27: passing 'ping' throws
-//   TypeError: The provided value is not of type 'RegisteredTool'.
-const handles = {};
-
-// WebMCP gives the execute handler no way to know who called it. The only caller we can
-// identify is ourselves, so we mark our own executeTool calls and treat everything else as
-// having come from an agent. Found on 2026-08-27, when one click logged both AGENT and webmcp.
-let viaExecuteTool = false;
-const whoCalled = () => (viaExecuteTool ? 'webmcp' : 'agent');
-
-// --- registration --------------------------------------------------------------------
-async function register() {
-  if (!('modelContext' in document) || !document.modelContext?.registerTool) {
-    statusEl.innerHTML =
-      '<b class="nope">WebMCP not available in this browser.</b>' +
-      'Chrome 149+ with <code>chrome://flags/#enable-webmcp-testing</code>, or ' +
-      "ChatGPT's in-app browser. The simulate buttons below still exercise the same tool bodies.";
-    return;
-  }
-  try {
-    handles.ping = await document.modelContext.registerTool({
-      name: 'ping',
-      description: 'Health check. Returns the current time from the page.',
-      inputSchema: { type: 'object', properties: {} },
-      execute: async () => { const r = doPing(); log(whoCalled(), 'ping', {}, r, false); return r; },
-    });
-
-    handles.enrol = await document.modelContext.registerTool({
-      name: 'enrol',
-      description: 'Enrol the student in a course by its code. May refuse, with the reason ' +
-                   'and what would unblock it.',
-      inputSchema: {
-        type: 'object',
-        properties: { course: { type: 'string', description: 'Course code, e.g. CALC-101' } },
-        required: ['course'],
-      },
-      execute: async ({ course }) => {
-        const r = doEnrol({ course });
-        log(whoCalled(), 'enrol', { course }, r, isRefusal(r));
-        return r;
-      },
-    });
-
-    const shape = (h) => h === undefined ? 'undefined'
-                       : `${typeof h}${h?.constructor?.name ? ' · ' + h.constructor.name : ''}`;
-    statusEl.innerHTML =
-      '<b class="yes">WebMCP available. Two tools registered.</b>' +
-      'Ask the agent: <code>ping this page</code>, then <code>enrol me in ADV-301</code>.' +
-      `<br><span class="dimtxt">registerTool returned: ping → <code>${shape(handles.ping)}</code>, ` +
-      `enrol → <code>${shape(handles.enrol)}</code></span>`;
-  } catch (err) {
-    statusEl.innerHTML =
-      `<b class="nope">registerTool threw.</b><code>${String(err)}</code>`;
-  }
-}
-
-document.getElementById('b1').onclick = () => log('button', 'ping', {}, doPing(), false);
-document.getElementById('b2').onclick = () => {
-  const r = doEnrol({ course: 'ADV-301' }); log('button', 'enrol', { course: 'ADV-301' }, r, isRefusal(r));
-};
-document.getElementById('b3').onclick = () => {
-  const r = doEnrol({ course: 'CALC-101' }); log('button', 'enrol', { course: 'CALC-101' }, r, isRefusal(r));
-};
-
-document.getElementById('b4').onclick = async () => {
-  const el = document.getElementById('status');
-  try {
-    // registerTool returns undefined, so the RegisteredTool comes from getTools().
-    // Read off the live API on 2026-08-27; getTools() is not in the Chrome docs.
-    const registered = await document.modelContext.getTools();
-    const tool = [...registered].find((t) => t?.name === 'ping');
-    if (!tool) throw new Error(`getTools() returned ${registered?.length ?? '?'} tools, none named ping`);
-    // The arguments go as a JSON *string*. An object, undefined or null all fail with
-    // UnknownError: Failed to parse input arguments. Measured on 2026-08-27.
-    viaExecuteTool = true;
-    try {
-      await document.modelContext.executeTool(tool, JSON.stringify({}));
-    } finally {
-      viaExecuteTool = false;
-    }
-  } catch (err) {
-    el.innerHTML += `<br><span class="nope">executeTool failed: ${String(err)}</span>`;
-  }
-};
-
-// Stop guessing at the API and read it. registerTool returned undefined on 2026-08-27,
-// so the RegisteredTool that executeTool wants must come from somewhere else.
-document.getElementById('b5').onclick = () => {
-  const mc = document.modelContext;
-  const out = [];
-  const describe = (obj, label) => {
-    if (!obj) { out.push(`${label}: (absent)`); return; }
-    const names = Object.getOwnPropertyNames(obj).sort();
-    out.push(`${label} — ${names.length} own properties:`);
-    for (const n of names) {
-      let t = '?';
-      try { t = typeof obj[n]; } catch { t = '(threw on access)'; }
-      let extra = '';
-      if (t === 'function') { try { extra = ` (arity ${obj[n].length})`; } catch {} }
-      out.push(`    ${n}: ${t}${extra}`);
-    }
-  };
-  describe(mc, 'document.modelContext');
-  describe(Object.getPrototypeOf(mc ?? {}), 'its prototype');
-  out.push('');
-  out.push(`constructor: ${mc?.constructor?.name ?? '(none)'}`);
-  for (const guess of ['tools','availableTools','getTools','listTools','registeredTools',
-                       'provideContext','unregisterTool','clearTools']) {
-    let v = '(absent)';
-    try { if (guess in mc) v = typeof mc[guess]; } catch {}
-    out.push(`  ${guess}: ${v}`);
-  }
-  // Whatever a tools collection looks like, show it.
-  for (const guess of ['tools','availableTools','registeredTools']) {
-    try {
-      const v = mc[guess];
-      if (v) out.push(`
-${guess} = ${JSON.stringify(v, null, 1).slice(0, 900)}`);
-    } catch (e) { out.push(`${guess} threw: ${e}`); }
-  }
-  const d = document.createElement('div');
-  d.className = 'call';
-  d.textContent = out.join(String.fromCharCode(10));
-  logEl.appendChild(d);
-};
-
-register();
+<script type="module">
+  import { boot } from './app/ui.js';
+  boot();
 </script>
 </body>
 </html>
