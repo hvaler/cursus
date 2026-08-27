@@ -43,16 +43,29 @@ None of this is in the Chrome documentation as of 2026-08-27.
   should return the resulting state, never an acknowledgement — otherwise the agent's idea of the
   state silently diverges from the page's.
 - **`registerTool` returns `undefined`**, so it is not the source of the `RegisteredTool` handle
-  that `executeTool` requires. Passing the tool's name instead throws
-  `TypeError: The provided value is not of type 'RegisteredTool'`.
+  that `executeTool` requires — that comes from **`getTools()`**. Passing the tool's name instead
+  throws `TypeError: The provided value is not of type 'RegisteredTool'`.
+- **`executeTool` wants its arguments as a JSON string**, not an object.
+- **The page cannot tell who called a tool.** An agent and `executeTool` arrive identical, so a
+  page's rules cannot rest on *who* is asking — only on *what* is being asked.
+
+All six, with the error each one produced, are in [`docs/WEBMCP-API-NOTES.md`](docs/WEBMCP-API-NOTES.md).
 
 ## Status
 
+**The gate is passed.** On 2026-08-27 `gemini-3.6-flash`, driven through the
+[WebMCP Inspector](https://github.com/GoogleChromeLabs/webmcp-tools), was given one sentence —
+*"Matricúlame en ADV-301"* — chose the `enrol` tool on its own, was refused, and answered by
+explaining the prerequisite and **offering to enrol `CALC-101` first**. The full trace and what it
+settles are in [`docs/GATE.md`](docs/GATE.md).
+
 | | |
 |---|---|
-| Tools register | **yes**, in Chrome 151 and Edge |
-| A refusal reads as a normal result | **yes**, by construction |
-| An agent has called a tool | **not yet** — that is what this deployment is for |
+| Tools register | **yes**, Chrome 151 and Edge |
+| An external client discovers them, with schemas | **yes** |
+| An agent chooses the right tool unprompted | **yes** |
+| A refusal reads well enough for the agent to repair the situation | **yes** — the finding |
+| ChatGPT's own in-app browser | **not tested** |
 
 ## Licence
 
