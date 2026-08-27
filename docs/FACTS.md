@@ -31,7 +31,7 @@ npm test        # node --test test/*.test.js
 **Skipped: zero. Failing: zero.** No build step, no dependencies — `package.json` has no
 `dependencies` or `devDependencies` at all, and the whole thing runs on Node's own test runner.
 
-**1,952 lines** across ten modules in `app/`. The shape of them is in
+**1,954 lines** across ten modules in `app/`. The shape of them is in
 [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 ---
@@ -365,15 +365,19 @@ remedy — and why they are tested as carefully as the logic underneath.
 ## 6. Open, in one list
 
 1. Adversarial eval scenarios written, attempted on both models, **still not run** — quota, both
-   times. The eleven-tool surface has one scenario's worth of evidence behind it, not eight.
-2. ChatGPT's in-app browser works in **Work mode** and produced two real tool calls (§4.4), not a
+   times. The thirteen-tool surface has one scenario's worth of evidence behind it, not eight.
+2. **Thirteen tools is a guess.** Chrome's best-practices page warns that more tools cost context
+   and completion time, and that overlapping tools confuse an agent — `what_this_closes` and
+   `compare_options` overlap deliberately. Neither the count nor the overlap has been measured,
+   for the same quota reason. Audited in [`WEBMCP-API-NOTES.md`](WEBMCP-API-NOTES.md).
+3. ChatGPT's in-app browser works in **Work mode** and produced two real tool calls (§4.4), not a
    scenario set. Whether a bare question suffices there, rather than one naming the tool, is
    untested — as is Codex, which OpenAI documents as a second surface.
-3. One model family.
-4. The greedy placer's false negatives are documented but not characterised.
-5. Synthetic catalogue, no registrar has seen it.
-6. No storage, no accounts, no server — deliberate. A plan is per-tab unless someone copied its
+4. One model family.
+5. The greedy placer's false negatives are documented but not characterised.
+6. Synthetic catalogue, no registrar has seen it.
+7. No storage, no accounts, no server — deliberate. A plan is per-tab unless someone copied its
    link, and a link is neither a backup nor private: it goes in browser history and in whatever it
    was pasted into.
-7. The UI's markup and layout are checked by eye. `ui.test.js` covers the escaping and the
+8. The UI's markup and layout are checked by eye. `ui.test.js` covers the escaping and the
    rendering; nothing covers how it looks.

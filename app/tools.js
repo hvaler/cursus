@@ -239,9 +239,9 @@ export const TOOLS = [
   {
     name: 'add_course',
     description:
-      'Add a course to the plan, in a given term. May refuse — for a missing prerequisite, a ' +
-      'timetable clash, a full term, or a course not taught in that term — and the refusal says ' +
-      'what would unblock it.',
+      'Add a course to the plan, in a given term. Checks the prerequisite chain, the timetable, ' +
+      'the credit cap and which terms the course is taught in — and when one of those blocks it, ' +
+      'the answer names what would unblock it.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -269,8 +269,8 @@ export const TOOLS = [
   {
     name: 'remove_course',
     description:
-      'Remove a course from the plan. Refuses if something already in the plan depends on it, ' +
-      'and says which.',
+      'Remove a course from the plan. Checks what else in the plan depends on it first, and names ' +
+      'those courses if there are any.',
     inputSchema: {
       type: 'object',
       properties: { course: { type: 'string', description: 'Course code' } },
@@ -325,11 +325,13 @@ export const TOOLS = [
 
   // ------------------------------------------------------------------ planning towards a goal
   {
-    name: 'plan_for_track',
+    name: 'propose_plan_for_track',
     description:
       'Work out what still has to be taken to complete a specialisation track, and in which ' +
-      'terms. Returns a concrete list, or — if it cannot be done from here — the course that ' +
-      'blocks it and what it would cost to unblock. Track ids: data, systems, graphics, theory.',
+      'terms. It proposes and does not add anything, so the whole route can be looked at before ' +
+      'any of it is committed. Returns a concrete list, or — if it cannot be done from here — the ' +
+      'course that blocks it and what it would cost to unblock. Track ids: data, systems, ' +
+      'graphics, theory.',
     inputSchema: {
       type: 'object',
       properties: { track: { type: 'string', description: 'data, systems, graphics or theory' } },
@@ -363,7 +365,7 @@ export const TOOLS = [
               `plan has no room for them. Call explain_infeasibility for the binding constraint ` +
               `and what it would cost to lift it.`;
       }
-      return record('plan_for_track', { track }, out, !r.ok && !r.unknownTrack);
+      return record('propose_plan_for_track', { track }, out, !r.ok && !r.unknownTrack);
     },
   },
 
@@ -386,7 +388,7 @@ export const TOOLS = [
         const known = TRACKS.some((t) => t.id === id);
         out = known
           ? `That track is still reachable from here — there is nothing to explain. ` +
-            `Call plan_for_track to see what it would take.`
+            `Call propose_plan_for_track to see what it would take.`
           : `There is no track called ${quoteInput(track)}. The four are: ` +
             TRACKS.map((t) => t.id).join(', ') + '.';
       } else if (!r.blocker) {

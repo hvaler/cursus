@@ -106,7 +106,7 @@ course that does not exist. Results and limits in [`docs/EVAL.md`](docs/EVAL.md)
 
 ## Layout
 
-**1,952 lines** across ten modules, none of them importing in a circle. The diagrams and the
+**1,954 lines** across ten modules, none of them importing in a circle. The diagrams and the
 call flow are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 | | |

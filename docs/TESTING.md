@@ -141,7 +141,7 @@ A call the page did not make itself shows as `AGENT`. That is an assumption, and
 |---|---|
 | 154 tests, none skipped | `npm test` |
 | 5/5 on the eval scenarios | `npm run eval` (needs `GEMINI_API_KEY`) |
-| 1,952 lines across ten modules | `wc -l app/*.js` |
+| 1,954 lines across ten modules | `wc -l app/*.js` |
 | 40 courses, 4 tracks, 30-credit cap | `node -e "import('./app/catalogue.js').then(m=>console.log(m.COURSES.length, m.TRACKS.length, m.CREDIT_CAP_PER_TERM))"` |
 | the string the in-app browser returned | `node -e "import('./app/tools.js').then(m=>m.TOOLS.find(t=>t.name==='what_this_closes').execute({course:'NUM-201',term:3})).then(console.log)"` |
 | what the WebMCP API exposes | **Inspect the API** on the live page |

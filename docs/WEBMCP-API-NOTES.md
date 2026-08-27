@@ -201,6 +201,53 @@ was not captured before the window closed.
 
 ---
 
+## Afterwards: the official guidance, and what it said about this page
+
+The nine findings above were all made by getting something wrong first. Chrome publishes
+[WebMCP best practices](https://developer.chrome.com/docs/ai/webmcp/best-practices), and it was
+found **after** all of them — so this section is an audit rather than a source.
+
+**Most of it we had already arrived at**, which is worth saying plainly because it is the cheapest
+kind of validation and the easiest to overstate:
+
+| Guidance | Here |
+|---|---|
+| *"Validate strictly in code, loosely in schema"* | `inputSchema` takes a string and a number; `rules.js` decides |
+| Descriptive errors, so the model can self-correct | `refuse()` carries a remedy — the finding in [GATE.md](GATE.md) |
+| Update the interface after a call, so the agent can plan | the screen renders from the same log the tools write |
+| Evaluation-driven, with code checks and a model judge | [`tools/eval.mjs`](../tools/eval.mjs) |
+| Natural-language values, not ids | `track: "graphics"`, never `track_id: 3` |
+| One function per tool | thirteen tools, thirteen jobs |
+
+**Three things it changed.**
+
+*"Use positive language about capabilities, not limitations."* `add_course` opened with a list of
+what makes it fail — *"May refuse — for a missing prerequisite, a timetable clash, a full term…"*.
+Same information, wrong end first. It now says what it checks and that the answer names what would
+unblock it. `remove_course` had the same shape.
+
+*"Distinguish execution from initiation."* The guidance's own example is `create-event` against
+`start-event-creation-process`. **`plan_for_track` proposed a route and applied none of it, and the
+name did not say so** — while this repository's README claimed that proposing rather than applying
+was a deliberate decision. If it is deliberate the name has to carry it, so it is
+**`propose_plan_for_track`**.
+
+**And two places this page knowingly differs.**
+
+*"Be careful not to create overlapping tools, as the agent may be confused."* `what_this_closes`
+and `compare_options` answer the same underlying question, one course or two. That is deliberate —
+a call through ChatGPT's in-app browser took 53 seconds, and asking twice is a minute of a person's
+life — and the descriptions separate them by situation rather than by mechanism. But it is the
+overlap the guidance warns about, and **the eval that would show whether selection degraded could
+not run**: quota, both models, fifteen of sixteen scenarios ([EVAL.md](EVAL.md)). The risk is
+recorded, not measured.
+
+*"Experiment to find the right number — more tools increase context use and completion time."* This
+page went from ten to thirteen in one afternoon and measured nothing, for the same reason. Thirteen
+is a guess.
+
+---
+
 ## What `executeTool` is for
 
 It appears in Chrome's **evaluation** documentation, not in the imperative API page. It is a way to

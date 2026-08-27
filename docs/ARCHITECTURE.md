@@ -1,6 +1,6 @@
 # Architecture
 
-**1,952 lines** across ten modules in `app/`. No build step, no dependencies, no server. This
+**1,954 lines** across ten modules in `app/`. No build step, no dependencies, no server. This
 file is what a reader needs before opening any of it.
 
 Every number here is checkable: `wc -l app/*.js`, `npm test`.
@@ -141,10 +141,10 @@ with neither side able to notice. `describe(state)` is what closes that gap.
 | `app/policy.js` | 157 | the limits a person declares, and why an add is refused against them | invent a limit the person did not set |
 | `app/share.js` | 160 | a plan encoded into a link, and replayed back through the tools | write state directly |
 | `app/store.js` | 54 | the one `EventLog`, the change listeners, the call trace, the caller attribution | contain rules |
-| `app/tools.js` | 557 | the 13 tool definitions, `registerAll`, `waitForModelContext` | contain rules |
+| `app/tools.js` | 559 | the 13 tool definitions, `registerAll`, `waitForModelContext` | contain rules |
 | `app/ui.js` | 267 | renders plan, tracks, trace, timeline, catalogue; the scripted walk-through | hold state |
 
-**`tools.js` is the largest file and contains no logic.** It is 557 lines of descriptions and
+**`tools.js` is the largest file and contains no logic.** It is 559 lines of descriptions and
 result strings, because with WebMCP those *are* the interface. The reasoning it exposes lives in
 `queries.js`, `solve.js` and `policy.js`, which have no idea an agent exists.
 
@@ -168,7 +168,7 @@ Eight answer questions, three change the plan, two work on the history.
 | | `compare_options` | reads — the same question with two answers |
 | | `share_plan` | reads — returns a link, changes nothing |
 | | `plan_status` | reads |
-| | `plan_for_track` | reads — proposes, does not apply |
+| | `propose_plan_for_track` | reads — proposes, does not apply |
 | | `explain_infeasibility` | reads |
 | act | `add_course` | appends an event |
 | | `remove_course` | appends an event |
@@ -176,7 +176,7 @@ Eight answer questions, three change the plan, two work on the history.
 | history | `list_actions` | reads the log |
 | | `undo_to` | rewinds the log |
 
-`plan_for_track` proposing rather than applying is deliberate: a plan an agent can inspect before
+`propose_plan_for_track` proposing rather than applying is deliberate: a plan an agent can inspect before
 committing is worth more than one it has already carried out.
 
 `share_plan` returns a link and touches nothing, which is why it sits with the questions. What
@@ -230,7 +230,7 @@ against an artefact nobody has. And with zero dependencies there is no transitiv
 all — which matters more than usual on a page that renders strings an agent supplied.
 
 *What it costs:* no minification, no tree-shaking, and nothing from npm. Everything here is
-hand-written, which is most of why it is 1,952 lines.
+hand-written, which is most of why it is 1,954 lines.
 
 **No server and no accounts.** Nothing leaves the tab.
 
