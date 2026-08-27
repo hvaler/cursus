@@ -352,8 +352,32 @@ export const TOOLS = [
 /** @type {string[]} */
 export const registered = [];
 
-/** Register everything with WebMCP, if the browser has it. */
+/**
+ * Wait for `document.modelContext` to exist.
+ *
+ * Reading it once at boot is a bet that the browser injected the API before this script ran. A
+ * host that attaches its agent *after* the page renders — which is a reasonable thing for an
+ * in-app browser to do — would lose every tool, silently, and the page would sit there saying
+ * WebMCP was unavailable. Nothing about that failure would point at the host.
+ *
+ * @param {number} [ms] how long to keep looking
+ */
+export function waitForModelContext(ms = 12000) {
+  const has = () => Boolean(/** @type {any} */ (document).modelContext?.registerTool);
+  if (has()) return Promise.resolve(true);
+  return new Promise((resolve) => {
+    const started = Date.now();
+    const timer = setInterval(() => {
+      if (has()) { clearInterval(timer); resolve(true); }
+      else if (Date.now() - started > ms) { clearInterval(timer); resolve(false); }
+    }, 200);
+  });
+}
+
+/** Register everything with WebMCP, waiting for it to turn up if it is not there yet. */
 export async function registerAll() {
+  if (registered.length) return { available: true, count: registered.length };
+  await waitForModelContext();
   const mc = /** @type {any} */ (document).modelContext;
   if (!mc?.registerTool) return { available: false, count: 0 };
   for (const t of TOOLS) {

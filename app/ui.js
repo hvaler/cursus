@@ -170,17 +170,48 @@ async function runSimulation() {
   btn.textContent = 'Run it again';
 }
 
+/**
+ * Keep an eye out for WebMCP arriving late.
+ *
+ * The rules point judges at ChatGPT's in-app browser, and we have no way to test that here. If it
+ * injects `document.modelContext` after load, a one-shot check at boot would leave every tool
+ * unregistered and the page would blame the browser. This costs one timer and removes that whole
+ * class of failure.
+ */
+async function keepLookingForWebMCP() {
+  for (let i = 0; i < 20; i++) {                    // ten minutes, at thirty-second intervals
+    await new Promise((r) => setTimeout(r, 30000));
+    const { available, count } = await registerAll();
+    if (available) {
+      $('status').innerHTML =
+        `<b class="ok">WebMCP appeared after load — ${count} tools registered.</b>
+         Ask the agent: <code>what does taking NUM-201 in term 3 close off?</code>`;
+      return;
+    }
+  }
+}
+
 export async function boot() {
   onChange(renderAll);
   renderAll();
+
+  // Say what is happening while we wait, rather than showing "unavailable" for twelve seconds
+  // and then contradicting it.
+  $('status').innerHTML = '<b>Looking for WebMCP…</b>';
 
   const { available, count } = await registerAll();
   $('status').innerHTML = available
     ? `<b class="ok">WebMCP available — ${count} tools registered.</b>
        Ask the agent: <code>what does taking NUM-201 in term 3 close off?</code>`
-    : `<b class="no">WebMCP not available in this browser.</b>
+    : `<b class="no">WebMCP did not appear in this browser.</b>
        Chrome 149+ with <code>chrome://flags/#enable-webmcp-testing</code>, or ChatGPT's in-app
        browser. Everything below still works — the buttons call the same tools an agent would.`;
+
+  // A host that attaches its agent after load, or on navigation, would have missed the window
+  // above. Keep looking quietly; if it turns up, register and say so.
+  if (!available) {
+    keepLookingForWebMCP();
+  }
 
   $('tool-list').innerHTML = TOOLS.map((t) =>
     `<div class="tooldef"><b>${t.name}</b><span class="dim">${esc(t.description)}</span></div>`).join('');

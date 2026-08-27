@@ -122,6 +122,22 @@ twice to add a course, it answered:
 Whether that is the plan, the app version, or a surface not present on Windows is not something
 this repository can establish. What it can say is that it was tried and did not work.
 
+### What was done about it
+
+The page used to read `document.modelContext` **once**, at boot. A host that attaches its agent
+after the page renders — a reasonable thing for an in-app browser to do — would have found every
+tool unregistered, and the page would have sat there blaming the browser. Nothing about that
+failure would have pointed here.
+
+It now waits up to twelve seconds for the API to appear, shows *"Looking for WebMCP…"* while it
+does, and if it still has not turned up keeps checking every thirty seconds for ten minutes. Four
+tests in [`test/registration.test.js`](../test/registration.test.js) cover it with a fake
+`document`: present at boot, arriving late, never arriving, and a `modelContext` without
+`registerTool`.
+
+This does not prove the page works in ChatGPT's in-app browser. It removes the one way it could
+have failed there that would have been our fault.
+
 ### The part worth more than the check
 
 Before that, the same assistant was asked *"what do I close off by taking NUM-201 in term 3?"* and
