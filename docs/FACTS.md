@@ -132,13 +132,22 @@ node -e "import('./app/tools.js').then(m =>
 
 Character for character.
 
-**What backs this is the string, not our own log.** The window was closed before the page's call
-counter was captured, so the page's own record of that call no longer exists, and the prompt that
-produced it was not saved verbatim. What survives is the returned text and the host's trace line
-(*"used the browser, loaded tools and ran a command"*). By this repository's own standard - §4.2,
-that a page can only be sure of the calls it makes itself - **this is the model's report plus a
-string match, not our measurement.** The string match is strong, for the reason below, and it is
-not the same thing. Reproducing it with the counter in shot is a loose end, and it is cheap: the
+**The host kept its own ledger, and it is not the model's prose.** The conversation's *Sources*
+panel lists, under `hvaler.github.io`:
+
+```text
+what_this_closes     once
+webmcp_list_tools    once
+```
+
+Two calls, counted by the platform rather than narrated by the model. The second is **not a tool
+this page registers** - `webmcp_list_tools` is the host's own discovery tool, which the model used
+to enumerate the page's registry before calling into it. It listed, then called.
+
+**What is still missing is our side of it.** The window was closed before the page's own call
+counter was captured, so by this repository's standard - §4.2, that a page can only be sure of the
+calls it makes itself - the page has no record of this. Host ledger plus exact string, not our
+measurement. Reproducing it with the page's counter in shot is a loose end, and a cheap one: the
 tool is idempotent and the plan starts empty.
 
 **And it is the answer that could not have come from reading.** Every document in this repository
@@ -188,17 +197,36 @@ green line, and reported correctly that it could see the HTML and not the regist
 
 #### What this does not establish
 
-**The successful run changed two things at once.** It moved to a different plan *and* asked, in the
-prompt, for browser-side action towards a real invocation - the prompt is paraphrased here because
-it was not kept. The assistant attributes the fix to the
-bound tab rather than to the plan, and the settings above were identical in both — but this was not
-run as a controlled comparison, and no claim here rests on which of the two mattered. One app
-version, one operating system, one afternoon.
+**The successful run changed three things at once**, which is why nothing here claims to know which
+one mattered:
 
-**What a judge needs from this section is the practical part**, and it does not depend on that
-question: opening the page in the in-app browser and asking about it is not enough. The session has
-to have the tab bound to the agent. Without it the model answers from whatever it can read, which
-in this case was this repository, fluently and wrongly.
+| | the four failures | the success |
+|---|---|---|
+| plan | Go | Work |
+| model | GPT-5.6 Sol | 5.6 Terra Medio |
+| what was asked | a question about the page | a request to fix the invocation |
+
+**The third is the one to be careful about.** It was not a question. Verbatim:
+
+> *"Help the user get the WebMCP tool registered by `https://hvaler.github.io/cursus/` exposed and
+> invocable in the ChatGPT in-app browser. Inspect the current open page and browser state, verify
+> WebMCP is enabled, inspect the page's registered tools (especially `what_this_closes`), determine
+> why the agent cannot invoke them, and make any appropriate browser/page-side changes needed. Do
+> not use web search. Goal: a real successful invocation of `what_this_closes` for NUM-201 in term 3
+> from the page's WebMCP tools."*
+
+That put the assistant into an agentic browser session: it worked for **3 minutes 18 seconds** and
+the host logged *"used the browser, loaded tools and ran a command"*. Its own account afterwards
+blames the unbound tab, and it changed neither the page nor the settings, which is consistent. But
+**the minimum needed was never established** - nobody has since tried a plain question inside a
+bound session, on either plan, with either model. One app version, one operating system, one
+afternoon.
+
+**What a judge needs from this section is the practical part**, and it survives the uncertainty:
+opening the page in the in-app browser and asking about it is **not enough**. What is known to work
+is asking the assistant to inspect the open page and actually invoke the tool - an agentic browser
+session rather than a question. Short of that, the model answers from whatever it can read, which
+here was this repository: fluently, in detail, and wrongly.
 
 ### What was done about it, before this test
 
@@ -284,7 +312,7 @@ the rendering is not.
 
 ## 5. What the API actually does
 
-Eight findings, none of them in Chrome's documentation as of this date, three found by getting it
+Nine findings, none of them in Chrome's documentation as of this date, three found by getting it
 wrong first. Full list with the error each produced:
 [`WEBMCP-API-NOTES.md`](WEBMCP-API-NOTES.md).
 

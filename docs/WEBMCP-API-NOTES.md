@@ -1,9 +1,9 @@
 # What the WebMCP API actually does
 
 Read off the live API on **2026-08-27**, in Chrome 151 and in the Chromium that ships with
-Playwright. **None of the eight findings below is in the Chrome documentation**, and three of them
-were found by getting it wrong first. Number 8 came from the environment the challenge rules
-name, and is the only one not reproducible from a button on the page.
+Playwright. **None of the nine findings below is in the Chrome documentation**, and three of them
+were found by getting it wrong first. The last two came from the environment the challenge rules
+name, and are the only ones not reproducible from a button on the page.
 
 Reproduce any of them with the *Inspect the API* button on <https://hvaler.github.io/cursus/>.
 
@@ -169,6 +169,29 @@ real reason was the one furthest from anything it can observe.
 happened. Both numbers are honest and neither is the interesting one. **The gap between them is not
 diagnosable from inside the page**, which means a WebMCP page that wants to be usable has to say
 what the reader should check on their side - the page cannot work it out for them.
+
+---
+
+## 9. The host adds a discovery tool of its own
+
+The model does not receive a page's tools and nothing else. In ChatGPT's in-app browser on
+2026-08-27, the conversation's *Sources* panel recorded two calls against `hvaler.github.io`:
+
+```text
+what_this_closes     once
+webmcp_list_tools    once
+```
+
+`what_this_closes` is ours. **`webmcp_list_tools` is not** - this page registers ten tools and that
+is not one of them. It is the host's own, and the order says what it is for: the model listed the
+page's registry first, then called into it.
+
+Two things follow. A page's tool names share a namespace with whatever the host injects, so a page
+that registered `webmcp_list_tools` itself would be colliding with the client - which sits badly
+next to [finding 7](#7-the-client-renames-your-tools), where the client renames what you register.
+And **the host's ledger of calls is a better witness than the model's prose**: it is counted rather
+than narrated, and in this case it is the only record that survived, because the page's own counter
+was not captured before the window closed.
 
 ---
 

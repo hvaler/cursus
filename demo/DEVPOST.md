@@ -98,7 +98,7 @@ and refusing to invent a course that does not exist.
 
 ### What we found out about WebMCP
 
-Eight things, none of them in Chrome's documentation, three found by getting them wrong first.
+Nine things, none of them in Chrome's documentation, three found by getting them wrong first.
 Registration is on `document`, not `navigator`. `registerTool` returns nothing, so the handle comes
 from `getTools()`. `executeTool` wants its arguments as a JSON string. The client renames your
 tools. And the one that shaped the product: `execute` returns a string, so the strings are the
@@ -111,7 +111,12 @@ anything.** Zero calls is consistent with the host never bridging the tools, wit
 them and declining, with no agent being present, and — as it turned out here — with a session
 that had no browser tab bound to the agent. **A page sees one number for all four.** So a WebMCP
 page cannot diagnose its own silence, and has to tell the reader what to check on their side
-instead. They are all written up with the error each one produced.
+instead.
+
+The ninth fell out of the same run. The host does not hand the model a page's tools and stop
+there: it adds one of its own, **`webmcp_list_tools`**, which this page does not register and
+which the model called first to enumerate the registry before calling into it. A page's names
+share a namespace with the client's. They are all written up with the error each one produced.
 
 ### The thing we did not expect
 
