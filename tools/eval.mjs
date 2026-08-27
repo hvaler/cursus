@@ -34,10 +34,28 @@ const sleep = (/** @type {number} */ ms) => new Promise((r) => setTimeout(r, ms)
  * A 429 here is not a failing scenario — reporting it as one would be a lie about the tools.
  * @param {() => Promise<Response>} fn
  */
+let requests = 0;
+
+/** Thrown for a quota that waiting cannot fix, so the run stops instead of pretending. */
+class DailyQuotaExhausted extends Error {}
+
 async function withRetry(fn, attempts = 5) {
   for (let i = 0; i < attempts; i++) {
+    requests++;
     const res = await fn();
     if (res.status !== 429) return res;
+
+    // Two different limits arrive as the same status code, and only one of them is worth waiting
+    // out. On 2026-08-27 this cost an afternoon: the harness backed off politely, five times, in a
+    // loop, against a quota measured in days.
+    const body = await res.clone().text();
+    if (/PerDay|per_day|_requests.*limit: \d+/i.test(body) && /PerDay|per_day/i.test(body)) {
+      const cap = /"quotaValue":\s*"?(\d+)/.exec(body)?.[1] ?? '?';
+      throw new DailyQuotaExhausted(
+        `the free tier allows ${cap} requests per day for this model, and they are spent. ` +
+        `Waiting will not help; come back tomorrow, switch model with EVAL_MODEL, or use a paid key.`);
+    }
+
     const wait = 4000 * (i + 1);
     process.stdout.write(`(rate-limited, waiting ${wait / 1000}s) `);
     await sleep(wait);
@@ -212,7 +230,21 @@ let failures = 0;
 let errors = 0;
 console.log(`Evaluating ${TOOLS.length} tools against ${MODEL}\n`);
 
-for (const sc of [...SCENARIOS, ...ADVERSARIAL]) {
+/**
+ * A full run needs more requests than the free tier grants in a day — up to eight turns each,
+ * across eight scenarios, against a cap of twenty. So it can be sliced:
+ *
+ *   EVAL_ONLY=adversarial node tools/eval.mjs
+ *
+ * which is how the three that have never run are meant to get their turn.
+ */
+const ONLY = process.env.EVAL_ONLY;
+const chosen = ONLY === 'adversarial' ? ADVERSARIAL
+  : ONLY === 'usability' ? SCENARIOS
+  : [...SCENARIOS, ...ADVERSARIAL];
+if (ONLY) console.log(`Running the ${ONLY} set only — ${chosen.length} scenario(s).\n`);
+
+for (const sc of chosen) {
   log.rewindTo(0);
   trace.length = 0;
   for (const [course, term] of sc.setup ?? []) callTool('add_course', { course, term });
@@ -235,14 +267,19 @@ for (const sc of [...SCENARIOS, ...ADVERSARIAL]) {
     // nothing about the tools, and rolling it into the failure count is the lie this file's
     // header warns about — which is exactly what it used to do.
     errors++;
+    if (err instanceof DailyQuotaExhausted) {
+      console.log(`STOPPED — ${err.message}`);
+      errors += chosen.length - chosen.indexOf(sc) - 1;
+      break;
+    }
     console.log(`ERROR ${String(err).slice(0, 160)}`);
   }
 }
 
-const total = SCENARIOS.length + ADVERSARIAL.length;
+const total = chosen.length;
 const passed = total - failures - errors;
-console.log(`\n${passed} passed, ${failures} failed, ${errors} not evaluated ` +
-            `— of ${total} (${SCENARIOS.length} usability, ${ADVERSARIAL.length} adversarial)`);
+console.log(`\n${passed} passed, ${failures} failed, ${errors} not evaluated — of ${total}, ` +
+            `costing ${requests} request(s) of the free tier's twenty a day for ${MODEL}`);
 if (errors) {
   console.log(`Not evaluated is not the same as passing, and it is not the same as failing ` +
               `either. Those ${errors} never reached the model.`);

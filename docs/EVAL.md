@@ -64,7 +64,22 @@ Both models were tried. Almost nothing ran:
 | `gemini-2.5-flash` | 1 | 0 | **7** |
 
 Every one of those fifteen was a `429`, after the harness had already backed off five times, up to
-twenty seconds. The free tier's per-minute quota is the ceiling and it is a low one.
+twenty seconds — **and the backing off was pointless**, which took a third attempt to find out.
+
+A later 429, read properly, carried what the earlier ones had not been read for:
+
+```text
+quotaId: "GenerateRequestsPerDayPerProjectPerModel-FreeTier"
+quotaValue: "20"
+```
+
+**Twenty requests per day, per model.** Not per minute. A retry loop measured in seconds cannot
+outlast a quota measured in days, so every one of those waits was wall-clock spent to reach the
+same answer, dressed as something transient.
+
+And the arithmetic is worse than one afternoon. `converse` allows up to eight turns per scenario
+and there are eight scenarios: **a full run can want sixty-four requests against a cap of twenty.**
+It has never fitted in the free tier and never will.
 
 **The one that got through is still worth something.** *"A refusal is repaired, not reported"* ran
 against the eleven-tool surface and the model chose `add_course` — the same tool it chose when there
@@ -135,6 +150,19 @@ echoes a code back. They need no API key, because what they check is what this p
   2026-08-27 once the tab was bound to the agent, and it returned the right string for an empty
   plan ([FACTS §4.4](FACTS.md)) — but that is one call, not a scenario set. Every number below
   came through Chrome plus the Inspector.
-- The free tier's rate limit is low enough that a multi-turn conversation exhausts it in seconds;
-  the harness retries and reports a 429 as an error rather than as a failing scenario, because
-  calling it a failure would be a lie about the tools.
+- **Twenty requests per day, per model**, on the free tier. The harness now tells the two kinds of
+  429 apart: a transient one it waits out, a daily one it **stops on**, because waiting cannot fix
+  it. Either way a 429 is *not evaluated* rather than a failing scenario, since calling it a
+  failure would be a lie about the tools. It prints what a run cost, because twenty a day is a
+  budget:
+
+  ```text
+  1 passed, 0 failed, 7 not evaluated — of 8, costing 12 request(s) of the free tier's twenty a day
+  ```
+
+  And it can be sliced, which is how the three scenarios that have never run are meant to get their
+  turn without the five usability ones spending the allowance first:
+
+  ```bash
+  EVAL_ONLY=adversarial node tools/eval.mjs
+  ```
