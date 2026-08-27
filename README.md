@@ -3,9 +3,11 @@
 A course planner whose tools can **refuse**, can say **what a choice closes off** two years before
 it bites, and can be **rewound**. Built for [The WebMCP Challenge](https://webmcp.devpost.com/).
 
-**Live: <https://hvaler.github.io/cursus/>** — best in ChatGPT's in-app browser, or Chrome 149+
-with `chrome://flags/#enable-webmcp-testing`. Without either, the page still works: the buttons and
-the scripted walk-through call the same tools an agent would, by the same contract.
+**Live: <https://hvaler.github.io/cursus/>** — for an agent that actually calls the tools, use
+Chrome 149+ with `chrome://flags/#enable-webmcp-testing` and a WebMCP client. ChatGPT's in-app
+browser loads the page and registers all ten tools, but its chat pane could not invoke them
+([FACTS §4.4](docs/FACTS.md)). Without an agent the page still works: the buttons and the
+scripted walk-through call the same tools, by the same contract.
 
 ## The argument
 
@@ -109,7 +111,8 @@ settles are in [`docs/GATE.md`](docs/GATE.md).
 | An external client discovers them, with schemas | **yes** |
 | An agent chooses the right tool unprompted | **yes** |
 | A refusal reads well enough for the agent to repair the situation | **yes** — the finding |
-| ChatGPT's own in-app browser | **not tested** |
+| ChatGPT's in-app browser registers the tools | **yes**, all ten |
+| ...and its chat pane calls one | **no** — it reads the page, not the registry ([FACTS §4.4](docs/FACTS.md)) |
 
 ## Licence
 

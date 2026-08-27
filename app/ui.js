@@ -173,10 +173,13 @@ async function runSimulation() {
 /**
  * Keep an eye out for WebMCP arriving late.
  *
- * The rules point judges at ChatGPT's in-app browser, and we have no way to test that here. If it
- * injects `document.modelContext` after load, a one-shot check at boot would leave every tool
- * unregistered and the page would blame the browser. This costs one timer and removes that whole
- * class of failure.
+ * If a host injects `document.modelContext` after load, a one-shot check at boot would leave every
+ * tool unregistered and the page would blame the browser. This costs one timer and removes that
+ * whole class of failure.
+ *
+ * ChatGPT's in-app browser was tested on 2026-08-27 and turned out to attach before load - all ten
+ * tools registered there. So this is no longer the fix for a suspected failure; it is insurance
+ * against a host that is entitled to attach whenever it likes. See docs/FACTS.md 4.4.
  */
 async function keepLookingForWebMCP() {
   for (let i = 0; i < 20; i++) {                    // ten minutes, at thirty-second intervals

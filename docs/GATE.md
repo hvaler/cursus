@@ -85,12 +85,17 @@ Refused.  ADV-301 (Advanced Calculus) requires CALC-101, which is not completed 
 
 `execute` returns a string the model reads, so this is not decoration: it is the whole interface.
 
-## Still not tested
+## The other environment
 
 **ChatGPT's own in-app browser.** The submission asks for a URL reachable from *"ChatGPT's in-app
-browser or Google Chrome with WebMCP enabled"*, and this was the second of those. Asking
-`chatgpt.com` in an ordinary tab does not work and cannot: a web page has no access to another
-tab's model context, and ChatGPT says so plainly when asked.
+browser or Google Chrome with WebMCP enabled"*, and the gate above is the second of those.
+
+The first was tried on 2026-08-27. The in-app browser loads the page and the page registers all
+ten tools in it — **"WebMCP available — 10 tools registered"** — but the chat pane beside that
+tab called none of them across four prompts, and said why: it reaches the rendered page, not the
+live registry. The full record, with what was asked and what came back, is in
+[FACTS §4.4](FACTS.md). Asking `chatgpt.com` in an ordinary tab is a different thing again, and
+cannot work: a web page has no access to another tab's model context.
 
 ## Cost
 

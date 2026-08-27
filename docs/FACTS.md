@@ -96,7 +96,7 @@ Forty courses, invented. Real, in the sense that the prerequisite graph is six l
 timetable clashes are genuine and the tracks need chains rather than shopping lists. But it is not
 any university's, and no student or registrar has looked at it.
 
-### 4.4 Not tested in ChatGPT's in-app browser
+### 4.4 ChatGPT's in-app browser: the page registers, the model cannot call
 
 The rules name two environments a judge may use:
 
@@ -104,26 +104,51 @@ The rules name two environments a judge may use:
 > Alternatively, download Google Chrome 149 or later, enable `chrome://flags/#enable-webmcp-testing`,
 > and restart the browser."*
 
-**Only the second has been done**: Chrome 151 with the flag, plus the WebMCP Inspector extension
-driving Gemini.
+**Both have now been tried.** The second works and is the basis of [GATE.md](GATE.md): Chrome 151
+with the flag, the WebMCP Inspector extension, an agent choosing a tool and acting on a refusal.
 
-The first was attempted on 2026-08-27 and **could not be completed**. The ChatGPT desktop app
-(Microsoft Store, `OpenAI.ChatGPT-Desktop 1.2026.190.0`, on a **Go** plan) opens as *"ChatGPT
-Classic"*, and from a conversation there the model reports it cannot reach a page's tools. Asked
-twice to add a course, it answered:
+The first was tried on 2026-08-27 in ChatGPT desktop (`OpenAI.ChatGPT-Desktop 1.2026.190.0`, a
+**Go** plan, model **GPT-5.6 Sol**), and it splits cleanly in two.
 
-> *"No tengo acceso desde esta conversación a la instancia interactiva de WebMCP que tienes
-> abierta, así que no puedo ejecutar de verdad `add_course` sobre tu plan. […] prefiero no fingir
-> que lo he hecho."*
->
-> *Translation: "From this conversation I have no access to the interactive WebMCP instance you
-> have open, so I cannot really run `add_course` against your plan. […] I would rather not pretend
-> that I have."*
+**The page's half works.** The in-app browser loads <https://hvaler.github.io/cursus/>, runs the
+modules, and the status line reads **"WebMCP available — 10 tools registered."** `registerTool`
+resolves ten times in that browser and `getTools()` returns them.
 
-Whether that is the plan, the app version, or a surface not present on Windows is not something
-this repository can establish. What it can say is that it was tried and did not work.
+**The model's half does not.** Four prompts in the chat pane beside that tab, and the page's own
+counter never left `No tool has been called yet`:
 
-### What was done about it
+| Asked | What came back |
+|---|---|
+| `Abre <url> y dime qué puedo cerrar si cojo NUM-201 en el cuatrimestre 3` | the Graphics answer, cited to **GitHub** |
+| `What does taking NUM-201 in term 3 close off?` | the same, still cited to **GitHub** |
+| `Use the tools this page registers. Do not search the web.` | *"Searching the web"* |
+| the same again | *"Understood. I will not use web search. I will rely only on the tools the page registers"* — and then nothing |
+
+Named directly, it gave the clearest account of the boundary that anything in this repository has
+produced:
+
+> *"I can't actually invoke `what_this_closes` from this chat interface. The page confirms that it
+> registers tools, but **the web access available to me exposes only the rendered page, not its
+> live WebMCP tool registry.** So I **won't pretend I called it** or substitute a web-search
+> answer."*
+
+That answer is cited to `hvaler.github.io` rather than GitHub: it had read the live page, seen the
+green line, and correctly reported that it could see the HTML and not the registry. The browser's
+**⋮** menu offers find, print, zoom, screenshot, cookies, passwords, downloads, history and
+settings — **no entry for tools, permissions, or connecting the page to the model.**
+
+**What this establishes and what it does not.** It establishes that the page is not the obstacle:
+WebMCP is present in that browser and this page registers into it. It does not establish that
+ChatGPT's in-app browser cannot bridge a page's tools to a model in general — one app version, one
+plan, one model, one operating system, one afternoon. A different build may well do it. What this
+repository can say is what it saw.
+
+**The three quotations above are worth more than the check they failed.** A model that says *"I
+won't pretend I called it"* is doing the thing §4.2 exists to catch, unprompted — and its earlier
+answers, confident and sourced to this repository's own README, are the same failure caught by the
+same counter.
+
+### What was done about it, before this test
 
 The page used to read `document.modelContext` **once**, at boot. A host that attaches its agent
 after the page renders — a reasonable thing for an in-app browser to do — would have found every
@@ -136,8 +161,10 @@ tests in [`test/registration.test.js`](../test/registration.test.js) cover it wi
 `document`: present at boot, arriving late, never arriving, and a `modelContext` without
 `registerTool`.
 
-This does not prove the page works in ChatGPT's in-app browser. It removes the one way it could
-have failed there that would have been our fault.
+That fix went in **before** the test above, and the test retired the hypothesis behind it: the page
+registered all ten tools in that browser, so late attachment was never what stood in the way. The
+waiting is still right — a host is entitled to attach whenever it likes — but it is no longer a
+guess about a failure. It is one ruled out.
 
 ### The part worth more than the check
 
@@ -216,8 +243,8 @@ remedy — and why they are tested as carefully as the logic underneath.
 ## 6. Open, in one list
 
 1. Adversarial eval scenarios written but not run — quota.
-2. ChatGPT's in-app browser — one of the two environments the rules name — was tried on
-   2026-08-27 and could not reach the page's tools. Recorded in §4.4 rather than left blank.
+2. ChatGPT's in-app browser registers all ten tools but its chat pane calls none of them —
+   tried four ways on 2026-08-27, recorded in §4.4. One build, one plan, one model.
 3. One model family.
 4. The greedy placer's false negatives are documented but not characterised.
 5. Synthetic catalogue, no registrar has seen it.

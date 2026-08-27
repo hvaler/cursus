@@ -133,9 +133,11 @@ fork well enough to answer the question, and that is exactly what made reading c
 The catalogue is synthetic — real in structure, invented in content, and no registrar has seen it.
 There is no persistence: reload and the plan is empty, which is why there is no auth and no server.
 The planner is greedy with one repair pass, so a "no" from it means *this planner found no way*,
-not *no way exists*. It has been evaluated against one model family. And ChatGPT's in-app browser —
-one of the two environments the rules name — was tried and could not reach the tools, which is
-recorded rather than left blank.
+not *no way exists*. It has been evaluated against one model family. And of the two environments the
+rules name, only Chrome-plus-a-WebMCP-client produced a real tool call: ChatGPT's in-app browser
+loads the page and registers all ten tools, but its chat pane could not invoke them — it reaches
+the rendered page, not the live registry. That is written up with what was asked and what came
+back, rather than left blank.
 
 ---
 

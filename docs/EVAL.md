@@ -87,7 +87,9 @@ echoes a code back. They need no API key, because what they check is what this p
 - **One model family.** Gemini, twice. Not GPT, not Claude, not a small local model.
 - **Five scenarios**, chosen by the person who wrote the tools. An adversarial set would be a
   different exercise and would probably find something.
-- **Nothing about ChatGPT's in-app browser**, which is the environment the submission names.
+- **Nothing through ChatGPT's in-app browser.** It was tried on 2026-08-27: the page registers
+  all ten tools there, and the chat pane beside it called none of them across four prompts.
+  Everything measured here came through Chrome plus the Inspector ([FACTS §4.4](FACTS.md)).
 - The free tier's rate limit is low enough that a multi-turn conversation exhausts it in seconds;
   the harness retries and reports a 429 as an error rather than as a failing scenario, because
   calling it a failure would be a lie about the tools.

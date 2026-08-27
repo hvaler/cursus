@@ -121,8 +121,9 @@ verify that."*
 ## Things not to say
 
 - Not *"it never hallucinates"*. The rules are in code; the agent's prose is not.
-- Not *"tested in ChatGPT's in-app browser"*. It was tried and could not reach the tools
-  ([FACTS §4.4](../docs/FACTS.md)).
+- Not *"it works in ChatGPT's in-app browser"*. The page **registers** all ten tools there; the
+  chat pane beside it **called none of them** ([FACTS §4.4](../docs/FACTS.md)). Say the first
+  half only with the second attached, or not at all.
 - Not *"the solver finds the optimal plan"*. It is greedy with one repair pass, and a `no` from it
   means *this planner found no way*.
 - Not a specialisation count or a test count that has not been re-run that morning.
