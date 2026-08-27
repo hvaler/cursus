@@ -8,6 +8,7 @@ import { COURSES, TERMS, CREDIT_CAP_PER_TERM, course } from './catalogue.js';
 import { creditsIn } from './rules.js';
 import { trackStatus, totalCredits } from './queries.js';
 import { log, state, trace, onChange, asPage } from './store.js';
+import { protectedTracks } from './policy.js';
 import { TOOLS, callFromPage, registerAll } from './tools.js';
 
 const $ = (/** @type {string} */ id) => /** @type {HTMLElement} */ (document.getElementById(id));
@@ -45,12 +46,20 @@ function renderPlan() {
 
 /** Which specialisations are still reachable. This is the part a timetable cannot show. */
 function renderTracks() {
-  $('tracks').innerHTML = trackStatus(state()).map((t) => `
-    <div class="track ${t.open ? 'open' : 'shut'}">
-      <b>${t.open ? '◆' : '◇'} ${esc(t.name)}</b>
+  const s = state();
+  const held = protectedTracks(s);
+  $('tracks').innerHTML = trackStatus(s).map((t) => {
+    // A protection nobody can see is a protection nobody trusts, and it is the one thing on this
+    // screen that came from the person rather than from the catalogue.
+    const kept = held.includes(t.id);
+    return `
+    <div class="track ${t.open ? 'open' : 'shut'}${kept ? ' kept' : ''}">
+      <b>${kept ? '🔒' : t.open ? '◆' : '◇'} ${esc(t.name)}</b>
       <span class="dim">${t.have.length} held · ${t.reachable.length} still reachable${
-        t.open ? '' : ' · <b class="over">closed</b>'}</span>
-    </div>`).join('');
+        t.open ? '' : ' · <b class="over">closed</b>'}${
+        kept ? ' · <b class="kept-tag">protected — the agent cannot close this</b>' : ''}</span>
+    </div>`;
+  }).join('');
 }
 
 /** Every tool call, with where it came from and whether it was refused. */

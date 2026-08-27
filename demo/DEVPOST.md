@@ -30,7 +30,7 @@ out in their head, and no interface offers to.
 
 ### What Cursus does
 
-Ten tools, registered with `document.modelContext.registerTool`, that do four things a rendered
+Eleven tools, registered with `document.modelContext.registerTool`, that do five things a rendered
 timetable cannot.
 
 **They refuse.** Ask an agent to enrol you in Advanced Calculus and the page says no — naming the
@@ -56,6 +56,19 @@ another specialisation.**
 **They can be undone.** Every tool call is an event and the plan is the reduction of those events,
 so rewinding is the same reducer with a smaller number rather than per-tool inverse logic. The
 timeline on the page is the log with a cursor.
+
+**And they hold the student's own limits against the agent.** This is the one that runs the other
+way. Every rule above belongs to the university — a prerequisite, a clash, a credit cap, the same
+for everyone. `protect_track` belongs to the person: say *"whatever else happens, do not close
+Graphics"* and from then on **any course that would close it is refused, including when you ask for
+it yourself an hour later**, and the refusal cites your own instruction rather than the handbook.
+The planner will not even propose a route through it.
+
+A tool surface that only exposes capability lets an agent do whatever the UI could do, faster. One
+that also carries the user's policy lets them say **what they will not have done to their plan**,
+and have it hold while they are not watching. It cost almost nothing to build, because a protection
+is an event like any other — so `undo_to` unwinds it with everything else, and no code was written
+to make that true.
 
 ### Why this fits WebMCP rather than an API
 
@@ -91,7 +104,7 @@ asks before committing. That behaviour was not prompted. It came from the shape 
 own, was refused, and proposed the fix. That is the gate in `docs/GATE.md`, and it has no plan,
 mode or workspace conditions.
 
-**ChatGPT's in-app browser**: the page registers all ten tools and a model calls them — **in Work
+**ChatGPT's in-app browser**: the page registers its tools and a model calls them — **in Work
 mode**. Outside it, four different phrasings produced no call at all, and confident answers read off
 our own README instead. Finding that out took an afternoon and is written up in
 `docs/CHATGPT-WORK-MODE.md`, including the part a judge most needs: **site tools are not available
@@ -112,7 +125,7 @@ The whole thing rests on one decision — **every tool call is an event, and the
 reduction of the events**. Refusing is the reducer rejecting an event before state changes. Undo is
 replaying fewer of them. The audit trail is the list itself.
 
-**89 tests**, none skipped, on Node's own test runner. `npm run eval` puts a real model in front of
+**118 tests**, none skipped, on Node's own test runner. `npm run eval` puts a real model in front of
 the tools and asserts on what it *did*: 5/5, including finding `list_actions → undo_to` unprompted,
 and refusing to invent a course that does not exist.
 

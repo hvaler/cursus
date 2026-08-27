@@ -19,6 +19,9 @@ import {
   requirementChain, search, trackStatus, whatThisCloses, totalCredits, canStillPlace,
 } from './queries.js';
 import { log, state, record, caller } from './store.js';
+import {
+  PROTECTED, whyNotAllowedByPolicy, whyNotProtect, whyNotRelease, withProtection, describePolicy,
+} from './policy.js';
 import { planForTrack, explainInfeasible } from './solve.js';
 
 /** A newline, named. Building these strings through a shell has mangled the escape twice. */
@@ -146,6 +149,7 @@ export const TOOLS = [
         `Total ${totalCredits(s)} credits, cap ${CREDIT_CAP_PER_TERM} per term.`,
         open.length ? `Still open: ${open.map((t) => t.name).join(', ')}.` : 'No track is still open.',
         shut.length ? `Already closed: ${shut.map((t) => t.name).join(', ')}.` : '',
+        describePolicy(s),
       ].filter(Boolean).join(' ');
       return record('plan_status', {}, out, false);
     },
@@ -172,6 +176,10 @@ export const TOOLS = [
       const no = whyNotAdd(state(), c, wanted);
       if (no) return record('add_course', { course: code, term }, no.text, true);
 
+      // The university's rules passed. Now the student's own, which are a different kind of no.
+      const against = whyNotAllowedByPolicy(state(), c, wanted);
+      if (against) return record('add_course', { course: code, term }, against.text, true);
+
       log.append({ type: 'CourseAdded', code: c, term: /** @type {number} */ (wanted) });
       const out = `Added ${c} to term ${wanted}. ${describe(state())}`;
       return record('add_course', { course: code, term }, out, false);
@@ -196,6 +204,42 @@ export const TOOLS = [
       log.append({ type: 'CourseRemoved', code: c });
       const out = `Removed ${c}. ${describe(state())}`;
       return record('remove_course', { course: code }, out, false);
+    },
+  },
+
+  {
+    name: 'protect_track',
+    description:
+      'Hold a specialisation open. Once protected, any course that would close it is refused — ' +
+      'including when the same person asks for it later. Use this when the student has said what ' +
+      'they are not willing to give up, before exploring anything that might cost it. Pass ' +
+      'protect: false to release it again.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        track: { type: 'string', description: 'Track id: data, systems, graphics or theory.' },
+        protect: { type: 'boolean', description: 'True to protect (the default), false to release.' },
+      },
+      required: ['track'],
+    },
+    execute: ({ track: id, protect }) => {
+      const wanted = protect === undefined ? true : Boolean(protect);
+      const t = String(id ?? '').toLowerCase().trim();
+      const before = state();
+
+      const no = wanted ? whyNotProtect(before, t) : whyNotRelease(before, t);
+      if (no) return record('protect_track', { track: id, protect }, no.text, true);
+
+      log.append({ type: 'ConstraintSet', key: PROTECTED, value: withProtection(before, t, wanted) });
+
+      const label = TRACKS.find((x) => x.id === t)?.name ?? t;
+      const now = describePolicy(state());
+      const out = wanted
+        ? `Protecting "${label}". Anything that would close it is refused from now on, including ` +
+          `if you ask for it yourself. ${now}`
+        : `Released "${label}". It can be closed like any other now. ` +
+          `${now || 'Nothing is protected.'}`;
+      return record('protect_track', { track: id, protect }, out, false);
     },
   },
 
@@ -308,10 +352,15 @@ export const TOOLS = [
       const out = events.length === 0
         ? 'Nothing has been done to this plan yet.'
         : events.map((e) => {
+            const held = /** @type {any} */ (e).value;
             const what = e.type === 'CourseAdded' ? `added ${e.code} to term ${e.term}`
               : e.type === 'CourseRemoved' ? `removed ${e.code}`
               : e.type === 'PlanCleared' ? 'cleared the plan'
-              : `set ${/** @type {any} */ (e).key}`;
+              : /** @type {any} */ (e).key === PROTECTED
+                ? (Array.isArray(held) && held.length
+                    ? `protected: ${held.map((id) => TRACKS.find((t) => t.id === id)?.name ?? id).join(', ')}`
+                    : 'released every protection')
+                : `set ${/** @type {any} */ (e).key}`;
             return `  step ${e.seq}: ${what}`;
           }).join('\n') + `\nundo_to takes any of those step numbers; step 0 empties the plan.`;
       return record('list_actions', {}, out, false);
@@ -342,7 +391,8 @@ export const TOOLS = [
       const out = dropped.length === 0
         ? `Nothing to undo: step ${n} is already the latest. ${describe(state())}`
         : `Rewound to step ${n}, discarding ${dropped.length} action(s): ` +
-          `${dropped.map((e) => /** @type {any} */ (e).code ?? e.type).join(', ')}. ` +
+          `${dropped.map((e) => /** @type {any} */ (e).code
+              ?? (e.type === 'ConstraintSet' ? 'a change to what is protected' : e.type)).join(', ')}. ` +
           `${describe(state())}`;
       return record('undo_to', { step }, out, false);
     },

@@ -17,6 +17,75 @@ beforeEach(() => {
   trace.length = 0;
 });
 
+const FORK = [
+  ['CALC-101', 1], ['ALG-101', 1], ['PROG-101', 1], ['DISC-101', 1], ['PHYS-101', 1],
+  ['CALC-102', 2], ['PROG-102', 2], ['STAT-101', 2], ['LOGIC-101', 2], ['CIRC-101', 2],
+  ['DS-201', 3], ['ARCH-201', 3], ['AUTO-201', 3], ['STAT-201', 3],
+];
+const buildFork = () => { for (const [c, term] of FORK) call('add_course', { course: c, term }); };
+
+describe('the student\'s policy, through the tools', () => {
+  test('protecting is an event, so undo_to takes it back out', () => {
+    // Nothing was written to make this true. It is what the log buys.
+    buildFork();
+    const before = log.length;
+    call('protect_track', { track: 'graphics' });
+    assert.equal(log.length, before + 1, 'a protection is a step like any other');
+
+    assert.match(call('add_course', { course: 'NUM-201', term: 3 }), /PROTECTED_TRACK/);
+    call('undo_to', { step: before });
+    assert.match(call('add_course', { course: 'NUM-201', term: 3 }), /Added NUM-201/,
+      'once the protection is rewound the course goes in like any other');
+  });
+
+  test('the refusal reaches the caller through the real path', () => {
+    buildFork();
+    call('protect_track', { track: 'graphics' });
+    const out = call('add_course', { course: 'NUM-201', term: 3 });
+    assert.match(out, /you asked to keep open/);
+    assert.match(out, /The plan was not changed\./);
+    assert.equal(trace.at(-1)?.refused, true, 'and it is recorded as a refusal, not a result');
+  });
+
+  test('a refused add appends nothing', () => {
+    buildFork();
+    call('protect_track', { track: 'graphics' });
+    const before = log.length;
+    call('add_course', { course: 'NUM-201', term: 3 });
+    assert.equal(log.length, before, 'a policy refusal must not leave an event behind either');
+  });
+
+  test('plan_status carries the policy, so an agent reading it knows the boundary', () => {
+    buildFork();
+    call('protect_track', { track: 'graphics' });
+    const out = call('plan_status', {});
+    assert.match(out, /Protected: Graphics and Animation/);
+    assert.match(out, /is refused/);
+  });
+
+  test('list_actions reads it as a person would', () => {
+    call('protect_track', { track: 'theory' });
+    const out = call('list_actions', {});
+    assert.match(out, /protected: Theory and Verification/);
+    assert.doesNotMatch(out, /ConstraintSet/, 'the type name is not something to show a reader');
+  });
+
+  test('releasing says the protection is gone, and what is left', () => {
+    call('protect_track', { track: 'theory' });
+    const out = call('protect_track', { track: 'theory', protect: false });
+    assert.match(out, /Released "Theory and Verification"/);
+    assert.match(out, /Nothing is protected\./);
+  });
+
+  test('protecting is not free, and the tool says so before it is taken back', () => {
+    buildFork();
+    const out = call('add_course', { course: 'NUM-201', term: 3 });
+    assert.match(out, /Added/, 'no policy, no obstacle');
+    // Having closed graphics, protecting it is a promise the page cannot keep.
+    assert.match(call('protect_track', { track: 'graphics' }), /TRACK_ALREADY_CLOSED/);
+  });
+});
+
 describe('a mutation reports the state it produced', () => {
   test('adding says what the plan now holds, not "ok"', () => {
     const out = call('add_course', { course: 'CALC-101', term: 1 });

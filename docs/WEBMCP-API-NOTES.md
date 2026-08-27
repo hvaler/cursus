@@ -188,8 +188,8 @@ what_this_closes     once
 webmcp_list_tools    once
 ```
 
-`what_this_closes` is ours. **`webmcp_list_tools` is not** - this page registers ten tools and that
-is not one of them. It is the host's own, and the order says what it is for: the model listed the
+`what_this_closes` is ours. **`webmcp_list_tools` is not** - it is in no version of this page's
+registry. It is the host's own, and the order says what it is for: the model listed the
 page's registry first, then called into it.
 
 Two things follow. A page's tool names share a namespace with whatever the host injects, so a page

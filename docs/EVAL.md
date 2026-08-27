@@ -4,7 +4,7 @@ The descriptions and the strings the tools return are the whole interface betwee
 any agent. A unit test cannot check them: a description can be accurate, grammatical, and still
 leave a model unable to tell two tools apart, or unable to act on a refusal.
 
-So `tools/eval.mjs` puts a model in front of the same ten tools — imported, not reimplemented —
+So `tools/eval.mjs` puts a model in front of the same eleven tools — imported, not reimplemented —
 and asserts on **what the model did**, not on what it said.
 
 ```bash

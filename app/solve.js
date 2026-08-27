@@ -16,6 +16,7 @@
 import { BY_CODE, CREDIT_CAP_PER_TERM, TERMS, TRACKS, course } from './catalogue.js';
 import { whyNotAdd, creditsIn } from './rules.js';
 import { closure, trackStatus, whatThisCloses } from './queries.js';
+import { whyNotAllowedByPolicy } from './policy.js';
 
 /** @param {State} s */
 const clone = (s) => ({ selected: new Map(s.selected), constraints: { ...s.constraints } });
@@ -38,7 +39,9 @@ export function place(state, code) {
     /** @type {string} */
     let lastWhy = '';
     for (const term of info.terms) {
-      const no = whyNotAdd(work, c, term);
+      // Both kinds of no. Proposing a step the student's own policy would reject is not a plan,
+      // it is a plan the page would refuse to carry out one call later.
+      const no = whyNotAdd(work, c, term) ?? whyNotAllowedByPolicy(work, c, term);
       if (!no) {
         work.selected.set(c, term);
         added.push([c, term]);

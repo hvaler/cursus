@@ -1,6 +1,6 @@
 # Architecture
 
-**1,431 lines** across eight modules in `app/`. No build step, no dependencies, no server. This
+**1,650 lines** across nine modules in `app/`. No build step, no dependencies, no server. This
 file is what a reader needs before opening any of it.
 
 Every number here is checkable: `wc -l app/*.js`, `npm test`.
@@ -33,6 +33,7 @@ graph TD
     rules["rules.js<br/><i>7 add rules, 3 remove rules, refuse()</i>"]
     queries["queries.js<br/><i>reachability, closures, cost</i>"]
     solve["solve.js<br/><i>placement, planning, priced repairs</i>"]
+    policy["policy.js<br/><i>the student's own limits</i>"]
     store["store.js<br/><i>the single log, call attribution</i>"]
     tools["tools.js<br/><i>the 10 WebMCP tools</i>"]
     ui["ui.js<br/><i>renders from the same log</i>"]
@@ -44,7 +45,12 @@ graph TD
     solve --> catalogue
     solve --> rules
     solve --> queries
+    policy --> catalogue
+    policy --> rules
+    policy --> queries
+    solve --> policy
     store --> events
+    tools --> policy
     tools --> catalogue
     tools --> rules
     tools --> queries
@@ -54,13 +60,14 @@ graph TD
     ui --> rules
     ui --> queries
     ui --> store
+    ui --> policy
     ui --> tools
     page --> ui
 
     classDef leaf fill:#1f2933,stroke:#7b8794,color:#e4e7eb
     classDef core fill:#243b53,stroke:#4098d7,color:#e4e7eb
     class catalogue,events leaf
-    class store,tools core
+    class store,tools,policy core
 ```
 
 `catalogue.js` and `events.js` import nothing. Everything else is downhill from them, and no arrow
@@ -77,6 +84,7 @@ sequenceDiagram
     participant MC as document.modelContext
     participant T as tools.js
     participant R as rules.js
+    participant P as policy.js
     participant L as store.js log
     participant U as ui.js
 
@@ -84,7 +92,9 @@ sequenceDiagram
     MC->>T: execute(input)
     T->>R: whyNotAdd(state, code, term)
 
-    alt a rule says no
+    T->>P: whyNotAllowedByPolicy(state, code, term)
+
+    alt a rule says no, or the student's own policy does
         R-->>T: Refusal {rule, because, remedy}
         T->>L: record(tool, input, text, refused=true)
         Note over L: no event appended<br/>the plan is unchanged
@@ -123,20 +133,27 @@ with neither side able to notice. `describe(state)` is what closes that gap.
 | `app/events.js` | 113 | `EventLog`, `apply`, `reduce`, `rewindTo` | know what a course is |
 | `app/rules.js` | 199 | the 7 rules on adding and 3 on removing, `refuse()`, `quoteInput()`, `describe()` | mutate state |
 | `app/queries.js` | 145 | `closure`, `canStillPlace`, `trackStatus`, `whatThisCloses`, `requirementChain`, `search` | mutate state |
-| `app/solve.js` | 156 | `place`, `planForTrack`, `explainInfeasible` — greedy earliest-fit with one repair pass | promise optimality |
+| `app/solve.js` | 159 | `place`, `planForTrack`, `explainInfeasible` — greedy earliest-fit with one repair pass | promise optimality |
+| `app/policy.js` | 157 | the limits a person declares, and why an add is refused against them | invent a limit the person did not set |
 | `app/store.js` | 54 | the one `EventLog`, the change listeners, the call trace, the caller attribution | contain rules |
-| `app/tools.js` | 400 | the 10 tool definitions, `registerAll`, `waitForModelContext` | contain rules |
-| `app/ui.js` | 223 | renders plan, tracks, trace, timeline, catalogue; the scripted walk-through | hold state |
+| `app/tools.js` | 450 | the 11 tool definitions, `registerAll`, `waitForModelContext` | contain rules |
+| `app/ui.js` | 232 | renders plan, tracks, trace, timeline, catalogue; the scripted walk-through | hold state |
 
-**`tools.js` is the largest file and contains no logic.** It is 400 lines of descriptions and
+**`tools.js` is the largest file and contains no logic.** It is 450 lines of descriptions and
 result strings, because with WebMCP those *are* the interface. The reasoning it exposes lives in
-`queries.js` and `solve.js`, which have no idea an agent exists.
+`queries.js`, `solve.js` and `policy.js`, which have no idea an agent exists.
+
+**`policy.js` exists because of an import, and the import is the interesting part.** `rules.js`
+cannot import `queries.js` — `queries` already imports `rules` — so a check that needs both has
+nowhere to live but a layer above them. That happens to match what the check *is*: the university's
+rules and the student's own are different kinds of no, and a refusal that confused them would send
+an agent hunting for a prerequisite that is not the problem.
 
 ---
 
-## The ten tools
+## The eleven tools
 
-Six answer questions, two change the plan, two work on the history.
+Six answer questions, three change the plan, two work on the history.
 
 | | Tool | Reads or writes |
 |---|---|---|
@@ -148,11 +165,17 @@ Six answer questions, two change the plan, two work on the history.
 | | `explain_infeasibility` | reads |
 | act | `add_course` | appends an event |
 | | `remove_course` | appends an event |
+| | `protect_track` | appends an event — a limit, not a course |
 | history | `list_actions` | reads the log |
 | | `undo_to` | rewinds the log |
 
 `plan_for_track` proposing rather than applying is deliberate: a plan an agent can inspect before
 committing is worth more than one it has already carried out.
+
+`protect_track` is the odd one and the point of the surface. The other two writes add and remove
+courses; this one writes a **limit**, which every later call is then checked against — including
+calls from the person who set it. Because it is an event like the others, `undo_to` unwinds it for
+free.
 
 ---
 

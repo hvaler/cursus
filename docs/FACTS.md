@@ -18,16 +18,18 @@ npm test        # node --test test/*.test.js
 |---|---|---:|
 | Events, rules, the catalogue's own invariants | `test/core.test.js` | 24 |
 | Reachability, closures, what a choice costs | `test/queries.test.js` | 18 |
-| The strings the tools return | `test/tools.test.js` | 21 |
-| Hostile input | `test/hostile.test.js` | 11 |
+| The strings the tools return | `test/tools.test.js` | 28 |
+| Hostile input | `test/hostile.test.js` | 13 |
 | Planning towards a goal | `test/solve.test.js` | 11 |
 | Registering when the host attaches late | `test/registration.test.js` | 4 |
-| **Total** | | **89** |
+| A limit the student set, and the ways round it | `test/policy.test.js` | 16 |
+| The documents, against the code they describe | `test/docs.test.js` | 4 |
+| **Total** | | **118** |
 
 **Skipped: zero. Failing: zero.** No build step, no dependencies — `package.json` has no
 `dependencies` or `devDependencies` at all, and the whole thing runs on Node's own test runner.
 
-**1,431 lines** across eight modules in `app/`. The shape of them is in
+**1,650 lines** across nine modules in `app/`. The shape of them is in
 [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 ---
@@ -46,7 +48,8 @@ npm test        # node --test test/*.test.js
 | Planning towards a track only proposes legal plans | `app/solve.js:59` `planForTrack` | `solve.test.js` "nothing it proposes would be rejected by the rules" | **yes** |
 | Infeasibility names the blocker and prices each way out | `app/solve.js:109` `explainInfeasible` | `solve.test.js` (4 tests) | **yes** |
 | Caller input is bounded and quoted before reaching a model | `app/rules.js:46` `quoteInput` | `hostile.test.js` (8 tests) | **yes** |
-| Ten tools registered with WebMCP | `app/tools.js` `TOOLS`, `registerAll` | measured in-browser: 10 | **yes** |
+| Eleven tools registered with WebMCP | `app/tools.js` `TOOLS`, `registerAll` | `docs.test.js` counts them against every document | **yes** |
+| A limit the student sets is held against the agent | `app/policy.js:70` `whyNotAllowedByPolicy` | `policy.test.js` (16 tests) | **yes** |
 | The catalogue's graph is at least four deep | `app/catalogue.js` | `core.test.js` "at least four levels deep" | **yes** — deepest chain is 6 |
 
 The catalogue also tests **itself**: every prerequisite names a course that exists, and no course
