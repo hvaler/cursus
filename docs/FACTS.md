@@ -132,6 +132,15 @@ node -e "import('./app/tools.js').then(m =>
 
 Character for character.
 
+**What backs this is the string, not our own log.** The window was closed before the page's call
+counter was captured, so the page's own record of that call no longer exists, and the prompt that
+produced it was not saved verbatim. What survives is the returned text and the host's trace line
+(*"used the browser, loaded tools and ran a command"*). By this repository's own standard - §4.2,
+that a page can only be sure of the calls it makes itself - **this is the model's report plus a
+string match, not our measurement.** The string match is strong, for the reason below, and it is
+not the same thing. Reproducing it with the counter in shot is a loose end, and it is cheap: the
+tool is idempotent and the plan starts empty.
+
 **And it is the answer that could not have come from reading.** Every document in this repository
 describes the *other* case — `NUM-201` closing Graphics and Animation, which only happens once terms
 1 and 2 are full. The page loads empty, so a real call is obliged to say it closes nothing. A model
@@ -180,7 +189,8 @@ green line, and reported correctly that it could see the HTML and not the regist
 #### What this does not establish
 
 **The successful run changed two things at once.** It moved to a different plan *and* asked, in the
-prompt, for browser-side action towards a real invocation. The assistant attributes the fix to the
+prompt, for browser-side action towards a real invocation - the prompt is paraphrased here because
+it was not kept. The assistant attributes the fix to the
 bound tab rather than to the plan, and the settings above were identical in both — but this was not
 run as a controlled comparison, and no claim here rests on which of the two mattered. One app
 version, one operating system, one afternoon.
