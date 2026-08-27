@@ -19,6 +19,10 @@ import {
   requirementChain, search, trackStatus, whatThisCloses, totalCredits, canStillPlace,
 } from './queries.js';
 import { log, state, record, caller } from './store.js';
+import { planForTrack, explainInfeasible } from './solve.js';
+
+/** A newline, named. Building these strings through a shell has mangled the escape twice. */
+const NL = String.fromCharCode(10);
 
 const line = (/** @type {string} */ code) => {
   const c = course(code);
@@ -192,6 +196,103 @@ export const TOOLS = [
       log.append({ type: 'CourseRemoved', code: c });
       const out = `Removed ${c}. ${describe(state())}`;
       return record('remove_course', { course: code }, out, false);
+    },
+  },
+
+  // ------------------------------------------------------------------ planning towards a goal
+  {
+    name: 'plan_for_track',
+    description:
+      'Work out what still has to be taken to complete a specialisation track, and in which ' +
+      'terms. Returns a concrete list, or — if it cannot be done from here — the course that ' +
+      'blocks it and what it would cost to unblock. Track ids: data, systems, graphics, theory.',
+    inputSchema: {
+      type: 'object',
+      properties: { track: { type: 'string', description: 'data, systems, graphics or theory' } },
+      required: ['track'],
+    },
+    execute: ({ track }) => {
+      const id = String(track ?? '').toLowerCase().trim();
+      const r = planForTrack(state(), id);
+      let out;
+      if (r.unknownTrack) {
+        out = `There is no track called ${quoteInput(track)}. The four are: ` +
+              TRACKS.map((t) => `${t.id} (${t.name})`).join(', ') + '.';
+      } else if (r.ok && r.added.length === 0) {
+        out = `That track is already complete in this plan; nothing more is needed.`;
+      } else if (r.ok) {
+        const byTerm = new Map();
+        for (const [c, t] of r.added) {
+          if (!byTerm.has(t)) byTerm.set(t, []);
+          byTerm.get(t).push(c);
+        }
+        const perTerm = [...byTerm.keys()].sort((a, b) => a - b)
+          .map((t) => `  term ${t}: ${byTerm.get(t).sort().join(', ')}`);
+        out = [
+          `It can be done. ${r.added.length} course(s) to add:`,
+          ...perTerm,
+          'Every placement above was checked against the same rules add_course uses, so none of ' +
+          'them would be refused.',
+        ].join(NL);
+      } else {
+        out = `It cannot be done from here — ${r.needed} more course(s) would be needed and the ` +
+              `plan has no room for them. Call explain_infeasibility for the binding constraint ` +
+              `and what it would cost to lift it.`;
+      }
+      return record('plan_for_track', { track }, out, !r.ok && !r.unknownTrack);
+    },
+  },
+
+  {
+    name: 'explain_infeasibility',
+    description:
+      'When a specialisation cannot be completed, say exactly why: which course cannot be placed, ' +
+      'which rule stops it, and what would have to be dropped to make room — with what each of ' +
+      'those trades would close in turn. Use it instead of telling a student "it is not possible".',
+    inputSchema: {
+      type: 'object',
+      properties: { track: { type: 'string', description: 'data, systems, graphics or theory' } },
+      required: ['track'],
+    },
+    execute: ({ track }) => {
+      const id = String(track ?? '').toLowerCase().trim();
+      const r = explainInfeasible(state(), id);
+      let out;
+      if (r === null) {
+        const known = TRACKS.some((t) => t.id === id);
+        out = known
+          ? `That track is still reachable from here — there is nothing to explain. ` +
+            `Call plan_for_track to see what it would take.`
+          : `There is no track called ${quoteInput(track)}. The four are: ` +
+            TRACKS.map((t) => t.id).join(', ') + '.';
+      } else if (!r.blocker) {
+        out = `${r.track.name} needs ${r.needed} more course(s) and none can be placed, but no ` +
+              `single course could be identified as the blocker. That is a gap in this planner, ` +
+              `not a proof that nothing would work.`;
+      } else {
+        const lines = [
+          `${r.track.name} cannot be completed from here. The blocker is ${r.blocker.code}` +
+          `${course(r.blocker.code) ? ` (${course(r.blocker.code)?.name})` : ''}.`,
+          `Why: ${r.blocker.why}`,
+        ];
+        if (r.repairs.length === 0) {
+          lines.push('Nothing in the plan can be dropped to make room, so this one is settled.');
+        } else {
+          lines.push(`What would make room, and what each costs:`);
+          for (const rep of r.repairs) {
+            lines.push(`  drop ${rep.drop} from term ${rep.term} — frees ${rep.frees} credits — ` +
+              (rep.closes.length
+                ? `but then closes: ${rep.closes.join(', ')}`
+                : 'and closes nothing else'));
+          }
+          const free = r.repairs.filter((x) => x.closes.length === 0);
+          lines.push(free.length
+            ? `${free.length} of those cost nothing else.`
+            : `Every one of them costs another specialisation. There is no free version of this trade.`);
+        }
+        out = lines.join(NL);
+      }
+      return record('explain_infeasibility', { track }, out, false);
     },
   },
 
