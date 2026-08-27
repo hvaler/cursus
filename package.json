@@ -6,7 +6,7 @@
   "description": "A course planner whose tools can refuse, explain what a choice closes off, and be rewound",
   "license": "Apache-2.0",
   "scripts": {
-    "test": "node --test test/",
+    "test": "node --test test/*.test.js",
     "eval": "node tools/eval.mjs"
   }
 }

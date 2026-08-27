@@ -11,7 +11,7 @@ says so instead of softening it.
 ## 1. The tests, counted
 
 ```bash
-npm test        # node --test test/
+npm test        # node --test test/*.test.js
 ```
 
 | Suite | File | Tests |
@@ -21,12 +21,13 @@ npm test        # node --test test/
 | The strings the tools return | `test/tools.test.js` | 21 |
 | Hostile input | `test/hostile.test.js` | 11 |
 | Planning towards a goal | `test/solve.test.js` | 11 |
-| **Total** | | **85** |
+| Registering when the host attaches late | `test/registration.test.js` | 4 |
+| **Total** | | **89** |
 
 **Skipped: zero. Failing: zero.** No build step, no dependencies — `package.json` has no
 `dependencies` or `devDependencies` at all, and the whole thing runs on Node's own test runner.
 
-**1,373 lines** across eight modules in `app/`.
+**1,428 lines** across eight modules in `app/`.
 
 ---
 
