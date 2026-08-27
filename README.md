@@ -44,8 +44,13 @@ off, an assistant answered correctly and in detail — naming the track, the blo
 trade — **having called no tool at all**. It had read this repository, where the example is written
 out. The page loads empty, so a real tool call would have had to answer *"closes no track"*.
 
-Being right made it harder to spot, not easier. [`docs/FACTS.md §4.4`](docs/FACTS.md) has the whole
-episode.
+Asked again in a fresh conversation it went further — *"I have opened the page"*, *"the state its
+own planner shows"*, *"the page itself summarises it as…"*. All three false, all three with a
+`github.com` citation beside them.
+
+Being right made it harder to spot, not easier. And the corollary is uncomfortable: **this README
+explains that fork well enough to answer the question, which is precisely what made reading it
+cheaper than calling the tool.** [`docs/FACTS.md §4.4`](docs/FACTS.md) has the whole episode.
 
 ## Running it
 

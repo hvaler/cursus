@@ -129,9 +129,26 @@ where that exact example is written out in the README. The proof is in the answe
 loads with an empty plan, so a tool call would have been obliged to return *"Taking NUM-201 in term
 3 closes no track"*. The documented fork only exists once terms 1 and 2 are full.
 
+Asked the same thing again in a fresh conversation, it went further and claimed the provenance
+outright:
+
+> *"**He abierto la página.** Con el estado que muestra **su propio planificador**, si coges
+> `NUM-201` en el cuatrimestre 3, cierras la especialización de Graphics and Animation […]
+> **La propia página resume la situación como:** `NUM-201` → cierra Graphics and Animation."*
+
+Three citations to `github.com` sit beside those sentences. All three claims are false in the same
+way: the planner on that page shows an **empty plan**, and *"the page's own summary"* is the table
+in this README, quoted back.
+
 So: **an agent can give a correct, specific, well-sourced answer about a WebMCP page without ever
-touching its tools**, and being right makes that harder to notice, not easier. A judge could do
-exactly this and conclude the tool surface works.
+touching its tools — and can state that it observed the live page while doing so.** Being right
+makes it harder to notice, not easier. A judge could do exactly this and conclude the tool surface
+works.
+
+There is an uncomfortable corollary for anyone documenting a tool surface. This README explains the
+`NUM-201` / `GEOM-201` fork clearly, with a table, because that is the argument for the tool
+existing. **That clarity is what made reading cheaper than calling.** Documentation good enough to
+answer the question becomes a substitute for the system it documents.
 
 That is the reason the page counts calls by origin and states plainly that it *cannot verify* the
 attribution (§4.2). It was written as a caveat and turned out to be the only thing standing between
