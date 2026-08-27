@@ -527,10 +527,15 @@ export function waitForModelContext(ms = 12000) {
 export async function registerAll() {
   if (registered.length) return { available: true, count: registered.length };
   await waitForModelContext();
-  const mc = /** @type {any} */ (document).modelContext;
-  if (!mc?.registerTool) return { available: false, count: 0 };
+  // `document.modelContext.registerTool({name, description, inputSchema, execute})`, which is the
+  // shape the challenge documents. Destructured only because `modelContext` is not in the DOM
+  // types and writing it out would need a declaration file — and a type-only build step is still
+  // a build step. `gate.html` has the same call spelled out in full.
+  const { modelContext } = /** @type {any} */ (document);
+  if (!modelContext?.registerTool) return { available: false, count: 0 };
+
   for (const t of TOOLS) {
-    await mc.registerTool({
+    await modelContext.registerTool({
       name: t.name,
       description: t.description,
       inputSchema: t.inputSchema,

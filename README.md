@@ -84,6 +84,18 @@ npm run eval      # puts a real model in front of the tools; needs GEMINI_API_KE
 
 There is no build. What is in the repository is what is served. Node 20 or later.
 
+To open the page itself, **serve the folder** — any static server will do, and none of them need
+installing anything:
+
+```bash
+npx serve .          # then open the address it prints
+python -m http.server  # or this, then http://localhost:8000
+```
+
+**Do not open `index.html` by double-clicking it.** Browsers block ES module imports over `file://`,
+so the page loads and stays blank — which looks exactly like a broken project and is not one. The
+live copy at <https://hvaler.github.io/cursus/> needs none of this.
+
 The other two ways to test it — in a browser without an agent, and with a real one — are in
 [`docs/TESTING.md`](docs/TESTING.md).
 

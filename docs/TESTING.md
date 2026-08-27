@@ -60,6 +60,17 @@ a failing scenario, because calling it a failure would be a lie about the tools.
 
 Open <https://hvaler.github.io/cursus/> in anything. Press **Run the scripted walk-through**.
 
+To run the same page from a clone, **serve the folder** rather than opening the file:
+
+```bash
+npx serve .            # then open the address it prints
+python -m http.server  # or this, then http://localhost:8000
+```
+
+**Double-clicking `index.html` gives a blank page.** Browsers refuse ES module imports over
+`file://`, and the failure looks identical to a project that does not work. There is nothing to
+install either way — the repository has no dependencies.
+
 It calls the same tools, by the same contract, and is labelled `page` in the trace — **never
 `AGENT`**. It exists because the rules say judges *"are not required to test the Project"*, so the
 most likely way this is seen is with no agent at all.
