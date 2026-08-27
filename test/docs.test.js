@@ -101,8 +101,12 @@ describe('the documents against the code', () => {
     for (const [path, text] of DOCS) {
       for (const [i, line] of text.split('\n').entries()) {
         if (HISTORICAL.some((h) => line.includes(h))) continue;
-        for (const m of line.matchAll(/\b(\d{1,2}|ten|eleven|twelve|thirteen|fourteen) tools\b/gi)) {
-          const word = m[1].toLowerCase();
+        // Two shapes, because "all ten" slipped past a pattern that only knew "ten tools" —
+        // and a check that catches one way of writing a number gives more confidence than it
+        // has earned. This still is not every way; it is the two that have actually occurred.
+        const shapes = /\b(\d{1,2}|ten|eleven|twelve|thirteen|fourteen) tools\b|\ball (\d{1,2}|ten|eleven|twelve|thirteen|fourteen)\b/gi;
+        for (const m of line.matchAll(shapes)) {
+          const word = (m[1] ?? m[2]).toLowerCase();
           const claimed = WORD[/** @type {keyof typeof WORD} */ (word)] ?? Number(word);
           if (claimed !== TOOLS.length) {
             problems.push(`${path}:${i + 1} says "${m[0]}"; the code registers ${TOOLS.length}`);

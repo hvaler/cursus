@@ -1,33 +1,21 @@
 # Cursus
 
-A course planner whose tools can **refuse**, can say **what a choice closes off** two years before
-it bites, and can be **rewound**. Built for [The WebMCP Challenge](https://webmcp.devpost.com/).
+A course planner whose tools **refuse**, say **what a choice closes off** two years before it
+bites, **hold a limit you set** against the agent, and can be **rewound**. Built for
+[The WebMCP Challenge](https://webmcp.devpost.com/).
 
-**Live: <https://hvaler.github.io/cursus/>**
+**Live: <https://hvaler.github.io/cursus/>** — thirteen tools on `document.modelContext`.
 
-**Both environments the rules name were tested, and both produce real tool calls.** One of them
-has a condition worth knowing before you judge it:
+To watch an agent call them, either environment the rules name works:
 
-- **ChatGPT's in-app browser** — open the page, **be in Work mode**, and tell the assistant to
-  use the tool:
+- **ChatGPT's in-app browser, in Work mode.** Open the page and ask the assistant to use a tool.
+  Work mode is the requirement, and Enterprise or Edu workspaces cannot do it at all.
+  [CHATGPT-WORK-MODE.md](docs/CHATGPT-WORK-MODE.md) is the runbook — including how to tell a real
+  tool call from a convincing answer, which turns out to matter.
+- **Chrome 149+** with `chrome://flags/#enable-webmcp-testing` and a WebMCP client. No conditions;
+  the trace is in [GATE.md](docs/GATE.md).
 
-  > *Use the open page's WebMCP tool `what_this_closes` with: course `NUM-201`, term `3`.*
-
-  Outside Work mode the same request gets an answer read off this repository instead of a tool
-  call — and a convincing one. The tell: with an empty plan, a real call says `NUM-201`
-  **closes no track**; anything about Graphics and Animation came from reading.
-
-  **On an Enterprise or Edu workspace this route is closed** — site tools are not available
-  there at all ([OpenAI's documentation](https://learn.chatgpt.com/docs/webmcp)), and nothing
-  on screen says so. Use Chrome.
-- **Chrome 149+** with `chrome://flags/#enable-webmcp-testing` and a WebMCP client — the route in
-  [GATE.md](docs/GATE.md). No plan, mode or workspace conditions.
-
-The demo video is recorded in ChatGPT's in-app browser, because that is the one the rules name
-first. The runbook for it, with the four failures it took to find the condition, is in
-[CHATGPT-WORK-MODE.md](docs/CHATGPT-WORK-MODE.md).
-
-Without an agent the page still works: the buttons and the scripted walk-through call the same
+With no agent at all the page still works: the buttons and the scripted walk-through call the same
 tools, by the same contract.
 
 ## The argument
@@ -35,7 +23,7 @@ tools, by the same contract.
 Most pages that expose tools to an agent expose compliant ones: `add_thing`, `list_things`. An
 agent could do that by reading the DOM and clicking. Those tools add nothing.
 
-These do three things a rendered timetable cannot.
+These do five things a rendered timetable cannot.
 
 **They refuse.** `add_course('ADV-301')` comes back with *why*, and with what would unblock it. On
 2026-08-27 that made `gemini-3.6-flash` stop reporting a failure and start proposing a fix — then
@@ -52,9 +40,25 @@ prerequisite graph under a credit budget. With terms 1–2 full and six credits 
 One slot, two futures, and either choice forecloses the other. No timetable shows that, and it is
 not recoverable once the term is full.
 
+**They price the way out.** Asked whether a specialisation is still possible, the page does not
+answer *no*. `explain_infeasibility` names the course that blocks it, the rule behind it, and every
+way to make room — with what each one costs. In the fixture above there are five ways and **every
+one closes another specialisation**, which is more useful than a solver that shrugs.
+
+**They hold a limit you set, against the agent.** Every rule above belongs to the university:
+prerequisites, clashes, a credit cap, the same for everyone. `protect_track` belongs to the person.
+Say *keep Graphics open* and from then on any course that would close it is refused — **including
+when you ask for it yourself an hour later** — and the refusal cites your own instruction rather
+than the handbook. The planner will not route through it either.
+
+A tool surface that only exposes capability lets an agent do whatever the UI could, faster. One
+that carries the user's policy lets them say **what they will not have done to their plan**, and
+have it hold while they are not watching.
+
 **They can be undone.** Every tool call is an event; the state is the reduction of the events; so
-rewinding is the same reducer with a smaller number, not per-tool inverse logic. The timeline on
-the page is the log with a cursor.
+rewinding is the same reducer with a smaller number, not per-tool inverse logic. A protection is an
+event too, so undo takes it back out and no code was written to make that true. The timeline on the
+page is the log with a cursor.
 
 ## And the page never claims an agent was here
 
@@ -63,17 +67,13 @@ assumption: WebMCP gives the `execute` handler no caller identity, so a page can
 about the calls it makes itself.
 
 That looked like pedantry until it caught something. Asked what taking `NUM-201` in term 3 closes
-off, an assistant answered correctly and in detail — naming the track, the blocking course and the
-trade — **having called no tool at all**. It had read this repository, where the example is written
-out. The page loads empty, so a real tool call would have had to answer *"closes no track"*.
+off, an assistant answered correctly and in detail — **having called no tool at all**. It had read
+this repository. Asked again it claimed *"I have opened the page"*, with a `github.com` citation
+beside the sentence. Being right made it harder to spot, not easier.
 
-Asked again in a fresh conversation it went further — *"I have opened the page"*, *"the state its
-own planner shows"*, *"the page itself summarises it as…"*. All three false, all three with a
-`github.com` citation beside them.
-
-Being right made it harder to spot, not easier. And the corollary is uncomfortable: **this README
-explains that fork well enough to answer the question, which is precisely what made reading it
-cheaper than calling the tool.** [`docs/FACTS.md §4.4`](docs/FACTS.md) has the whole episode.
+The corollary is uncomfortable and worth passing on: **this README explains that fork well enough
+to answer the question, which is exactly what made reading it cheaper than calling the tool.** The
+whole episode, and the tell that catches it, is in [`docs/FACTS.md §4.4`](docs/FACTS.md).
 
 ## Running it
 
@@ -157,8 +157,8 @@ settles are in [`docs/GATE.md`](docs/GATE.md).
 | An external client discovers them, with schemas | **yes** |
 | An agent chooses the right tool unprompted | **yes** |
 | A refusal reads well enough for the agent to repair the situation | **yes** — the finding |
-| ChatGPT's in-app browser registers the tools | **yes**, all ten |
-| ...and a model there calls one | **yes** in **Work mode** — and **no**, four times, outside it ([FACTS §4.4](docs/FACTS.md)) |
+| ChatGPT's in-app browser registers the tools | **yes**, every one |
+| ...and a model there calls one | **yes**, in **Work mode** ([the runbook](docs/CHATGPT-WORK-MODE.md)) |
 
 ## Licence
 
