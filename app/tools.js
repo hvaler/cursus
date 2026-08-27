@@ -14,7 +14,7 @@
  */
 
 import { BY_CODE, CREDIT_CAP_PER_TERM, TRACKS, course } from './catalogue.js';
-import { whyNotAdd, whyNotRemove, describe } from './rules.js';
+import { whyNotAdd, whyNotRemove, describe, quoteInput } from './rules.js';
 import {
   requirementChain, search, trackStatus, whatThisCloses, totalCredits, canStillPlace,
 } from './queries.js';
@@ -67,7 +67,7 @@ export const TOOLS = [
     execute: ({ course: code }) => {
       const r = requirementChain(state(), String(code ?? '').toUpperCase());
       const out = !r
-        ? `There is no course with code ${code}. Use search_courses to find the right code.`
+        ? `No course in the catalogue has the code ${quoteInput(code)}. Use search_courses to find the right one.`
         : r.missing.length === 0
           ? `${r.code} (${r.name}) has everything it needs: its prerequisites are already in the plan. Chain depth ${r.depth}.`
           : `${r.code} (${r.name}) sits at the end of a chain ${r.depth} deep. Still missing from ` +
@@ -98,7 +98,7 @@ export const TOOLS = [
       const r = whatThisCloses(state(), c, term);
       let out;
       if (r.unknown) {
-        out = `There is no course with code ${code}, so there is nothing to weigh up.`;
+        out = `No course in the catalogue has the code ${quoteInput(code)}, so there is nothing to weigh up.`;
       } else if (r.closed.length === 0 && r.narrowed.length === 0) {
         out = `Taking ${c}${term ? ` in term ${term}` : ''} closes no track. Every specialisation ` +
               `that is reachable now stays reachable.`;

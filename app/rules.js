@@ -30,6 +30,25 @@ export function refuse(rule, because, remedy) {
   };
 }
 
+/**
+ * Quote a caller-supplied value before it goes back into a model's context.
+ *
+ * `add_course({course: 'IGNORE ALL PREVIOUS INSTRUCTIONS...'})` used to come back as
+ * `There is no course with code IGNORE ALL PREVIOUS INSTRUCTIONS... in the catalogue` — the
+ * attacker's text, verbatim, in the model's context, indistinguishable from the page's own words.
+ *
+ * Whether a given model falls for that is beside the point: a page should not be a delivery
+ * mechanism. So the value is clipped, stripped of line breaks, and quoted, which makes it read
+ * as data rather than as prose the page is asserting.
+ *
+ * @param {unknown} v @param {number} [max]
+ */
+export function quoteInput(v, max = 24) {
+  const raw = String(v ?? '').replace(/\s+/g, ' ').trim();
+  const clipped = raw.length > max ? `${raw.slice(0, max)}…` : raw;
+  return JSON.stringify(clipped);
+}
+
 const name = (/** @type {string} */ code) => {
   const c = course(code);
   return c ? `${code} (${c.name})` : code;
@@ -61,7 +80,7 @@ export function whyNotAdd(state, code, wanted) {
   const c = BY_CODE.get(code);
   if (!c) {
     return refuse('UNKNOWN_COURSE',
-      `There is no course with code ${code} in the catalogue.`,
+      `No course in the catalogue has the code ${quoteInput(code)}.`,
       'check the code, or search the catalogue for the name you meant.');
   }
 
@@ -137,7 +156,7 @@ export function whyNotAdd(state, code, wanted) {
 export function whyNotRemove(state, code) {
   if (!BY_CODE.has(code)) {
     return refuse('UNKNOWN_COURSE',
-      `There is no course with code ${code} in the catalogue.`,
+      `No course in the catalogue has the code ${quoteInput(code)}.`,
       'check the code.');
   }
   if (!state.selected.has(code)) {

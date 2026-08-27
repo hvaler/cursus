@@ -129,7 +129,8 @@ describe('the question the screen cannot answer', () => {
   });
 
   test('an unknown code does not pretend the answer is "nothing"', () => {
-    assert.match(call('what_this_closes', { course: 'NOPE-999' }), /no course with code/);
+    assert.match(call('what_this_closes', { course: 'NOPE-999' }),
+      /No course in the catalogue has the code "NOPE-999"/);
   });
 });
 
