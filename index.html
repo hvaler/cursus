@@ -237,8 +237,7 @@ ${guess} = ${JSON.stringify(v, null, 1).slice(0, 900)}`);
   }
   const d = document.createElement('div');
   d.className = 'call';
-  d.textContent = out.join('
-');
+  d.textContent = out.join(String.fromCharCode(10));
   logEl.appendChild(d);
 };
 
