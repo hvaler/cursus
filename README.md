@@ -75,7 +75,10 @@ npm test          # 89 tests, no build step, no dependencies
 npm run eval      # puts a real model in front of the tools; needs GEMINI_API_KEY
 ```
 
-There is no build. What is in the repository is what is served.
+There is no build. What is in the repository is what is served. Node 20 or later.
+
+The other two ways to test it — in a browser without an agent, and with a real one — are in
+[`docs/TESTING.md`](docs/TESTING.md).
 
 `npm test` checks the logic. **`npm run eval` checks the part unit tests cannot**: whether a model
 reads these tool descriptions and picks the right one, and whether it can act on a refusal. On
@@ -84,14 +87,32 @@ course that does not exist. Results and limits in [`docs/EVAL.md`](docs/EVAL.md)
 
 ## Layout
 
+**1,431 lines** across eight modules, none of them importing in a circle. The diagrams and the
+call flow are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
 | | |
 |---|---|
+| `app/catalogue.js` | 40 courses, 6 terms, 4 tracks, the 30-credit cap — no reasoning |
 | `app/events.js` | the log and the reducer — the decision the rest rests on |
-| `app/rules.js` | the rules, and `refuse()` which enforces the shape of saying no |
+| `app/rules.js` | 7 rules on adding, 3 on removing, and `refuse()` which enforces the shape of saying no |
 | `app/queries.js` | reachability, closures, and what a choice costs |
-| `app/tools.js` | the eight tools, and the strings they return |
+| `app/solve.js` | placement, planning towards a track, and pricing each way out |
+| `app/store.js` | the one log everything reads from, and what the page can honestly say about callers |
+| `app/tools.js` | the ten tools, and the strings they return |
 | `app/ui.js` | the screen, rendered from the same log |
 | `gate.html` | the day-one gate that proved the API works at all |
+
+## The documents
+
+| | |
+|---|---|
+| [`ARCHITECTURE.md`](docs/ARCHITECTURE.md) | the modules, the call flow, and the one decision underneath |
+| [`TESTING.md`](docs/TESTING.md) | four ways to test this, cheapest first |
+| [`CHATGPT-WORK-MODE.md`](docs/CHATGPT-WORK-MODE.md) | getting the tools callable from ChatGPT, and the four attempts it took |
+| [`FACTS.md`](docs/FACTS.md) | every claim, its code, its test, and what is not verified |
+| [`GATE.md`](docs/GATE.md) | the traces from both environments |
+| [`EVAL.md`](docs/EVAL.md) | a real model in front of the tools, and the limits of that |
+| [`WEBMCP-API-NOTES.md`](docs/WEBMCP-API-NOTES.md) | nine things about the API, with the error each produced |
 
 ## What we learned about the API, by getting it wrong
 
@@ -108,7 +129,9 @@ None of this is in the Chrome documentation as of 2026-08-27.
 - **The page cannot tell who called a tool.** An agent and `executeTool` arrive identical, so a
   page's rules cannot rest on *who* is asking — only on *what* is being asked.
 
-All six, with the error each one produced, are in [`docs/WEBMCP-API-NOTES.md`](docs/WEBMCP-API-NOTES.md).
+All nine, with the error each one produced, are in
+[`docs/WEBMCP-API-NOTES.md`](docs/WEBMCP-API-NOTES.md). The last two came from ChatGPT's in-app
+browser and are the only ones not reproducible from a button on the page.
 
 ## Status
 
@@ -126,7 +149,7 @@ settles are in [`docs/GATE.md`](docs/GATE.md).
 | An agent chooses the right tool unprompted | **yes** |
 | A refusal reads well enough for the agent to repair the situation | **yes** — the finding |
 | ChatGPT's in-app browser registers the tools | **yes**, all ten |
-| ...and a model there calls one | **yes** in an agentic browser session — and **no**, four times, when asked as a question ([FACTS §4.4](docs/FACTS.md)) |
+| ...and a model there calls one | **yes** in **Work mode** — and **no**, four times, outside it ([FACTS §4.4](docs/FACTS.md)) |
 
 ## Licence
 

@@ -7,7 +7,7 @@
  * accurate and still leave a model unable to tell two tools apart. The only way to know is to put
  * a model in front of them.
  *
- * So this runs the same eight tools — imported, not reimplemented — through Gemini's function
+ * So this runs the same ten tools — imported, not reimplemented — through Gemini's function
  * calling, and asserts on what the model *did*, not on what it said.
  *
  *   GEMINI_API_KEY=… node tools/eval.mjs

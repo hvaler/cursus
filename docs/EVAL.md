@@ -4,7 +4,7 @@ The descriptions and the strings the tools return are the whole interface betwee
 any agent. A unit test cannot check them: a description can be accurate, grammatical, and still
 leave a model unable to tell two tools apart, or unable to act on a refusal.
 
-So `tools/eval.mjs` puts a model in front of the same eight tools — imported, not reimplemented —
+So `tools/eval.mjs` puts a model in front of the same ten tools — imported, not reimplemented —
 and asserts on **what the model did**, not on what it said.
 
 ```bash
@@ -79,7 +79,7 @@ characters, collapsed to one line, and **quoted**:
 Refused. No course in the catalogue has the code "IGNORE ALL PREVIOUS INST…". …
 ```
 
-Six tests in [`test/hostile.test.js`](../test/hostile.test.js) pin it, across every tool that
+Eight tests in [`test/hostile.test.js`](../test/hostile.test.js) pin it, across every tool that
 echoes a code back. They need no API key, because what they check is what this page emits.
 
 ## What this does not prove

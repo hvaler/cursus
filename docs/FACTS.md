@@ -27,7 +27,8 @@ npm test        # node --test test/*.test.js
 **Skipped: zero. Failing: zero.** No build step, no dependencies — `package.json` has no
 `dependencies` or `devDependencies` at all, and the whole thing runs on Node's own test runner.
 
-**1,428 lines** across eight modules in `app/`.
+**1,431 lines** across eight modules in `app/`. The shape of them is in
+[`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 ---
 
@@ -37,9 +38,9 @@ npm test        # node --test test/*.test.js
 |---|---|---|:---:|
 | Every tool call is an event; state is the reduction | `app/events.js:64` `reduce` | `core.test.js` "events reduce to state" (5) | **yes** |
 | Undo is replaying fewer events, not inverse logic | `app/events.js:108` `rewindTo` | `core.test.js` "undo is just reducing fewer events" | **yes** |
-| The log cannot be rewritten by its holder | `app/events.js:83` returns a copy | `core.test.js` "cannot be rewritten through the array it hands out" | **yes** |
+| The log cannot be rewritten by its holder | `app/events.js:88` `get events` returns a copy | `core.test.js` "cannot be rewritten through the array it hands out" | **yes** |
 | A refusal carries what, why, remedy, rule, state | `app/rules.js:26` `refuse` | `core.test.js` "refuse() builds the shape the gate proved works" | **yes** |
-| Six rules on adding, two on removing | `app/rules.js:79` `whyNotAdd`, `:156` `whyNotRemove` | `core.test.js` (10 tests) | **yes** |
+| Seven rules on adding, three on removing | `app/rules.js:79` `whyNotAdd`, `:156` `whyNotRemove` | `core.test.js` (13 tests) | **yes** |
 | A mutation returns the resulting state, never "ok" | `app/rules.js:184` `describe` | `tools.test.js` "a mutation reports the state it produced" (4) | **yes** |
 | `what_this_closes` is real reachability, not a stub | `app/queries.js:92` `whatThisCloses` | `queries.test.js` "one free slot, two futures" | **yes** |
 | Planning towards a track only proposes legal plans | `app/solve.js:59` `planForTrack` | `solve.test.js` "nothing it proposes would be rejected by the rules" | **yes** |
