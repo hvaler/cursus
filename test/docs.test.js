@@ -76,7 +76,11 @@ describe('the documents against the code', () => {
     /** @type {string[]} */
     const problems = [];
     for (const [path, text] of DOCS) {
-      for (const [, file, lineNo] of text.matchAll(/`?(app\/[a-z]+\.js):(\d+)`?/g)) {
+      // The symbol after the reference, when there is one: `app/rules.js:26` `refuse`. Checking the
+      // line exists is not enough — four references drifted onto JSDoc lines when code moved
+      // beneath them, and a reference that points at a comment looks checkable and is not.
+      for (const m of text.matchAll(/`?(app\/[a-z]+\.js):(\d+)`?(?:\s*`([A-Za-z_]\w*)`)?/g)) {
+        const [, file, lineNo, symbol] = m;
         if (!existsSync(join(ROOT, file))) {
           problems.push(`${path} points at ${file}, which does not exist`);
           continue;
@@ -87,6 +91,9 @@ describe('the documents against the code', () => {
           problems.push(`${path} points at ${file}:${n}, but that file has ${lines.length} lines`);
         } else if (lines[n - 1].trim() === '') {
           problems.push(`${path} points at ${file}:${n}, which is blank — the code moved`);
+        } else if (symbol && !lines[n - 1].includes(symbol)) {
+          problems.push(
+            `${path} points at ${file}:${n} for \`${symbol}\`, but that line is: ${lines[n - 1].trim().slice(0, 50)}`);
         }
       }
     }
@@ -132,6 +139,75 @@ describe('the documents against the code', () => {
       }
     }
     report(problems, 'wrong suite count(s)');
+  });
+
+  test('every claim about a describe block matches that block', () => {
+    // FACTS' claim table cites sub-counts: `hostile.test.js` (8 tests), `core.test.js` "events
+    // reduce to state" (5). Those are counts of the tests covering one row, not of a file, so the
+    // per-suite check above cannot see them — and two had drifted by the time this was written.
+    /** @type {Record<string, Record<string, number>>} */
+    const blocks = {};
+    for (const f of readdirSync(join(ROOT, 'test')).filter((x) => x.endsWith('.test.js'))) {
+      blocks[f] = {};
+      let current = null;
+      for (const line of read(`test/${f}`).split('\n')) {
+        const d = /^describe\((['"`])(.*?)\1/.exec(line);
+        if (d) { current = d[2].replace(/\'/g, "'"); blocks[f][current] = 0; }
+        else if (current && /^ {2}test\(/.test(line)) blocks[f][current] += 1;
+      }
+    }
+
+    /** @type {string[]} */
+    const problems = [];
+    // `core.test.js` "events reduce to state" (5)   — a named block with a count
+    const named = /`([a-z]+\.test\.js)`\s+"([^"]+)"\s*\((\d+)\)/g;
+    for (const [path, text] of DOCS) {
+      for (const m of text.matchAll(named)) {
+        const [, file, title, count] = m;
+        const have = blocks[file]?.[title];
+        if (have === undefined) problems.push(`${path} cites ${file} "${title}", which is not a describe there`);
+        else if (have !== Number(count)) problems.push(`${path} says ${file} "${title}" has ${count}; it has ${have}`);
+      }
+    }
+    report(problems, 'wrong describe count(s)');
+  });
+
+  test('every line count matches the file it describes', () => {
+    // These drifted in four consecutive commits before this test existed. A comment in a table is
+    // a claim about a file, and it is the cheapest kind to check and the easiest to forget.
+    const lines = Object.fromEntries(
+      readdirSync(join(ROOT, 'app'))
+        .filter((f) => f.endsWith('.js'))
+        .map((f) => [`app/${f}`, read(`app/${f}`).split('\n').length - 1]));
+    const total = Object.values(lines).reduce((a, b) => a + b, 0);
+    const modules = Object.keys(lines).length;
+
+    /** @type {string[]} */
+    const problems = [];
+    for (const [path, text] of DOCS) {
+      for (const [i, line] of text.split('\n').entries()) {
+        // A table row: | `app/thing.js` | 123 | …
+        for (const m of line.matchAll(/\|\s*`(app\/[a-z]+\.js)`\s*\|\s*(\d+)\s*\|/g)) {
+          if (lines[m[1]] === undefined) problems.push(`${path}:${i + 1} names ${m[1]}, which does not exist`);
+          else if (Number(m[2]) !== lines[m[1]]) {
+            problems.push(`${path}:${i + 1} says ${m[1]} is ${m[2]} lines; it is ${lines[m[1]]}`);
+          }
+        }
+        // A stated total: "1,952 lines" or "557 lines of descriptions".
+        for (const m of line.matchAll(/\b([\d,]{3,7}) lines\b/g)) {
+          const claimed = Number(m[1].replace(/,/g, ''));
+          const ok = claimed === total || Object.values(lines).includes(claimed);
+          if (!ok) problems.push(`${path}:${i + 1} says "${m[0]}"; the total is ${total}`);
+        }
+        for (const m of line.matchAll(/across (\w+) modules/g)) {
+          const n = { eight: 8, nine: 9, ten: 10, eleven: 11 }[m[1].toLowerCase()];
+          if (n !== undefined && n !== modules) {
+            problems.push(`${path}:${i + 1} says ${m[1]} modules; there are ${modules}`);
+          }
+        }
+      }
+    }
+    report(problems, 'wrong line count(s)');
   });
 
   test('every stated total matches the sum of the suites', () => {

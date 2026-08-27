@@ -132,7 +132,7 @@ The whole thing rests on one decision — **every tool call is an event, and the
 reduction of the events**. Refusing is the reducer rejecting an event before state changes. Undo is
 replaying fewer of them. The audit trail is the list itself.
 
-**152 tests**, none skipped, on Node's own test runner. `npm run eval` puts a real model in front of
+**154 tests**, none skipped, on Node's own test runner. `npm run eval` puts a real model in front of
 the tools and asserts on what it *did*: 5/5, including finding `list_actions → undo_to` unprompted,
 and refusing to invent a course that does not exist.
 

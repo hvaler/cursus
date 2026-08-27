@@ -24,14 +24,14 @@ npm test        # node --test test/*.test.js
 | Registering when the host attaches late | `test/registration.test.js` | 4 |
 | A limit the student set, and the ways round it | `test/policy.test.js` | 16 |
 | A plan in a link, and links that were edited | `test/share.test.js` | 14 |
-| The documents, against the code they describe | `test/docs.test.js` | 4 |
+| The documents, against the code they describe | `test/docs.test.js` | 6 |
 | Escaping, and the screen rendering from the log | `test/ui.test.js` | 13 |
-| **Total** | | **152** |
+| **Total** | | **154** |
 
 **Skipped: zero. Failing: zero.** No build step, no dependencies — `package.json` has no
 `dependencies` or `devDependencies` at all, and the whole thing runs on Node's own test runner.
 
-**1,947 lines** across ten modules in `app/`. The shape of them is in
+**1,952 lines** across ten modules in `app/`. The shape of them is in
 [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 ---
@@ -47,13 +47,13 @@ npm test        # node --test test/*.test.js
 | Seven rules on adding, three on removing | `app/rules.js:79` `whyNotAdd`, `:156` `whyNotRemove` | `core.test.js` (13 tests) | **yes** |
 | A mutation returns the resulting state, never "ok" | `app/rules.js:184` `describe` | `tools.test.js` "a mutation reports the state it produced" (4) | **yes** |
 | `what_this_closes` is real reachability, not a stub | `app/queries.js:92` `whatThisCloses` | `queries.test.js` "one free slot, two futures" | **yes** |
-| Planning towards a track only proposes legal plans | `app/solve.js:59` `planForTrack` | `solve.test.js` "nothing it proposes would be rejected by the rules" | **yes** |
-| Infeasibility names the blocker and prices each way out | `app/solve.js:109` `explainInfeasible` | `solve.test.js` (4 tests) | **yes** |
-| Caller input is bounded and quoted before reaching a model | `app/rules.js:46` `quoteInput` | `hostile.test.js` (8 tests) | **yes** |
+| Planning towards a track only proposes legal plans | `app/solve.js:62` `planForTrack` | `solve.test.js` "nothing it proposes would be rejected by the rules" | **yes** |
+| Infeasibility names the blocker and prices each way out | `app/solve.js:112` `explainInfeasible` | `solve.test.js` "explaining why a goal is out of reach" (4) | **yes** |
+| Caller input is bounded and quoted before reaching a model | `app/rules.js:46` `quoteInput` | `hostile.test.js` "caller input never leaves the page unbounded" (7) | **yes** |
 | Thirteen tools registered with WebMCP | `app/tools.js` `TOOLS`, `registerAll` | `docs.test.js` counts them against every document | **yes** |
-| A limit the student sets is held against the agent | `app/policy.js:70` `whyNotAllowedByPolicy` | `policy.test.js` (16 tests) | **yes** |
+| A limit the student sets is held against the agent | `app/policy.js:72` `whyNotAllowedByPolicy` | `policy.test.js` (16 tests) | **yes** |
 | Two courses can be weighed in one call, without the two tools disagreeing | `app/tools.js` `compare_options` | `tools.test.js` "it cannot disagree with what_this_closes" | **yes** |
-| A shared link cannot build a plan the rules would refuse | `app/share.js:122` `replay` | `share.test.js` (5 tests on forged links) | **yes** |
+| A shared link cannot build a plan the rules would refuse | `app/share.js:122` `replay` | `share.test.js` "the rules are the gate on the way in, not only on the way through" (4) | **yes** |
 | The catalogue's graph is at least four deep | `app/catalogue.js` | `core.test.js` "at least four levels deep" | **yes** — deepest chain is 6 |
 
 The catalogue also tests **itself**: every prerequisite names a course that exists, and no course
@@ -129,7 +129,7 @@ reachable.
 ```
 
 **That string is checkable, and it was checked.** It is the template at
-[`app/tools.js:107`](../app/tools.js) with the arguments substituted. Run locally:
+[`app/tools.js:111`](../app/tools.js) with the arguments substituted. Run locally:
 
 ```bash
 node -e "import('./app/tools.js').then(m =>

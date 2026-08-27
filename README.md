@@ -78,7 +78,7 @@ whole episode, and the tell that catches it, is in [`docs/FACTS.md §4.4`](docs/
 ## Running it
 
 ```bash
-npm test          # 152 tests, no build step, no dependencies
+npm test          # 154 tests, no build step, no dependencies
 npm run eval      # puts a real model in front of the tools; needs GEMINI_API_KEY
 ```
 
@@ -106,7 +106,7 @@ course that does not exist. Results and limits in [`docs/EVAL.md`](docs/EVAL.md)
 
 ## Layout
 
-**1,947 lines** across ten modules, none of them importing in a circle. The diagrams and the
+**1,952 lines** across ten modules, none of them importing in a circle. The diagrams and the
 call flow are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 | | |
@@ -158,10 +158,12 @@ browser and are the only ones not reproducible from a button on the page.
 
 **The gate is passed.** On 2026-08-27 `gemini-3.6-flash`, driven through the
 [WebMCP Inspector](https://github.com/GoogleChromeLabs/webmcp-tools), was given one sentence —
-*"Matricúlame en ADV-301"* (*"Enrol me in ADV-301"*) — chose the `enrol` tool on its own, was
-refused, and answered by
-explaining the prerequisite and **offering to enrol `CALC-101` first**. The full trace and what it
-settles are in [`docs/GATE.md`](docs/GATE.md).
+*"Matricúlame en ADV-301"* (*"Enrol me in ADV-301"*) — chose the tool on its own, was refused, and
+answered by explaining the prerequisite and **offering to enrol `CALC-101` first**.
+
+That ran against a deliberately tiny two-tool page, before any product code existed; it is still
+here as [`gate.html`](gate.html). The full trace and what it settles are in
+[`docs/GATE.md`](docs/GATE.md).
 
 | | |
 |---|---|

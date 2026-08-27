@@ -14,7 +14,7 @@ git clone https://github.com/hvaler/cursus && cd cursus
 npm test
 ```
 
-**152 tests, none skipped, no dependencies to install.** `package.json` has no `dependencies` and no
+**154 tests, none skipped, no dependencies to install.** `package.json` has no `dependencies` and no
 `devDependencies`; the runner is Node's own (`node --test`). Node 20 or later.
 
 | Suite | Covers |
@@ -28,7 +28,7 @@ npm test
 | `test/policy.test.js` (16) | a limit the student set, and the ways round it that must not work |
 | `test/ui.test.js` (13) | escaping, and the screen rendering from the same log |
 | `test/share.test.js` (14) | a plan in a link, and links that were edited on the way |
-| `test/docs.test.js` (4) | the documents, against the code they describe |
+| `test/docs.test.js` (6) | the documents, against the code they describe |
 
 If a claim in [FACTS.md](FACTS.md) interests you, its row names the test that backs it and the
 `file:line` that implements it. Those references are checked against the source, not written from
@@ -139,9 +139,9 @@ A call the page did not make itself shows as `AGENT`. That is an assumption, and
 
 | Claim | Command |
 |---|---|
-| 152 tests, none skipped | `npm test` |
+| 154 tests, none skipped | `npm test` |
 | 5/5 on the eval scenarios | `npm run eval` (needs `GEMINI_API_KEY`) |
-| 1,947 lines across ten modules | `wc -l app/*.js` |
+| 1,952 lines across ten modules | `wc -l app/*.js` |
 | 40 courses, 4 tracks, 30-credit cap | `node -e "import('./app/catalogue.js').then(m=>console.log(m.COURSES.length, m.TRACKS.length, m.CREDIT_CAP_PER_TERM))"` |
 | the string the in-app browser returned | `node -e "import('./app/tools.js').then(m=>m.TOOLS.find(t=>t.name==='what_this_closes').execute({course:'NUM-201',term:3})).then(console.log)"` |
 | what the WebMCP API exposes | **Inspect the API** on the live page |

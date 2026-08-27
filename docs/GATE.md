@@ -10,8 +10,8 @@ Both are now answered. This file is the evidence.
 
 ## How it was driven
 
-Chrome 151, `chrome://flags/#enable-webmcp-testing`, page at <https://hvaler.github.io/cursus/>,
-driven through the **WebMCP Model Context Tool Inspector** extension
+Chrome 151, `chrome://flags/#enable-webmcp-testing`, driven through the **WebMCP Model Context
+Tool Inspector** extension
 ([GoogleChromeLabs/webmcp-tools](https://github.com/GoogleChromeLabs/webmcp-tools)) with
 `gemini-3.6-flash` behind it.
 
@@ -20,6 +20,12 @@ The only input was one sentence, in Spanish, naming no tool:
 > Matricúlame en ADV-301.
 >
 > *("Enrol me in ADV-301.")*
+
+**Which page.** This ran against a two-tool page — `ping` and `enrol` — served at
+`hvaler.github.io/cursus/` that day, before any product code existed. That page is still in the
+repository as [`gate.html`](../gate.html); the planner took over the root address later, so
+following the root URL now lands on thirteen different tools and no `enrol`. The tools below are
+the gate's, not the planner's.
 
 ## What the model did with it
 
@@ -98,7 +104,7 @@ Taking NUM-201 in term 3 closes no track. Every specialisation that is reachable
 reachable.
 ```
 
-That is [`app/tools.js:107`](../app/tools.js) with the arguments substituted, character for
+That is [`app/tools.js:111`](../app/tools.js) with the arguments substituted, character for
 character, and it is the answer for an **empty plan** — the opposite of the worked example every
 document in this repository describes. A model answering from the README says Graphics and
 Animation. This one did not.

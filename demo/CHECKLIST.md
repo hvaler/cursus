@@ -21,7 +21,7 @@ second screen while recording.
 - [ ] ChatGPT **sidebar collapsed** — the conversation titles are personal.
 - [ ] Notifications off. Taskbar clock checked.
 - [ ] Panes sized so **TOOL CALLS, LIVE** is readable at 1080p. Squint at it.
-- [ ] `npm test` run this morning, so any number you say out loud is today's. **152, 0 failing.**
+- [ ] `npm test` run this morning, so any number you say out loud is today's. **154, 0 failing.**
 
 ## The rehearsal that decides one thing
 

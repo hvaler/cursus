@@ -145,7 +145,7 @@ hvaler.github.io
 the model listed the page's registry first, then called into it
 ([API notes, finding 9](WEBMCP-API-NOTES.md)).
 
-**The string itself**, which is `app/tools.js:107` with the arguments substituted, character for
+**The string itself**, which is `app/tools.js:111` with the arguments substituted, character for
 character, and reproducible offline:
 
 ```bash
