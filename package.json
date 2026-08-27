@@ -1,0 +1,11 @@
+{
+  "name": "cursus",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A course planner whose tools can refuse, explain what a choice closes off, and be rewound",
+  "license": "Apache-2.0",
+  "scripts": {
+    "test": "node --test test/"
+  }
+}
