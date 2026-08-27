@@ -98,6 +98,31 @@ await document.modelContext.executeTool(ping, JSON.stringify(args));
 
 ---
 
+## 6. The page cannot tell who called a tool
+
+The `execute` handler receives the input and an `AbortSignal`. **Nothing identifies the caller.**
+A call from a real agent and a call from `document.modelContext.executeTool` arrive
+indistinguishable.
+
+Found on 2026-08-27: one click on a button that called `executeTool` produced two log lines, one
+tagged as coming from an agent, because the handler had no way to know better. The only caller a
+page can identify is itself:
+
+```js
+let viaExecuteTool = false;
+// around our own call
+viaExecuteTool = true;
+try { await mc.executeTool(tool, JSON.stringify(args)); } finally { viaExecuteTool = false; }
+```
+
+Everything else is *assumed* to be an agent, which is an assumption and not a measurement.
+
+**This matters beyond a diagnostic.** A page whose rules depend on who is acting cannot get that
+answer from WebMCP. Whatever governance a page enforces has to rest on what is being asked, not on
+who is asking.
+
+---
+
 ## What `executeTool` is for
 
 It appears in Chrome's **evaluation** documentation, not in the imperative API page. It is a way to

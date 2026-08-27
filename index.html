@@ -135,6 +135,12 @@ const isRefusal = (s) => s.startsWith('Refused.');
 //   TypeError: The provided value is not of type 'RegisteredTool'.
 const handles = {};
 
+// WebMCP gives the execute handler no way to know who called it. The only caller we can
+// identify is ourselves, so we mark our own executeTool calls and treat everything else as
+// having come from an agent. Found on 2026-08-27, when one click logged both AGENT and webmcp.
+let viaExecuteTool = false;
+const whoCalled = () => (viaExecuteTool ? 'webmcp' : 'agent');
+
 // --- registration --------------------------------------------------------------------
 async function register() {
   if (!('modelContext' in document) || !document.modelContext?.registerTool) {
@@ -149,7 +155,7 @@ async function register() {
       name: 'ping',
       description: 'Health check. Returns the current time from the page.',
       inputSchema: { type: 'object', properties: {} },
-      execute: async () => { const r = doPing(); log('agent', 'ping', {}, r, false); return r; },
+      execute: async () => { const r = doPing(); log(whoCalled(), 'ping', {}, r, false); return r; },
     });
 
     handles.enrol = await document.modelContext.registerTool({
@@ -163,7 +169,7 @@ async function register() {
       },
       execute: async ({ course }) => {
         const r = doEnrol({ course });
-        log('agent', 'enrol', { course }, r, isRefusal(r));
+        log(whoCalled(), 'enrol', { course }, r, isRefusal(r));
         return r;
       },
     });
@@ -199,8 +205,12 @@ document.getElementById('b4').onclick = async () => {
     if (!tool) throw new Error(`getTools() returned ${registered?.length ?? '?'} tools, none named ping`);
     // The arguments go as a JSON *string*. An object, undefined or null all fail with
     // UnknownError: Failed to parse input arguments. Measured on 2026-08-27.
-    const out = await document.modelContext.executeTool(tool, JSON.stringify({}));
-    log('webmcp', 'ping', {}, typeof out === 'string' ? out : JSON.stringify(out), false);
+    viaExecuteTool = true;
+    try {
+      await document.modelContext.executeTool(tool, JSON.stringify({}));
+    } finally {
+      viaExecuteTool = false;
+    }
   } catch (err) {
     el.innerHTML += `<br><span class="nope">executeTool failed: ${String(err)}</span>`;
   }
