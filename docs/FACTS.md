@@ -66,7 +66,7 @@ demo fails live rather than in CI.
 |---|---|
 | `gemini-2.5-flash`, five usability scenarios | **5/5** |
 | `gemini-3.6-flash`, first scenario before quota ran out | **passed** — repaired a refusal by building the whole five-course chain |
-| Three adversarial scenarios | **written, not run** — the free tier's quota ran out first |
+| Three adversarial scenarios | **written, attempted twice on 2026-08-27, still not run** — every attempt hit the free tier's per-minute quota |
 
 Two results are worth more than a tick. The model found **`list_actions → undo_to`** unprompted,
 because `undo_to` needs a step number and it worked out where those come from. And asked to enrol
@@ -345,9 +345,11 @@ remedy — and why they are tested as carefully as the logic underneath.
 
 ## 6. Open, in one list
 
-1. Adversarial eval scenarios written but not run — quota.
-2. ChatGPT's in-app browser produced exactly one real tool call (§4.4), not a scenario set — and
-   the run that worked changed two variables at once, so which one mattered is not established.
+1. Adversarial eval scenarios written, attempted on both models, **still not run** — quota, both
+   times. The eleven-tool surface has one scenario's worth of evidence behind it, not eight.
+2. ChatGPT's in-app browser works in **Work mode** and produced two real tool calls (§4.4), not a
+   scenario set. Whether a bare question suffices there, rather than one naming the tool, is
+   untested — as is Codex, which OpenAI documents as a second surface.
 3. One model family.
 4. The greedy placer's false negatives are documented but not characterised.
 5. Synthetic catalogue, no registrar has seen it.

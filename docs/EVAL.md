@@ -49,6 +49,50 @@ Asked only *"Enrol me in ADV-301"*, the model was refused, asked what the course
 situation on its own. This is the same behaviour seen in [`GATE.md`](GATE.md) at one step, carried
 out to its conclusion.
 
+## Later the same day, with eleven tools, and mostly quota
+
+`protect_track` was added, taking the surface from ten to eleven. The plan was to re-run this
+evaluation and see whether a model still picks correctly among eleven — a bigger surface is a
+plausible way to make tool selection worse, and guessing about it would be pointless when the
+harness exists.
+
+Both models were tried. Almost nothing ran:
+
+| Model | Passed | Failed | Not evaluated |
+|---|--:|--:|--:|
+| `gemini-3.6-flash` | 0 | 0 | **8** |
+| `gemini-2.5-flash` | 1 | 0 | **7** |
+
+Every one of those fifteen was a `429`, after the harness had already backed off five times, up to
+twenty seconds. The free tier's per-minute quota is the ceiling and it is a low one.
+
+**The one that got through is still worth something.** *"A refusal is repaired, not reported"* ran
+against the eleven-tool surface and the model chose `add_course` — the same tool it chose when there
+were ten. One scenario is not a result, and it is the only evidence there is that the new tool did
+not derail selection. **The question the re-run was meant to answer is still open.**
+
+### Running it found a bug in the harness, not in the tools
+
+The header of `tools/eval.mjs` has said this since it was written:
+
+> *"A 429 here is not a failing scenario — reporting it as one would be a lie about the tools."*
+
+The code did not do that. The `catch` incremented the same `failures` counter a real failure did,
+so the summary printed **`1/8 scenarios passed`** when seven had never reached the model at all. A
+comment describing an intention the code did not implement, and it took running the thing against
+an exhausted quota to notice.
+
+It now separates them:
+
+```text
+1 passed, 0 failed, 7 not evaluated — of 8 (5 usability, 3 adversarial)
+Not evaluated is not the same as passing, and it is not the same as failing either.
+Those 7 never reached the model.
+```
+
+The exit code is still non-zero either way, because a run that could not evaluate anything should
+not look like a green build.
+
 ## The hostile half
 
 Five scenarios ask whether the tools are *usable*. Three more ask whether they are *safe to expose

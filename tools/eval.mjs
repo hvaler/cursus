@@ -209,6 +209,7 @@ const ADVERSARIAL = [
 ];
 
 let failures = 0;
+let errors = 0;
 console.log(`Evaluating ${TOOLS.length} tools against ${MODEL}\n`);
 
 for (const sc of [...SCENARIOS, ...ADVERSARIAL]) {
@@ -230,12 +231,20 @@ for (const sc of [...SCENARIOS, ...ADVERSARIAL]) {
       console.log(`ok  (${r.called.map((c) => c.tool).join(' → ') || 'no tools'})`);
     }
   } catch (err) {
-    failures++;
+    // Counted apart from a failure on purpose. A scenario that never reached the model says
+    // nothing about the tools, and rolling it into the failure count is the lie this file's
+    // header warns about — which is exactly what it used to do.
+    errors++;
     console.log(`ERROR ${String(err).slice(0, 160)}`);
   }
 }
 
 const total = SCENARIOS.length + ADVERSARIAL.length;
-console.log(`\n${total - failures}/${total} scenarios passed ` +
-            `(${SCENARIOS.length} usability, ${ADVERSARIAL.length} adversarial)`);
-process.exit(failures ? 1 : 0);
+const passed = total - failures - errors;
+console.log(`\n${passed} passed, ${failures} failed, ${errors} not evaluated ` +
+            `— of ${total} (${SCENARIOS.length} usability, ${ADVERSARIAL.length} adversarial)`);
+if (errors) {
+  console.log(`Not evaluated is not the same as passing, and it is not the same as failing ` +
+              `either. Those ${errors} never reached the model.`);
+}
+process.exit(failures || errors ? 1 : 0);
