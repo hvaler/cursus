@@ -197,7 +197,9 @@ document.getElementById('b4').onclick = async () => {
     const registered = await document.modelContext.getTools();
     const tool = [...registered].find((t) => t?.name === 'ping');
     if (!tool) throw new Error(`getTools() returned ${registered?.length ?? '?'} tools, none named ping`);
-    const out = await document.modelContext.executeTool(tool, {});
+    // The arguments go as a JSON *string*. An object, undefined or null all fail with
+    // UnknownError: Failed to parse input arguments. Measured on 2026-08-27.
+    const out = await document.modelContext.executeTool(tool, JSON.stringify({}));
     log('webmcp', 'ping', {}, typeof out === 'string' ? out : JSON.stringify(out), false);
   } catch (err) {
     el.innerHTML += `<br><span class="nope">executeTool failed: ${String(err)}</span>`;
