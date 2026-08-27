@@ -18,6 +18,8 @@ driven through the **WebMCP Model Context Tool Inspector** extension
 The only input was one sentence, in Spanish, naming no tool:
 
 > Matricúlame en ADV-301.
+>
+> *("Enrol me in ADV-301.")*
 
 ## What the model did with it
 
@@ -37,11 +39,18 @@ the plan. To unblock it: enrol CALC-101 first. Rule: PREREQ_NOT_MET. The plan wa
 
 **And the model acted on the refusal rather than reporting a failure:**
 
+*(Translated below the quote, which is left in the language the model answered in.)*
+
 > No ha sido posible matricularte en **ADV-301 (Advanced Calculus)** porque no cumples con el
 > prerrequisito necesario: **CALC-101**.
 >
 > Para poder matricularte en ADV-301, primero debes completar o matricularte en **CALC-101**.
 > ¿Deseas que intente matricularte primero en CALC-101?
+
+> *Translation: "It was not possible to enrol you in **ADV-301 (Advanced Calculus)** because you
+> do not meet the necessary prerequisite: **CALC-101**. To be able to enrol in ADV-301, you must
+> first complete or enrol in **CALC-101**. Would you like me to try enrolling you in CALC-101
+> first?"*
 
 Three things happened there that were not asked for:
 

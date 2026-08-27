@@ -98,7 +98,8 @@ All six, with the error each one produced, are in [`docs/WEBMCP-API-NOTES.md`](d
 
 **The gate is passed.** On 2026-08-27 `gemini-3.6-flash`, driven through the
 [WebMCP Inspector](https://github.com/GoogleChromeLabs/webmcp-tools), was given one sentence —
-*"Matricúlame en ADV-301"* — chose the `enrol` tool on its own, was refused, and answered by
+*"Matricúlame en ADV-301"* (*"Enrol me in ADV-301"*) — chose the `enrol` tool on its own, was
+refused, and answered by
 explaining the prerequisite and **offering to enrol `CALC-101` first**. The full trace and what it
 settles are in [`docs/GATE.md`](docs/GATE.md).
 
