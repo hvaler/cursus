@@ -4,8 +4,9 @@
 **2:40**.
 
 Public on YouTube, audio covering **what was built and how WebMCP was used**. No copyrighted music,
-no third-party trademarks beyond the app being visibly ChatGPT. Narration in English, ~350 words:
-at an unhurried 135 words a minute that is about 2:35, leaving room for the pauses. An earlier
+no third-party trademarks beyond the app being visibly ChatGPT. Narration in English, 368 words:
+at an unhurried 135 words a minute that is about 2:43, which leaves the margin thin on purpose —
+read it slower than feels natural and check the clock. An earlier
 draft of 413 words came out at 3:04 read slowly — worth knowing before trusting a word count.
 
 Recorded in ChatGPT desktop rather than Chrome, because that is the environment the rules point
@@ -78,31 +79,31 @@ carry it.
 
 ## The shots
 
-### 0:00 – 0:15 · The problem
+### 0:00 – 0:14 · The problem
 
 **On screen:** the whole window. ChatGPT on the left, the empty planner on the right. Six terms,
 0/30 each. Four specialisations, all still reachable.
 
-> "A course planner, open inside ChatGPT's browser. It shows what you picked — which is all any
-> timetable shows. Not what picking it costs you two years from now."
+> "A course planner, inside ChatGPT's browser. It shows what a student picked — all any timetable
+> shows. Not what it cost them two years later, when a specialisation they wanted is quietly
+> gone."
 
-### 0:15 – 0:33 · The student does the student part
+### 0:14 – 0:32 · The student does the student part
 
 **On screen:** click through the catalogue quickly, filling terms 1 and 2 and leaving **six credits
 free in term 3**. In the trace, each one appears tagged `page`.
 
-> "I fill in my first year by hand. The page logs each click as a tool call — the same tools an
-> agent would use, tagged `page`, because the page can only be sure about the calls it makes
-> itself."
+> "I fill in my first year by hand. Each click is a tool call — the same tools an agent would use,
+> tagged `page`, because a page can only be sure about calls it makes itself."
 
 **On screen:** one slot left in term 3. Pause on it.
 
-### 0:33 – 1:02 · The trade, in one call
+### 0:32 – 1:00 · The trade, in one call
 
 **On screen:** ask the agent to weigh the two courses that fit that slot. Send. The right-hand panel
 stays in frame. **Sped up, `×6` in the corner.** Then `AGENT compare_options(...)`.
 
-> "One slot, and two courses that fit it. So I ask the page to weigh them."
+> "One slot, two courses that fit it. So I ask the page to weigh them."
 
 **On screen:** the three lines land.
 
@@ -110,7 +111,7 @@ stays in frame. **Sped up, `×6` in the corner.** Then `AGENT compare_options(..
 > Neither is free — what costs is the slot, not the course. That is reachability over a
 > prerequisite graph under a credit budget, and nobody does it in their head."
 
-### 1:02 – 1:24 · The student draws a line
+### 1:00 – 1:20 · The student draws a line
 
 **On screen:** `Protect Graphics and Animation — I am not willing to lose that one.` Sped up.
 `AGENT protect_track(...)` appears, and a **lock** shows next to the track on the page.
@@ -121,7 +122,7 @@ stays in frame. **Sped up, `×6` in the corner.** Then `AGENT compare_options(..
 **On screen:** hold on *"Anything that would close it is refused from now on, including if you ask
 for it yourself."*
 
-### 1:24 – 1:52 · And the page holds it
+### 1:20 – 1:55 · And the page holds it
 
 **On screen:** `Add NUM-201 to term 3.` Sped up. The refusal appears in the panel.
 
@@ -132,37 +133,40 @@ for it yourself."*
 > "Refused — and it quotes me back to myself, not the handbook. It offers the way out and prices
 > it: I can lift my own limit, but the specialisation goes, and it does not come back."
 
-### 1:52 – 2:08 · Undoing it
+**On screen:** stay on the refusal.
+
+> "And that part is not really about courses. Anyone handing work to an agent has the same
+> question, and the usual answer is a prompt — which is a request. This is a limit that outlives
+> the conversation that set it."
+
+### 1:55 – 2:10 · Undoing it
 
 **On screen:** the timeline. Click the step before the protection. The lock disappears; the tracks
 re-render.
 
 > "All of that is on a timeline and any of it rewinds — including the limit, because a limit is an
-> event like any other. The plan is the reduction of those events, so undo is the same reducer
-> with a smaller number."
+> event like any other. Undo is the same reducer over fewer events."
 
-### 2:08 – 2:26 · How it is built
+### 2:10 – 2:26 · How it is built
 
 **On screen:** second tab, `app/tools.js`, scrolled to a `registerTool` call.
 
-> "Thirteen tools, registered with `document dot modelContext dot registerTool`. The thing that
-> shaped all of it: `execute` returns **a string the model reads**. These strings are the interface,
-> not a serialisation of it."
+> "Thirteen tools, registered with `document dot modelContext dot registerTool`. What shaped all of
+> it: `execute` returns **a string the model reads**. These strings are the interface."
 
 **On screen:** back to the page, on a tool result in the trace.
 
 > "So a tool that changes something returns the resulting plan, never 'ok' — or the agent's picture
-> of the state drifts from the page's, and neither of them knows."
+> of the state drifts from the page's."
 
-### 2:26 – 2:40 · What the page will not claim
+### 2:26 – 2:42 · What the page will not claim
 
 **On screen:** the trace counter, reading *"N calls, N attributed to an agent — the page cannot
 verify that."*
 
 > "Last thing. WebMCP gives a page no way to know who called it, so this page counts calls by
 > origin and says the attribution is a guess. That caught an assistant answering about this page
-> correctly and in detail, having called no tool at all. It had read the repository. Being right
-> made it harder to spot."
+> correctly and in detail — having called no tool at all. It had read the repository."
 
 **End card:** `hvaler.github.io/cursus` · `github.com/hvaler/cursus` · Apache-2.0
 
@@ -180,6 +184,19 @@ that both are in one frame: the instruction on the left, the `AGENT` line appear
 with no cut in between for anyone to wonder about.
 
 ---
+
+## Subtitles
+
+[`subtitles.en.srt`](subtitles.en.srt) and [`subtitles.es.srt`](subtitles.es.srt), **generated from
+this file and from the Spanish working copy** rather than written separately — a subtitle track
+typed by hand drifts from the narration on the first edit, and nobody notices until someone reads
+it.
+
+**Their timings are the script's, not the recording's.** They assume each shot runs exactly as long
+as its heading says. After recording, open the SRT next to the video and nudge the cues; the text
+will be right and only the clock will be wrong.
+
+The English track is what the rules ask for. The Spanish one is not required and costs nothing.
 
 ## YouTube description, ready to paste
 

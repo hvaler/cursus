@@ -127,6 +127,10 @@ is the shot: both origins side by side, with the page saying it cannot verify th
       particular: not *"it works in ChatGPT's in-app browser"* without **in Work mode** attached.
 - [ ] Upload to YouTube, **public**, not unlisted.
 - [ ] Paste the description from [SCRIPT.md](SCRIPT.md) *"YouTube description, ready to paste"*.
+- [ ] Upload [`subtitles.en.srt`](subtitles.en.srt) — **and re-time it first**. The cues carry the
+      script's timings, not the recording's, so open them beside the video and nudge. The words are
+      right; only the clock is wrong.
+- [ ] Optionally [`subtitles.es.srt`](subtitles.es.srt) too. Not required, costs nothing.
 - [ ] Open the link in a private window to confirm it really is public.
 
 ## Then the submission
