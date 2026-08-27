@@ -103,10 +103,19 @@ character, and it is the answer for an **empty plan** — the opposite of the wo
 document in this repository describes. A model answering from the README says Graphics and
 Animation. This one did not.
 
-**It took four failed attempts to get there**, and what was missing was not the page and not a
-permission: the session needed a browser tab **bound to the agent**. With the tab merely open
-beside the chat, the model answers from whatever it can read. [FACTS §4.4](FACTS.md) has all of
-it — what was asked, what came back, and what had already been ruled out.
+The page logged it as well as the model, which is the standard the gate above is held to:
+
+```text
+1 call(s), 1 attributed to an agent - the page cannot verify that;
+WebMCP gives the handler no caller identity
+
+[AGENT] what_this_closes({"course":"NUM-201","term":3})
+```
+
+**It took four failed attempts to get there**, and what was missing was neither the page nor a
+permission — it was the client's **Work mode**. Outside it the model reads the rendered page and
+answers from that. [FACTS §4.4](FACTS.md) has all of it: what was asked, what came back, and
+what had been ruled out on the way.
 
 Asking `chatgpt.com` in an ordinary tab is a different thing again, and cannot work: a web page
 has no access to another tab's model context.

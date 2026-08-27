@@ -111,7 +111,7 @@ because the way it fails is the way a judge will meet it.
 
 #### The call that worked
 
-On 2026-08-27, in ChatGPT desktop's in-app browser, **in a session with a tab bound to the agent**:
+On 2026-08-27, in ChatGPT desktop's in-app browser, **in Work mode**, with the page open:
 
 ```text
 what_this_closes({ course: "NUM-201", term: 3 })
@@ -132,23 +132,25 @@ node -e "import('./app/tools.js').then(m =>
 
 Character for character.
 
-**The host kept its own ledger, and it is not the model's prose.** The conversation's *Sources*
-panel lists, under `hvaler.github.io`:
+**The page logged it, which by §4.2 is the only witness that counts here.** Its own panel, in shot:
 
 ```text
-what_this_closes     once
-webmcp_list_tools    once
+TOOL CALLS, LIVE
+1 call(s), 1 attributed to an agent - the page cannot verify that;
+WebMCP gives the handler no caller identity
+
+[AGENT] what_this_closes({"course":"NUM-201","term":3})
+         Taking NUM-201 in term 3 closes no track. Every specialisation that is
+         reachable now stays reachable.
 ```
 
-Two calls, counted by the platform rather than narrated by the model. The second is **not a tool
-this page registers** - `webmcp_list_tools` is the host's own discovery tool, which the model used
-to enumerate the page's registry before calling into it. It listed, then called.
+The caveat prints beside the success, which is the point of writing it that way: the page is
+reporting a call it did not make and saying it cannot prove who did.
 
-**What is still missing is our side of it.** The window was closed before the page's own call
-counter was captured, so by this repository's standard - §4.2, that a page can only be sure of the
-calls it makes itself - the page has no record of this. Host ledger plus exact string, not our
-measurement. Reproducing it with the page's counter in shot is a loose end, and a cheap one: the
-tool is idempotent and the plan starts empty.
+**The host counted it too**, independently. The conversation's *Sources* panel lists, under
+`hvaler.github.io`, `what_this_closes` once and `webmcp_list_tools` once - the second being the
+host's own discovery tool rather than one of this page's ten ([API notes, finding
+9](WEBMCP-API-NOTES.md)). It listed the registry, then called into it.
 
 **And it is the answer that could not have come from reading.** Every document in this repository
 describes the *other* case — `NUM-201` closing Graphics and Animation, which only happens once terms
@@ -195,38 +197,46 @@ Named directly, it described the boundary exactly:
 That one is cited to `hvaler.github.io` rather than GitHub — it had read the live page, seen the
 green line, and reported correctly that it could see the HTML and not the registry.
 
-#### What this does not establish
+#### What actually made the difference
 
-**The successful run changed three things at once**, which is why nothing here claims to know which
-one mattered:
+The first success changed three things at once - plan, model and prompt - and settled none of them.
+A second run the same day cut it down to one.
 
-| | the four failures | the success |
-|---|---|---|
-| plan | Go | Work |
-| model | GPT-5.6 Sol | 5.6 Terra Medio |
-| what was asked | a question about the page | a request to fix the invocation |
+**The variable is the app's Work mode.** Asked to run the tool from an ordinary chat, the assistant
+named the requirement itself:
 
-**The third is the one to be careful about.** It was not a question. Verbatim:
+> *"I can't run `what_this_closes` from this chat because browser/WebMCP access requires **Work
+> mode**, and you declined the switch."*
 
-> *"Help the user get the WebMCP tool registered by `https://hvaler.github.io/cursus/` exposed and
-> invocable in the ChatGPT in-app browser. Inspect the current open page and browser state, verify
-> WebMCP is enabled, inspect the page's registered tools (especially `what_this_closes`), determine
-> why the agent cannot invoke them, and make any appropriate browser/page-side changes needed. Do
-> not use web search. Goal: a real successful invocation of `what_this_closes` for NUM-201 in term 3
-> from the page's WebMCP tools."*
+In Work mode, with the page open in the in-app browser, **a plain instruction was enough** - no
+troubleshooting, no request to inspect or repair anything:
 
-That put the assistant into an agentic browser session: it worked for **3 minutes 18 seconds** and
-the host logged *"used the browser, loaded tools and ran a command"*. Its own account afterwards
-blames the unbound tab, and it changed neither the page nor the settings, which is consistent. But
-**the minimum needed was never established** - nobody has since tried a plain question inside a
-bound session, on either plan, with either model. One app version, one operating system, one
-afternoon.
+```text
+Usa la herramienta WebMCP what_this_closes de la página abierta con:
+course: NUM-201
+term: 3
+```
 
-**What a judge needs from this section is the practical part**, and it survives the uncertainty:
-opening the page in the in-app browser and asking about it is **not enough**. What is known to work
-is asking the assistant to inspect the open page and actually invoke the tool - an agentic browser
-session rather than a question. Short of that, the model answers from whatever it can read, which
-here was this repository: fluently, in detail, and wrongly.
+> *Translation: "Use the open page's WebMCP tool what_this_closes with: course: NUM-201, term: 3."*
+
+**53 seconds**, one call, the string above. The first run's three-minute diagnostic prompt was not
+what did it; it was working around the mode.
+
+So the four failures have an explanation that fits all of them: they were ordinary chat sessions.
+The model could read the rendered page and nothing else, which is exactly what it said when asked
+directly.
+
+#### What this still does not establish
+
+The instruction that worked names the tool and its arguments. **Nobody has tried a bare question -
+*"what does taking NUM-201 in term 3 close off?"* - inside Work mode**, so how much of the naming
+was necessary is unknown. Nor is it known whether Work mode is reachable on every plan, or what
+another operating system does. One app version, one afternoon.
+
+**The practical part, for anyone testing this page.** Open it in the in-app browser, be in **Work
+mode**, and tell the assistant to use the tool rather than to answer about the page. Outside Work
+mode it answers from whatever it can read - which here was this repository: fluently, in detail,
+and wrong for the plan on screen.
 
 ### What was done about it, before this test
 

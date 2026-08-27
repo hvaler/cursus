@@ -108,10 +108,10 @@ The eighth came from the environment the rules themselves name, and cost four fa
 A page reading **"WebMCP available — 10 tools registered"** has established that the API exists
 in that browser and nothing more: **registration succeeding is not evidence a model can call
 anything.** Zero calls is consistent with the host never bridging the tools, with a model seeing
-them and declining, with no agent being present, and — as it turned out here — with a session
-that had no browser tab bound to the agent. **A page sees one number for all four.** So a WebMCP
-page cannot diagnose its own silence, and has to tell the reader what to check on their side
-instead.
+them and declining, with no agent being present, and — as it turned out here — with the client
+being in the wrong mode. **A page sees one number for all four.** So a WebMCP page cannot
+diagnose its own silence, and has to tell the reader what to check on their side instead. Ours
+now names the mode in its first paragraph, because four attempts went the other way first.
 
 The ninth fell out of the same run. The host does not hand the model a page's tools and stop
 there: it adds one of its own, **`webmcp_list_tools`**, which this page does not register and

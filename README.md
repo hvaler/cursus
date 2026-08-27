@@ -8,13 +8,15 @@ it bites, and can be **rewound**. Built for [The WebMCP Challenge](https://webmc
 Both environments the rules name work, and one of them has a catch worth knowing before you
 judge it:
 
-- **ChatGPT's in-app browser** — open the page, then **ask the assistant to inspect the open page
-  and invoke the tool**, not merely to answer from it. A question about the page, with the tab
-  open beside the chat, gets an answer read off this repository instead of a tool call — and a
-  convincing one. The tell: with an empty plan, a real `what_this_closes` for `NUM-201` says it
+- **ChatGPT's in-app browser** — open the page, **be in Work mode**, and tell the assistant to
+  use the tool:
+
+  > *Use the open page's WebMCP tool `what_this_closes` with: course `NUM-201`, term `3`.*
+
+  Outside Work mode the same request gets an answer read off this repository instead of a tool
+  call — and a convincing one. The tell: with an empty plan, a real call says `NUM-201`
   **closes no track**; anything about Graphics and Animation came from reading.
-  [FACTS §4.4](docs/FACTS.md) has the episode, including the four attempts it took to work that
-  out and what is still not known about the minimum needed.
+  [FACTS §4.4](docs/FACTS.md) has the four attempts it took to find that out.
 - **Chrome 149+** with `chrome://flags/#enable-webmcp-testing` and a WebMCP client — the route in
   [GATE.md](docs/GATE.md).
 

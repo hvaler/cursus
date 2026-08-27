@@ -145,12 +145,11 @@ Found on 2026-08-27 in ChatGPT desktop's in-app browser, which registered all te
 went four prompts without calling one - the fourth after saying it would rely on the page's tools
 and not search the web. Full record in [FACTS 4.4](FACTS.md).
 
-**The cause was none of the things the page could have guessed.** It was not the API, not the
-registration, and not a permission - *Enable site tools*, the setting that governs exactly this, was
-already on. The session simply had no browser tab **bound to the agent**. The page was open beside
-the conversation rather than under it, so the model reached the rendered HTML and not the registry.
-Bind the tab and the same tool call goes through and returns the same string the page's own buttons
-produce.
+**The cause was none of the things the page could have guessed.** Not the API, not the
+registration, and not a permission - *Enable site tools*, the setting that governs exactly this,
+was already on. It was the **mode the client was in**. Asked directly, the assistant said so:
+*"browser/WebMCP access requires Work mode, and you declined the switch."* In Work mode, with
+the same page and the same settings, a one-line instruction produced the call in 53 seconds.
 
 So the list of things a page cannot distinguish is longer than it first looks. Zero calls is
 consistent with all of:
