@@ -34,6 +34,10 @@ minutes.
 
 ## Before recording
 
+The tickable one-page version of everything below, with the exact course codes and the two
+prompts, is [CHECKLIST.md](CHECKLIST.md). Have that open while recording; this file is the
+reasoning behind it.
+
 - [ ] ChatGPT desktop, **Work mode on**. Without it there are no tool calls at all
       ([CHATGPT-WORK-MODE.md](../docs/CHATGPT-WORK-MODE.md)).
 - [ ] **Not an Enterprise or Edu workspace.** Site tools do not exist there and no setting
