@@ -37,9 +37,15 @@ the page is the log with a cursor.
 
 ```bash
 npm test          # 63 tests, no build step, no dependencies
+npm run eval      # puts a real model in front of the tools; needs GEMINI_API_KEY
 ```
 
 There is no build. What is in the repository is what is served.
+
+`npm test` checks the logic. **`npm run eval` checks the part unit tests cannot**: whether a model
+reads these tool descriptions and picks the right one, and whether it can act on a refusal. On
+2026-08-27, 5/5 — including finding `list_actions → undo_to` unprompted, and refusing to invent a
+course that does not exist. Results and limits in [`docs/EVAL.md`](docs/EVAL.md).
 
 ## Layout
 
