@@ -6,7 +6,7 @@
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { callTool } from '../app/tools.js';
+import { callTool, TOOLS, READ_ONLY, ECHOES_CALLER_INPUT, annotationsFor } from '../app/tools.js';
 import { log, trace, state } from '../app/store.js';
 import { COURSES } from '../app/catalogue.js';
 import { whyNotAdd } from '../app/rules.js';
@@ -29,6 +29,60 @@ const buildFork = () => { for (const [c, term] of FORK) call('add_course', { cou
 
 /** Terms 1 and 2 full, term 3 untouched — the fork's first half, without its conclusion. */
 const BASE = FORK.slice(0, 10);
+
+describe('the annotations the specification defines, checked by running them', () => {
+  test('nothing marked readOnly can append an event, whatever it is called with', () => {
+    // Only this direction is worth asserting. `readOnlyHint: true` is what may cost a person an
+    // approval prompt they would otherwise have seen, so it has to hold under any arguments —
+    // while `false` on a tool that happens not to write is merely conservative.
+    //
+    // An earlier version checked both ways and was wrong: `remove_course` wrote nothing in the
+    // fixture because it was *refused*, which says nothing about whether the tool can write.
+    const shapes = [
+      {},
+      { course: 'CALC-101', term: 1 },
+      { course: 'NUM-201', term: 3, track: 'graphics', step: 0 },
+      { course_a: 'NUM-201', course_b: 'GEOM-201', term: 3, q: 'calc' },
+      { course: 'ADV-301', term: 5, track: 'data', step: 99 },
+    ];
+    /** @type {string[]} */
+    const wrote = [];
+    for (const name of READ_ONLY) {
+      for (const args of shapes) {
+        log.rewindTo(0);
+        buildFork();
+        const before = log.length;
+        try { callTool(name, args); } catch { /* a throw is not an append */ }
+        if (log.length !== before) wrote.push(`${name} appended on ${JSON.stringify(args)}`);
+      }
+    }
+    assert.deepEqual(wrote, [], 'a readOnlyHint that is not true is worse than none at all');
+  });
+
+  test('untrustedContentHint is true exactly for the tools that echo the caller back', () => {
+    const MARK = 'ZZQXMARKER';
+    const args = { course: MARK, track: MARK, q: MARK, course_a: MARK, course_b: 'NUM-201', step: MARK };
+    /** @type {string[]} */
+    const wrong = [];
+    for (const t of TOOLS) {
+      log.rewindTo(0);
+      let out = '';
+      try { out = String(callTool(t.name, args)); } catch (err) { out = String(err); }
+      const echoed = out.toLowerCase().includes(MARK.toLowerCase());
+      if (echoed !== ECHOES_CALLER_INPUT.has(t.name)) {
+        wrong.push(`${t.name}: hint says untrusted=${ECHOES_CALLER_INPUT.has(t.name)}, it ${echoed ? 'echoes' : 'does not'}`);
+      }
+    }
+    assert.deepEqual(wrong, [], 'a new tool that echoes its input must carry the hint');
+  });
+
+  test('every tool carries both hints and nothing else', () => {
+    for (const t of TOOLS) {
+      assert.deepEqual(Object.keys(annotationsFor(t.name)).sort(),
+        ['readOnlyHint', 'untrustedContentHint'], `on ${t.name}`);
+    }
+  });
+});
 
 describe('the student\'s policy, through the tools', () => {
   test('protecting is an event, so undo_to takes it back out', () => {

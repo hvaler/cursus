@@ -31,6 +31,12 @@ members and nothing else:
 
 There is no `unregisterTool`, no `tools` collection, no `provideContext`, no `listTools`.
 
+**The specification agrees, and explains the gap.** There is no unregister *method* because
+[the spec](https://webmachinelearning.github.io/webmcp/) unregisters through the **`AbortSignal`**
+passed to `registerTool`, and fires `ontoolchange` when the set changes. Read off the live API, the
+absence looks like an omission; it is a different design, and this page never needed it — its
+thirteen tools are all valid all the time.
+
 ---
 
 ## 1. It is on `document`, not `navigator`
@@ -67,7 +73,8 @@ refusal left state behind.
 
 ## 3. `registerTool` returns `undefined`
 
-So it is not where the `RegisteredTool` comes from.
+So it is not where the `RegisteredTool` comes from. **The specification says so on purpose** —
+`Promise<undefined>` in the IDL — which was worth knowing an hour earlier than we knew it.
 
 ```js
 const h = await document.modelContext.registerTool({ name: 'ping', … });
@@ -103,6 +110,15 @@ Measured, all four in the same page:
 ```js
 await document.modelContext.executeTool(ping, JSON.stringify(args));
 ```
+
+**And the specification says the opposite.** Its IDL is
+`executeTool(RegisteredTool tool, optional object inputObject = {}, …)` — an **object**, which is
+the first thing we tried and the thing that produced `Failed to parse input arguments`.
+
+So one of two things is true and this page cannot tell which: Chrome 151 diverges from the spec
+here, or the spec moved after that build shipped. What is measured is the table above, in Chrome
+151, on 2026-08-27. **If you are writing against this, try the object first** — it is what the
+standard says — and keep the string as the fallback rather than the other way round.
 
 ---
 

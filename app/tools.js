@@ -500,6 +500,35 @@ export const TOOLS = [
   },
 ];
 
+/**
+ * The two hints the specification defines, kept here rather than spread across thirteen
+ * definitions so the classification can be read in one place — and checked in one test.
+ *
+ * `readOnlyHint` is a promise to the host, which may use it to skip an approval it would otherwise
+ * ask a person for. It has to be true rather than optimistic: a tool is in this set only if it
+ * appends no event, and `tools.test.js` proves that by calling each one and watching the log.
+ *
+ * `untrustedContentHint` says the result can carry text the caller supplied. Every refusal here
+ * quotes the code it was given back — bounded and quoted, but still not the page's own words — and
+ * an agent should read those as data rather than as the page speaking. The set is not written from
+ * memory either: the test drives every tool with a marker and fails if the two disagree.
+ */
+export const READ_ONLY = new Set([
+  'search_courses', 'explain_requirement', 'what_this_closes', 'compare_options', 'plan_status',
+  'propose_plan_for_track', 'explain_infeasibility', 'list_actions', 'share_plan',
+]);
+
+export const ECHOES_CALLER_INPUT = new Set([
+  'explain_requirement', 'what_this_closes', 'compare_options', 'add_course', 'remove_course',
+  'protect_track', 'propose_plan_for_track', 'explain_infeasibility', 'undo_to',
+]);
+
+/** @param {string} name */
+export const annotationsFor = (name) => ({
+  readOnlyHint: READ_ONLY.has(name),
+  untrustedContentHint: ECHOES_CALLER_INPUT.has(name),
+});
+
 /** @type {string[]} */
 export const registered = [];
 
@@ -527,25 +556,35 @@ export function waitForModelContext(ms = 12000) {
 
 /** Register everything with WebMCP, waiting for it to turn up if it is not there yet. */
 export async function registerAll() {
-  if (registered.length) return { available: true, count: registered.length };
+  if (registered.length) return { available: true, count: registered.length, failed: [] };
   await waitForModelContext();
   // `document.modelContext.registerTool({name, description, inputSchema, execute})`, which is the
   // shape the challenge documents. Destructured only because `modelContext` is not in the DOM
   // types and writing it out would need a declaration file — and a type-only build step is still
   // a build step. `gate.html` has the same call spelled out in full.
   const { modelContext } = /** @type {any} */ (document);
-  if (!modelContext?.registerTool) return { available: false, count: 0 };
+  if (!modelContext?.registerTool) return { available: false, count: 0, failed: [] };
 
+  /** @type {string[]} */
+  const failed = [];
   for (const t of TOOLS) {
-    await modelContext.registerTool({
-      name: t.name,
-      description: t.description,
-      inputSchema: t.inputSchema,
-      execute: async (/** @type {any} */ args) => t.execute(args ?? {}),
-    });
-    registered.push(t.name);
+    // One tool failing must not cost the other twelve. A host that rejects something here would
+    // otherwise leave the page with nothing registered and no way to say which tool was the
+    // problem — which is exactly the silence findings 8 and 9 are about.
+    try {
+      await modelContext.registerTool({
+        name: t.name,
+        description: t.description,
+        inputSchema: t.inputSchema,
+        annotations: annotationsFor(t.name),
+        execute: async (/** @type {any} */ args) => t.execute(args ?? {}),
+      });
+      registered.push(t.name);
+    } catch (err) {
+      failed.push(`${t.name}: ${String(err).slice(0, 80)}`);
+    }
   }
-  return { available: true, count: registered.length };
+  return { available: true, count: registered.length, failed };
 }
 
 /** Call a tool by name from the page itself. @param {string} name @param {any} args */

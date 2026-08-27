@@ -78,7 +78,7 @@ whole episode, and the tell that catches it, is in [`docs/FACTS.md §4.4`](docs/
 ## Running it
 
 ```bash
-npm test          # 154 tests, no build step, no dependencies
+npm test          # 157 tests, no build step, no dependencies
 npm run eval      # puts a real model in front of the tools; needs GEMINI_API_KEY
 ```
 
@@ -106,7 +106,7 @@ course that does not exist. Results and limits in [`docs/EVAL.md`](docs/EVAL.md)
 
 ## Layout
 
-**1,954 lines** across ten modules, none of them importing in a circle. The diagrams and the
+**1,993 lines** across ten modules, none of them importing in a circle. The diagrams and the
 call flow are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 | | |

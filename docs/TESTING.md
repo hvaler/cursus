@@ -14,14 +14,14 @@ git clone https://github.com/hvaler/cursus && cd cursus
 npm test
 ```
 
-**154 tests, none skipped, no dependencies to install.** `package.json` has no `dependencies` and no
+**157 tests, none skipped, no dependencies to install.** `package.json` has no `dependencies` and no
 `devDependencies`; the runner is Node's own (`node --test`). Node 20 or later.
 
 | Suite | Covers |
 |---|---|
 | `test/core.test.js` (24) | the reducer, the 10 university rules, the catalogue's own invariants |
 | `test/queries.test.js` (18) | reachability, closures, what a choice costs |
-| `test/tools.test.js` (35) | the strings the tools return |
+| `test/tools.test.js` (38) | the strings the tools return |
 | `test/hostile.test.js` (13) | input that is trying something |
 | `test/solve.test.js` (11) | planning towards a goal, and pricing the ways out |
 | `test/registration.test.js` (4) | a host that attaches WebMCP late, or never |
@@ -139,9 +139,9 @@ A call the page did not make itself shows as `AGENT`. That is an assumption, and
 
 | Claim | Command |
 |---|---|
-| 154 tests, none skipped | `npm test` |
+| 157 tests, none skipped | `npm test` |
 | 5/5 on the eval scenarios | `npm run eval` (needs `GEMINI_API_KEY`) |
-| 1,954 lines across ten modules | `wc -l app/*.js` |
+| 1,993 lines across ten modules | `wc -l app/*.js` |
 | 40 courses, 4 tracks, 30-credit cap | `node -e "import('./app/catalogue.js').then(m=>console.log(m.COURSES.length, m.TRACKS.length, m.CREDIT_CAP_PER_TERM))"` |
 | the string the in-app browser returned | `node -e "import('./app/tools.js').then(m=>m.TOOLS.find(t=>t.name==='what_this_closes').execute({course:'NUM-201',term:3})).then(console.log)"` |
 | what the WebMCP API exposes | **Inspect the API** on the live page |

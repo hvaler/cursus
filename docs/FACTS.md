@@ -18,7 +18,7 @@ npm test        # node --test test/*.test.js
 |---|---|---:|
 | Events, rules, the catalogue's own invariants | `test/core.test.js` | 24 |
 | Reachability, closures, what a choice costs | `test/queries.test.js` | 18 |
-| The strings the tools return | `test/tools.test.js` | 35 |
+| The strings the tools return | `test/tools.test.js` | 38 |
 | Hostile input | `test/hostile.test.js` | 13 |
 | Planning towards a goal | `test/solve.test.js` | 11 |
 | Registering when the host attaches late | `test/registration.test.js` | 4 |
@@ -26,12 +26,12 @@ npm test        # node --test test/*.test.js
 | A plan in a link, and links that were edited | `test/share.test.js` | 14 |
 | The documents, against the code they describe | `test/docs.test.js` | 6 |
 | Escaping, and the screen rendering from the log | `test/ui.test.js` | 13 |
-| **Total** | | **154** |
+| **Total** | | **157** |
 
 **Skipped: zero. Failing: zero.** No build step, no dependencies — `package.json` has no
 `dependencies` or `devDependencies` at all, and the whole thing runs on Node's own test runner.
 
-**1,954 lines** across ten modules in `app/`. The shape of them is in
+**1,993 lines** across ten modules in `app/`. The shape of them is in
 [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 ---
