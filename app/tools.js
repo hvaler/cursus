@@ -134,6 +134,85 @@ export const TOOLS = [
   },
 
   {
+    name: 'compare_options',
+    description:
+      'Weigh two courses against each other for the same slot: what each one closes off, and what ' +
+      'is lost either way. Use this when a student is choosing between two courses and the term ' +
+      'has room for one — it is the question they actually ask, and it takes one call instead of ' +
+      'two. Whichever is rejected is not merely unchosen: the slot is gone.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        course_a: { type: 'string', description: 'One of the two course codes' },
+        course_b: { type: 'string', description: 'The other' },
+        term: { type: 'number', description: 'The term both would compete for, 1 to 6' },
+      },
+      required: ['course_a', 'course_b'],
+    },
+    execute: ({ course_a: a, course_b: b, term }) => {
+      const args = { course_a: a, course_b: b, term };
+      const A = String(a ?? '').toUpperCase();
+      const B = String(b ?? '').toUpperCase();
+
+      if (A === B) {
+        const out = `Refused. ${quoteInput(a)} is on both sides, so there is nothing to compare. ` +
+                    `To unblock it: name two different courses, or call what_this_closes for one. ` +
+                    `Rule: SAME_COURSE_TWICE. The plan was not changed.`;
+        return record('compare_options', args, out, true);
+      }
+
+      const s = state();
+      const unknown = [A, B].filter((c) => !BY_CODE.has(c));
+      if (unknown.length) {
+        const out = `No course in the catalogue has the code ` +
+                    `${unknown.map((c) => quoteInput(c)).join(' or ')}, so there is nothing to ` +
+                    `weigh up. Search the catalogue for the name you meant.`;
+        return record('compare_options', args, out, true);
+      }
+
+      /** What one side costs, as a clause. Deliberately the same reachability the single-course
+       *  tool uses — a comparison that computed its own answer could disagree with it. */
+      const side = (/** @type {string} */ c) => {
+        const r = whatThisCloses(s, c, term);
+        if (r.closed.length) return `closes ${r.closed.map((t) => `"${t.name}"`).join(' and ')}`;
+        if (r.narrowed.length) {
+          return `closes nothing, but narrows ` +
+                 r.narrowed.map((x) => `"${x.t.name}" (loses ${x.lost.join(', ')})`).join(' and ');
+        }
+        return 'closes nothing';
+      };
+
+      const where = term ? ` in term ${term}` : '';
+      const lines = [
+        `Taking ${A}${where} ${side(A)}.`,
+        `Taking ${B}${where} ${side(B)}.`,
+      ];
+
+      const closedA = whatThisCloses(s, A, term).closed;
+      const closedB = whatThisCloses(s, B, term).closed;
+      if (closedA.length && closedB.length) {
+        lines.push(`Both cost a specialisation, so there is no free version of this choice — the ` +
+                   `slot is what costs, not the course.`);
+      } else if (!closedA.length && !closedB.length) {
+        lines.push(`Neither closes a specialisation, so this is a preference rather than a trade.`);
+      } else {
+        // No state in the current catalogue reaches this, and the reason is structural rather than
+        // lucky: a course closes a track by taking the last slot in the only term that track was
+        // still waiting on — and once a term is down to its last slot, *anything* that takes it
+        // does the same. So within one term the two sides are both costly or both free.
+        //
+        // The branch stays because that is a property of this catalogue, not of the question, and
+        // a catalogue with looser terms would reach it. `tools.test.js` pins the property, so if
+        // the catalogue ever changes shape this stops being dead and the test says so.
+        const free = closedA.length ? B : A;
+        lines.push(`${free} is the one that costs nothing here.`);
+      }
+
+      return record('compare_options', args, lines.join(NL), false);
+    },
+  },
+
+  {
     name: 'plan_status',
     description:
       'The current plan: what is in it, per term, with credits, plus which specialisation tracks ' +

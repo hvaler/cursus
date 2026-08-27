@@ -7,7 +7,10 @@ import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { callTool } from '../app/tools.js';
-import { log, trace } from '../app/store.js';
+import { log, trace, state } from '../app/store.js';
+import { COURSES } from '../app/catalogue.js';
+import { whyNotAdd } from '../app/rules.js';
+import { whatThisCloses } from '../app/queries.js';
 
 const call = (/** @type {string} */ name, /** @type {any} */ args) =>
   String(callTool(name, args));
@@ -23,6 +26,9 @@ const FORK = [
   ['DS-201', 3], ['ARCH-201', 3], ['AUTO-201', 3], ['STAT-201', 3],
 ];
 const buildFork = () => { for (const [c, term] of FORK) call('add_course', { course: c, term }); };
+
+/** Terms 1 and 2 full, term 3 untouched — the fork's first half, without its conclusion. */
+const BASE = FORK.slice(0, 10);
 
 describe('the student\'s policy, through the tools', () => {
   test('protecting is an event, so undo_to takes it back out', () => {
@@ -83,6 +89,81 @@ describe('the student\'s policy, through the tools', () => {
     assert.match(out, /Added/, 'no policy, no obstacle');
     // Having closed graphics, protecting it is a promise the page cannot keep.
     assert.match(call('protect_track', { track: 'graphics' }), /TRACK_ALREADY_CLOSED/);
+  });
+});
+
+describe('weighing two courses against each other', () => {
+  test('the fork, in one call instead of two', () => {
+    buildFork();
+    const out = call('compare_options', { course_a: 'NUM-201', course_b: 'GEOM-201', term: 3 });
+    assert.match(out, /NUM-201 in term 3 closes "Graphics and Animation"/);
+    assert.match(out, /GEOM-201 in term 3 closes "Data and Machine Learning"/);
+    assert.match(out, /no free version of this choice/);
+  });
+
+  test('it cannot disagree with what_this_closes, because it asks the same question', () => {
+    // Two tools answering one question is how a surface starts contradicting itself. This one
+    // calls the same reachability rather than computing its own, and this is what pins that.
+    buildFork();
+    const single = call('what_this_closes', { course: 'NUM-201', term: 3 });
+    const both = call('compare_options', { course_a: 'NUM-201', course_b: 'GEOM-201', term: 3 });
+    const track = /Graphics and Animation/;
+    assert.match(single, track);
+    assert.match(both, track);
+  });
+
+  test('within one term, the answer is never mixed — and that is a fact about slots', () => {
+    // compare_options has a branch for "one of these costs nothing". No state in this catalogue
+    // reaches it, and the reason is worth pinning rather than commenting: when a term is down to
+    // its last slot, *whatever* takes that slot closes whichever track needed it. The cost is the
+    // slot, not the course. So within one term the two sides are both costly or both free.
+    //
+    // If a future catalogue breaks that — a course that competes for a term without being the last
+    // thing any track was waiting on — this fails, and the branch stops being unreachable.
+    const terms = [3, 4, 5, 6];
+    /** @type {string[]} */
+    const mixed = [];
+
+    for (const term of terms) {
+      const pool = COURSES.filter((c) => c.terms.includes(term));
+      for (let fill = 0; fill <= pool.length; fill++) {
+        log.rewindTo(0);
+        for (const [c, t] of BASE) call('add_course', { course: c, term: t });
+        for (const c of pool.slice(0, fill)) call('add_course', { course: c.code, term });
+
+        const s = state();
+        const rest = pool.slice(fill).filter((c) => !whyNotAdd(s, c.code, term));
+        const costly = rest.filter((c) => whatThisCloses(s, c.code, term).closed.length);
+        if (costly.length && costly.length !== rest.length) {
+          mixed.push(`term ${term}, ${fill} filled: ${costly.length} of ${rest.length} cost something`);
+        }
+      }
+    }
+    assert.deepEqual(mixed, [], 'a term with a mixed answer would make the third branch reachable');
+  });
+
+  test('when neither costs anything it says so, instead of dressing it up as a trade', () => {
+    const out = call('compare_options', { course_a: 'CALC-101', course_b: 'ALG-101', term: 1 });
+    assert.match(out, /preference rather than a trade/);
+  });
+
+  test('the same course on both sides is refused rather than answered twice', () => {
+    const out = call('compare_options', { course_a: 'NUM-201', course_b: 'num-201', term: 3 });
+    assert.match(out, /SAME_COURSE_TWICE/);
+    assert.match(out, /The plan was not changed\./);
+  });
+
+  test('an unknown code is named and quoted, not silently dropped', () => {
+    const out = call('compare_options', { course_a: 'NUM-201', course_b: 'QUANTUM-999', term: 3 });
+    assert.match(out, /"QUANTUM-999"/);
+    assert.ok(out.length < 300, `echoed ${out.length} characters`);
+  });
+
+  test('comparing changes nothing — it is a question, not a move', () => {
+    buildFork();
+    const before = log.length;
+    call('compare_options', { course_a: 'NUM-201', course_b: 'GEOM-201', term: 3 });
+    assert.equal(log.length, before);
   });
 });
 

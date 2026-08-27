@@ -132,8 +132,11 @@ describe('the policy held against an add', () => {
   });
 
   test('a course that closes nothing is never blocked, whatever is protected', () => {
+    // ALGO-202 in term 4 is real, addable from this fixture, and costs nothing. An earlier draft
+    // used a code that does not exist, which passed for the wrong reason: an unknown course closes
+    // nothing either, so the assertion held while testing something else entirely.
     const held = fork(['graphics', 'data', 'systems', 'theory']);
-    assert.equal(whyNotAllowedByPolicy(held, 'HIST-101', 4), null,
+    assert.equal(whyNotAllowedByPolicy(held, 'ALGO-202', 4), null,
       'a policy that blocks harmless things would be worthless within a day');
   });
 });

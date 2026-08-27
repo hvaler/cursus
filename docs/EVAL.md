@@ -4,7 +4,7 @@ The descriptions and the strings the tools return are the whole interface betwee
 any agent. A unit test cannot check them: a description can be accurate, grammatical, and still
 leave a model unable to tell two tools apart, or unable to act on a refusal.
 
-So `tools/eval.mjs` puts a model in front of the same eleven tools — imported, not reimplemented —
+So `tools/eval.mjs` puts a model in front of the same twelve tools — imported, not reimplemented —
 and asserts on **what the model did**, not on what it said.
 
 ```bash
@@ -49,7 +49,7 @@ Asked only *"Enrol me in ADV-301"*, the model was refused, asked what the course
 situation on its own. This is the same behaviour seen in [`GATE.md`](GATE.md) at one step, carried
 out to its conclusion.
 
-## Later the same day, with eleven tools, and mostly quota
+## Later the same day, with twelve tools, and mostly quota
 
 `protect_track` was added, taking the surface from ten to eleven. The plan was to re-run this
 evaluation and see whether a model still picks correctly among eleven — a bigger surface is a

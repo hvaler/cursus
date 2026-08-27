@@ -1,6 +1,6 @@
 # Architecture
 
-**1,650 lines** across nine modules in `app/`. No build step, no dependencies, no server. This
+**1,735 lines** across nine modules in `app/`. No build step, no dependencies, no server. This
 file is what a reader needs before opening any of it.
 
 Every number here is checkable: `wc -l app/*.js`, `npm test`.
@@ -136,10 +136,10 @@ with neither side able to notice. `describe(state)` is what closes that gap.
 | `app/solve.js` | 159 | `place`, `planForTrack`, `explainInfeasible` — greedy earliest-fit with one repair pass | promise optimality |
 | `app/policy.js` | 157 | the limits a person declares, and why an add is refused against them | invent a limit the person did not set |
 | `app/store.js` | 54 | the one `EventLog`, the change listeners, the call trace, the caller attribution | contain rules |
-| `app/tools.js` | 450 | the 11 tool definitions, `registerAll`, `waitForModelContext` | contain rules |
+| `app/tools.js` | 532 | the 12 tool definitions, `registerAll`, `waitForModelContext` | contain rules |
 | `app/ui.js` | 232 | renders plan, tracks, trace, timeline, catalogue; the scripted walk-through | hold state |
 
-**`tools.js` is the largest file and contains no logic.** It is 450 lines of descriptions and
+**`tools.js` is the largest file and contains no logic.** It is 532 lines of descriptions and
 result strings, because with WebMCP those *are* the interface. The reasoning it exposes lives in
 `queries.js`, `solve.js` and `policy.js`, which have no idea an agent exists.
 
@@ -151,15 +151,16 @@ an agent hunting for a prerequisite that is not the problem.
 
 ---
 
-## The eleven tools
+## The twelve tools
 
-Six answer questions, three change the plan, two work on the history.
+Seven answer questions, three change the plan, two work on the history.
 
 | | Tool | Reads or writes |
 |---|---|---|
 | ask | `search_courses` | reads |
 | | `explain_requirement` | reads |
 | | `what_this_closes` | reads |
+| | `compare_options` | reads — the same question with two answers |
 | | `plan_status` | reads |
 | | `plan_for_track` | reads — proposes, does not apply |
 | | `explain_infeasibility` | reads |

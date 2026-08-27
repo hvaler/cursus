@@ -14,14 +14,14 @@ git clone https://github.com/hvaler/cursus && cd cursus
 npm test
 ```
 
-**131 tests, none skipped, no dependencies to install.** `package.json` has no `dependencies` and no
+**138 tests, none skipped, no dependencies to install.** `package.json` has no `dependencies` and no
 `devDependencies`; the runner is Node's own (`node --test`). Node 20 or later.
 
 | Suite | Covers |
 |---|---|
 | `test/core.test.js` (24) | the reducer, the 10 university rules, the catalogue's own invariants |
 | `test/queries.test.js` (18) | reachability, closures, what a choice costs |
-| `test/tools.test.js` (28) | the strings the tools return |
+| `test/tools.test.js` (35) | the strings the tools return |
 | `test/hostile.test.js` (13) | input that is trying something |
 | `test/solve.test.js` (11) | planning towards a goal, and pricing the ways out |
 | `test/registration.test.js` (4) | a host that attaches WebMCP late, or never |
@@ -79,7 +79,7 @@ worth knowing before you decide the page is broken.
 1. Chrome 149 or later. This was run on **151**.
 2. `chrome://flags/#enable-webmcp-testing` → **Enabled** → restart.
 3. Install the **WebMCP Inspector** extension and give it a model key.
-4. Open the page. The status line should read **WebMCP available - 11 tools registered.**
+4. Open the page. The status line should read **WebMCP available - 12 tools registered.**
 5. Ask, in the Inspector: `Enrol me in ADV-301.`
 
 Expected: the agent picks `add_course`, is refused for a missing prerequisite, and proposes
@@ -127,9 +127,9 @@ A call the page did not make itself shows as `AGENT`. That is an assumption, and
 
 | Claim | Command |
 |---|---|
-| 131 tests, none skipped | `npm test` |
+| 138 tests, none skipped | `npm test` |
 | 5/5 on the eval scenarios | `npm run eval` (needs `GEMINI_API_KEY`) |
-| 1,650 lines across nine modules | `wc -l app/*.js` |
+| 1,735 lines across nine modules | `wc -l app/*.js` |
 | 40 courses, 4 tracks, 30-credit cap | `node -e "import('./app/catalogue.js').then(m=>console.log(m.COURSES.length, m.TRACKS.length, m.CREDIT_CAP_PER_TERM))"` |
 | the string the in-app browser returned | `node -e "import('./app/tools.js').then(m=>m.TOOLS.find(t=>t.name==='what_this_closes').execute({course:'NUM-201',term:3})).then(console.log)"` |
 | what the WebMCP API exposes | **Inspect the API** on the live page |

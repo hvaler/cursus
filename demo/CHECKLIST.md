@@ -13,7 +13,7 @@ second screen while recording.
 - [ ] ChatGPT desktop, **Work mode on**.
 - [ ] *Settings → Browser → Permissions → Enable site tools* — **on**.
 - [ ] <https://hvaler.github.io/cursus/> open in the **in-app browser**, hard-reloaded.
-- [ ] Status line **green**: *WebMCP available — 11 tools registered.*
+- [ ] Status line **green**: *WebMCP available — 12 tools registered.*
 - [ ] Plan **empty**: six terms at 0/30, four specialisations all reachable, *"No tool has been
       called yet"*.
 - [ ] Second browser tab on `github.com/hvaler/cursus/blob/main/app/tools.js`, scrolled to a
@@ -21,7 +21,7 @@ second screen while recording.
 - [ ] ChatGPT **sidebar collapsed** — the conversation titles are personal.
 - [ ] Notifications off. Taskbar clock checked.
 - [ ] Panes sized so **TOOL CALLS, LIVE** is readable at 1080p. Squint at it.
-- [ ] `npm test` run this morning, so any number you say out loud is today's. **131, 0 failing.**
+- [ ] `npm test` run this morning, so any number you say out loud is today's. **138, 0 failing.**
 
 ## The rehearsal that decides one thing
 
