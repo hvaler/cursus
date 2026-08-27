@@ -25,13 +25,14 @@ second screen while recording.
 
 ## The rehearsal that decides one thing
 
-- [ ] Run the whole thing once, timed.
-- [ ] In that rehearsal, try the **bare question** first:
-      `What does taking NUM-201 in term 3 close off?`
-      - **It calls** → use it. Narrate it as the model choosing the tool. Much stronger shot.
-      - **It does not** → use the named form below, and **change the narration to say the tool was
-        named**. Do not claim the model chose it.
-- [ ] Time the call. Ours took **53 s** and **3 min 18 s**. You need that number for the edit.
+- [ ] Run all three prompts once, timed, exactly as written below.
+- [ ] Ask them **plainly** in the rehearsal, without naming a tool.
+      - **It calls** → keep it, and narrate it as the model choosing out of thirteen. Much stronger.
+      - **It does not** → name the tool in the real take, and **change the narration to say you
+        named it**. Do not claim the model chose it.
+- [ ] Time each call. Ours took **53 s** and **3 min 18 s**. You need those for the edit.
+- [ ] Watch for the **lock** on Graphics after prompt 2 — that is the fastest way to see whether a
+      call really happened.
 - [ ] Hard-reload and empty the plan again before the real take.
 
 ---
@@ -57,44 +58,60 @@ speed is about twenty seconds of screen time you do not have.
 
 ---
 
-## The two prompts
+## The three prompts
 
-**1 — the question.** Bare form if the rehearsal said it works, otherwise:
+Each can be asked plainly or with the tool named. **Rehearse plain first** — a model choosing the
+right tool out of thirteen is the shot worth having. If a plain ask does not produce a call, name
+the tool and **change the narration to say you named it**.
 
-```text
-Use the open page's WebMCP tool what_this_closes with: course NUM-201, term 3
-```
-
-Expected, and this is the sentence to check on screen before you keep the take:
-
-> *Taking NUM-201 in term 3 would CLOSE "Graphics and Animation". Graphics and Animation would have
-> 0 course(s) held and none still reachable.*
-
-**2 — the refusal.**
+**1 — the trade.** One call, not two.
 
 ```text
-Enrol me in ADV-301.
+One slot left in term 3. Compare NUM-201 and GEOM-201 for it — what does each one cost?
 ```
 
-Expected, verbatim from `app/tools.js`:
+Check on screen before keeping the take:
 
-> *Refused. ADV-301 (Advanced Calculus) requires CALC-102 (Calculus II) and NUM-201 (Numerical
-> Methods), and CALC-102 (Calculus II) and NUM-201 (Numerical Methods) are not in the plan. **To
-> unblock it: place CALC-102 and NUM-201 in a term before 5.** Rule: PREREQ_NOT_MET. The plan was
-> not changed.*
+> *Taking NUM-201 in term 3 closes "Graphics and Animation".*
+> *Taking GEOM-201 in term 3 closes "Data and Machine Learning".*
+> *Both cost a specialisation, so there is no free version of this choice — **the slot is what
+> costs, not the course.***
 
-Highlight the bolded sentence. That is the beat.
+**2 — the line the student draws.**
+
+```text
+Protect Graphics and Animation — I am not willing to lose that one.
+```
+
+> *Protecting "Graphics and Animation". **Anything that would close it is refused from now on,
+> including if you ask for it yourself.*** Protected: Graphics and Animation…*
+
+A **lock** should appear beside that track on the page. If it does not, the call did not happen.
+
+**3 — and the page holds it.**
+
+```text
+Add NUM-201 to term 3.
+```
+
+> *Refused. Adding NUM-201 in term 3 would close "Graphics and Animation", **which you asked to
+> keep open.** To unblock it: either choose something that does not close it, or release the
+> protection first … **but then the specialisation goes, and it does not come back.** Rule:
+> PROTECTED_TRACK. The plan was not changed.*
+
+Highlight **"which you asked to keep open"**. That is the whole point of the video.
 
 ---
 
 ## Two things not to get wrong on camera
 
-**The undo shot rewinds your own clicks, not the agent's.** Neither agent call in this video writes
-an event — a query does not, and the refusal deliberately does not. The scripted line
-*"everything on that timeline can be rewound"* is true. **"Everything the agent did"** would not be.
+**The undo shot rewinds the protection, which the agent did set.** That is new: `protect_track`
+writes an event, so *"including the limit"* is true. Beat 1 and beat 3 wrote nothing — a query does
+not, and a refusal deliberately does not — so click the step **just before the protection**, not
+further back, or you are rewinding your own clicks and the line stops being about the agent.
 
-**The counter at the end will read something like *"16 call(s), 2 attributed to an agent"***. That
-is the shot: both origins, side by side, with the page saying it cannot verify the second number.
+**The counter at the end will read something like *"17 call(s), 3 attributed to an agent"***. That
+is the shot: both origins side by side, with the page saying it cannot verify the second number.
 
 ---
 
