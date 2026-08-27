@@ -69,8 +69,9 @@ demo fails live rather than in CI.
 | | |
 |---|---|
 | `gemini-2.5-flash`, five usability scenarios | **5/5** |
+| `gemini-3.6-flash` through Vertex, all eight, thirteen tools | **8/8** — 26 requests |
 | `gemini-3.6-flash`, first scenario before quota ran out | **passed** — repaired a refusal by building the whole five-course chain |
-| Three adversarial scenarios | **written, attempted twice on 2026-08-27, still not run** — every attempt hit the free tier's per-minute quota |
+| Three adversarial scenarios | **run and passed** on 2026-08-27, through Vertex — three earlier attempts died on AI Studio's twenty-a-day cap |
 
 Two results are worth more than a tick. The model found **`list_actions → undo_to`** unprompted,
 because `undo_to` needs a step number and it worked out where those come from. And asked to enrol
@@ -364,20 +365,15 @@ remedy — and why they are tested as carefully as the logic underneath.
 
 ## 6. Open, in one list
 
-1. Adversarial eval scenarios written, attempted on both models, **still not run** — quota, both
-   times. The thirteen-tool surface has one scenario's worth of evidence behind it, not eight.
-2. **Thirteen tools is a guess.** Chrome's best-practices page warns that more tools cost context
-   and completion time, and that overlapping tools confuse an agent — `what_this_closes` and
-   `compare_options` overlap deliberately. Neither the count nor the overlap has been measured,
-   for the same quota reason. Audited in [`WEBMCP-API-NOTES.md`](WEBMCP-API-NOTES.md).
-3. ChatGPT's in-app browser works in **Work mode** and produced two real tool calls (§4.4), not a
+1. **One model family, and now one route.** Gemini through Vertex is the same model as Gemini
+   through AI Studio. Not GPT, not Claude, not a small local model.
+2. ChatGPT's in-app browser works in **Work mode** and produced two real tool calls (§4.4), not a
    scenario set. Whether a bare question suffices there, rather than one naming the tool, is
    untested — as is Codex, which OpenAI documents as a second surface.
-4. One model family.
-5. The greedy placer's false negatives are documented but not characterised.
-6. Synthetic catalogue, no registrar has seen it.
-7. No storage, no accounts, no server — deliberate. A plan is per-tab unless someone copied its
+3. The greedy placer's false negatives are documented but not characterised.
+4. Synthetic catalogue, no registrar has seen it.
+5. No storage, no accounts, no server — deliberate. A plan is per-tab unless someone copied its
    link, and a link is neither a backup nor private: it goes in browser history and in whatever it
    was pasted into.
-8. The UI's markup and layout are checked by eye. `ui.test.js` covers the escaping and the
+6. The UI's markup and layout are checked by eye. `ui.test.js` covers the escaping and the
    rendering; nothing covers how it looks.

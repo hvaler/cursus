@@ -43,12 +43,20 @@ A test can prove `what_this_closes` computes reachability correctly. It cannot p
 refusal**. That needs a model.
 
 ```bash
-export GEMINI_API_KEY=...        # free tier is enough
+export GEMINI_API_KEY=...        # AI Studio: twenty requests a day, per model
 npm run eval
 ```
 
-Five scenarios, asserting on what the model *did* rather than on what it said. Last run
-**5/5**, including finding `list_actions` then `undo_to` unprompted, and refusing to invent a
+**Twenty a day does not cover a full run**, which wants around twenty-six — so either slice it with
+`EVAL_ONLY=adversarial` (or `usability`), or go through Vertex on a Google Cloud project, which has
+no such cap and takes the identical request body:
+
+```bash
+EVAL_PROJECT=your-project GOOGLE_ACCESS_TOKEN=$(gcloud auth print-access-token) npm run eval
+```
+
+Eight scenarios, asserting on what the model *did* rather than on what it said. Last run
+**8/8**, including finding `list_actions` then `undo_to` unprompted, and refusing to invent a
 course that does not exist. Results, method and limits: [EVAL.md](EVAL.md).
 
 The free tier's rate limit is low; the harness retries and reports a 429 as an error rather than as
@@ -140,7 +148,8 @@ A call the page did not make itself shows as `AGENT`. That is an assumption, and
 | Claim | Command |
 |---|---|
 | 157 tests, none skipped | `npm test` |
-| 5/5 on the eval scenarios | `npm run eval` (needs `GEMINI_API_KEY`) |
+| 8/8 on the eval scenarios | `npm run eval` — `GEMINI_API_KEY` for AI Studio, or
+  `EVAL_PROJECT` + `GOOGLE_ACCESS_TOKEN` for Vertex |
 | 1,993 lines across ten modules | `wc -l app/*.js` |
 | 40 courses, 4 tracks, 30-credit cap | `node -e "import('./app/catalogue.js').then(m=>console.log(m.COURSES.length, m.TRACKS.length, m.CREDIT_CAP_PER_TERM))"` |
 | the string the in-app browser returned | `node -e "import('./app/tools.js').then(m=>m.TOOLS.find(t=>t.name==='what_this_closes').execute({course:'NUM-201',term:3})).then(console.log)"` |

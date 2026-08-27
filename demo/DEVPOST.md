@@ -133,8 +133,8 @@ reduction of the events**. Refusing is the reducer rejecting an event before sta
 replaying fewer of them. The audit trail is the list itself.
 
 **157 tests**, none skipped, on Node's own test runner. `npm run eval` puts a real model in front of
-the tools and asserts on what it *did*: 5/5, including finding `list_actions → undo_to` unprompted,
-and refusing to invent a course that does not exist.
+the tools and asserts on what it *did*: **8/8**, including the three adversarial scenarios, finding
+`list_actions → undo_to` unprompted, and refusing to invent a course that does not exist.
 
 ### What we found out about WebMCP
 

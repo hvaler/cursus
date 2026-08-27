@@ -20,12 +20,37 @@ import { log, trace } from '../app/store.js';
 
 const KEY = process.env.GEMINI_API_KEY;
 const MODEL = process.env.EVAL_MODEL ?? 'gemini-3.6-flash';
-const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
-if (!KEY) {
-  console.error('GEMINI_API_KEY is not set. Nothing was evaluated — which is not the same as passing.');
+/**
+ * Two routes to the same models.
+ *
+ * **AI Studio**, with `GEMINI_API_KEY`, is the one anybody can use in a minute — and it allows
+ * twenty requests per day per model, while a full run of eight scenarios can want sixty-four. It
+ * is the default because a judge should not need a cloud project to check this.
+ *
+ * **Vertex**, with a project and a bearer token, has no such cap. It takes the same request body:
+ * the thirteen tool declarations go across unchanged, which was measured rather than assumed.
+ */
+const PROJECT = process.env.EVAL_PROJECT;
+const TOKEN = process.env.GOOGLE_ACCESS_TOKEN;
+const VERTEX = Boolean(PROJECT && TOKEN);
+
+const URL = VERTEX
+  ? `https://aiplatform.googleapis.com/v1/projects/${PROJECT}/locations/global/publishers/google/models/${MODEL}:generateContent`
+  : `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
+
+const AUTH = VERTEX
+  ? { authorization: `Bearer ${TOKEN}` }
+  : { 'x-goog-api-key': String(KEY) };
+
+if (!VERTEX && !KEY) {
+  console.error('Nothing was evaluated, which is not the same as passing. Set one of:');
+  console.error('  GEMINI_API_KEY=…                       (AI Studio, 20 requests/day/model)');
+  console.error('  EVAL_PROJECT=… GOOGLE_ACCESS_TOKEN=…   (Vertex, no daily cap)');
   process.exit(2);
 }
+
+console.log(VERTEX ? `Through Vertex, project ${PROJECT}.` : 'Through AI Studio, on the free tier.');
 
 const sleep = (/** @type {number} */ ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -84,7 +109,7 @@ async function converse(prompt, maxTurns = 8) {
   for (let turn = 0; turn < maxTurns; turn++) {
     const res = await withRetry(() => fetch(URL, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-goog-api-key': KEY },
+      headers: { 'content-type': 'application/json', ...AUTH },
       body: JSON.stringify({
         contents,
         tools: [{ functionDeclarations: declarations }],
@@ -279,7 +304,8 @@ for (const sc of chosen) {
 const total = chosen.length;
 const passed = total - failures - errors;
 console.log(`\n${passed} passed, ${failures} failed, ${errors} not evaluated — of ${total}, ` +
-            `costing ${requests} request(s) of the free tier's twenty a day for ${MODEL}`);
+            `costing ${requests} request(s) on ${MODEL}` +
+            (VERTEX ? ' through Vertex.' : ` of the free tier's twenty a day.`));
 if (errors) {
   console.log(`Not evaluated is not the same as passing, and it is not the same as failing ` +
               `either. Those ${errors} never reached the model.`);

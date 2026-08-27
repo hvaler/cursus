@@ -101,8 +101,8 @@ The other two ways to test it — in a browser without an agent, and with a real
 
 `npm test` checks the logic. **`npm run eval` checks the part unit tests cannot**: whether a model
 reads these tool descriptions and picks the right one, and whether it can act on a refusal. On
-2026-08-27, 5/5 — including finding `list_actions → undo_to` unprompted, and refusing to invent a
-course that does not exist. Results and limits in [`docs/EVAL.md`](docs/EVAL.md).
+2026-08-27, **8/8 across thirteen tools** — including the three adversarial scenarios, finding
+`list_actions → undo_to` unprompted, and refusing to invent a course that does not exist. Results and limits in [`docs/EVAL.md`](docs/EVAL.md).
 
 ## Layout
 
