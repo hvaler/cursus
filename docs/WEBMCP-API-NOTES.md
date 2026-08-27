@@ -123,6 +123,17 @@ who is asking.
 
 ---
 
+## 7. The client renames your tools
+
+The names a page registers are not the names the model sees. Through the WebMCP Inspector,
+`enrol` and `ping` reached Gemini as **`_0_enrol`** and **`_0_ping`** — prefixed by the client,
+presumably per page or per frame.
+
+Seen in the trace in [GATE.md](GATE.md) on 2026-08-27. A page must not assume its own tool names
+survive the trip, and must not rely on them for anything it does itself.
+
+---
+
 ## What `executeTool` is for
 
 It appears in Chrome's **evaluation** documentation, not in the imperative API page. It is a way to
