@@ -33,6 +33,20 @@ not recoverable once the term is full.
 rewinding is the same reducer with a smaller number, not per-tool inverse logic. The timeline on
 the page is the log with a cursor.
 
+## And the page never claims an agent was here
+
+Every call is logged with where it came from, and the count says plainly that the attribution is an
+assumption: WebMCP gives the `execute` handler no caller identity, so a page can only be certain
+about the calls it makes itself.
+
+That looked like pedantry until it caught something. Asked what taking `NUM-201` in term 3 closes
+off, an assistant answered correctly and in detail — naming the track, the blocking course and the
+trade — **having called no tool at all**. It had read this repository, where the example is written
+out. The page loads empty, so a real tool call would have had to answer *"closes no track"*.
+
+Being right made it harder to spot, not easier. [`docs/FACTS.md §4.4`](docs/FACTS.md) has the whole
+episode.
+
 ## Running it
 
 ```bash

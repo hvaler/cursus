@@ -104,8 +104,38 @@ The rules name two environments a judge may use:
 > and restart the browser."*
 
 **Only the second has been done**: Chrome 151 with the flag, plus the WebMCP Inspector extension
-driving Gemini. Asking `chatgpt.com` in an ordinary browser tab does not work and cannot — a web
-page has no access to another tab's model context, and ChatGPT says so plainly when asked.
+driving Gemini.
+
+The first was attempted on 2026-08-27 and **could not be completed**. The ChatGPT desktop app
+(Microsoft Store, `OpenAI.ChatGPT-Desktop 1.2026.190.0`, on a **Go** plan) opens as *"ChatGPT
+Classic"*, and from a conversation there the model reports it cannot reach a page's tools. Asked
+twice to add a course, it answered:
+
+> *"No tengo acceso desde esta conversación a la instancia interactiva de WebMCP que tienes
+> abierta, así que no puedo ejecutar de verdad `add_course` sobre tu plan. […] prefiero no fingir
+> que lo he hecho."*
+
+Whether that is the plan, the app version, or a surface not present on Windows is not something
+this repository can establish. What it can say is that it was tried and did not work.
+
+### The part worth more than the check
+
+Before that, the same assistant was asked *"what do I close off by taking NUM-201 in term 3?"* and
+gave a correct, detailed, confident answer naming Graphics and Animation, `GEOM-201`, the term-3
+constraint and the trade against Data.
+
+**It had not called a single tool.** The citations said `github.com`: it had read this repository,
+where that exact example is written out in the README. The proof is in the answer itself — the page
+loads with an empty plan, so a tool call would have been obliged to return *"Taking NUM-201 in term
+3 closes no track"*. The documented fork only exists once terms 1 and 2 are full.
+
+So: **an agent can give a correct, specific, well-sourced answer about a WebMCP page without ever
+touching its tools**, and being right makes that harder to notice, not easier. A judge could do
+exactly this and conclude the tool surface works.
+
+That is the reason the page counts calls by origin and states plainly that it *cannot verify* the
+attribution (§4.2). It was written as a caveat and turned out to be the only thing standing between
+a plausible answer and a false conclusion.
 
 The rules also say judges *"are not required to test the Project and may choose to judge based
 solely on the text description, images, and video"*. That is why the page carries a scripted
@@ -144,7 +174,8 @@ remedy — and why they are tested as carefully as the logic underneath.
 ## 6. Open, in one list
 
 1. Adversarial eval scenarios written but not run — quota.
-2. Not tested in ChatGPT's in-app browser, which is one of the two environments the rules name.
+2. ChatGPT's in-app browser — one of the two environments the rules name — was tried on
+   2026-08-27 and could not reach the page's tools. Recorded in §4.4 rather than left blank.
 3. One model family.
 4. The greedy placer's false negatives are documented but not characterised.
 5. Synthetic catalogue, no registrar has seen it.
