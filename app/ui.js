@@ -10,6 +10,7 @@ import { trackStatus, totalCredits } from './queries.js';
 import { log, state, trace, onChange, asPage } from './store.js';
 import { protectedTracks } from './policy.js';
 import { TOOLS, callTool, registerAll } from './tools.js';
+import { decode, replay } from './share.js';
 
 const $ = (/** @type {string} */ id) => /** @type {HTMLElement} */ (document.getElementById(id));
 /**
@@ -206,8 +207,27 @@ async function keepLookingForWebMCP() {
   }
 }
 
+/**
+ * A plan arriving in the URL. Replayed through the tools rather than written into the state, so a
+ * link someone edited cannot build a plan the rules would have refused — and labelled `page`,
+ * because opening a link is something the page did, not an agent.
+ */
+async function loadSharedPlan() {
+  const hash = String(/** @type {any} */ (globalThis).location?.hash ?? '');
+  const m = /^#p=([A-Za-z0-9_-]+)$/.exec(hash);
+  if (!m) return null;
+
+  const actions = decode(m[1]);
+  if (!actions.length) return { applied: 0, refused: [], unreadable: true };
+
+  const result = await asPage(() => replay(actions, callTool));
+  return { ...result, unreadable: false };
+}
+
 export async function boot() {
   onChange(renderAll);
+
+  const shared = await loadSharedPlan();
   renderAll();
 
   // Say what is happening while we wait, rather than showing "unavailable" for twelve seconds
@@ -232,4 +252,16 @@ export async function boot() {
     `<div class="tooldef"><b>${t.name}</b><span class="dim">${esc(t.description)}</span></div>`).join('');
 
   $('simulate').addEventListener('click', runSimulation);
+
+  // Said after the status line rather than instead of it: a shared plan that quietly lost two
+  // courses is worse than one that says so.
+  if (shared) {
+    const el = $('status');
+    el.innerHTML += shared.unreadable
+      ? `<div class="dim">A shared plan was in the link and could not be read. Nothing was applied.</div>`
+      : `<div class="dim">Opened from a shared link: ${shared.applied} action(s) replayed` +
+        (shared.refused.length
+          ? `, <b class="over">${shared.refused.length} refused by the rules</b> (${esc(shared.refused.join(', '))})`
+          : '') + `.</div>`;
+  }
 }

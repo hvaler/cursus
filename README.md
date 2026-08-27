@@ -78,7 +78,7 @@ cheaper than calling the tool.** [`docs/FACTS.md §4.4`](docs/FACTS.md) has the 
 ## Running it
 
 ```bash
-npm test          # 138 tests, no build step, no dependencies
+npm test          # 152 tests, no build step, no dependencies
 npm run eval      # puts a real model in front of the tools; needs GEMINI_API_KEY
 ```
 
@@ -94,7 +94,7 @@ course that does not exist. Results and limits in [`docs/EVAL.md`](docs/EVAL.md)
 
 ## Layout
 
-**1,735 lines** across nine modules, none of them importing in a circle. The diagrams and the
+**1,947 lines** across ten modules, none of them importing in a circle. The diagrams and the
 call flow are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 | | |
@@ -106,7 +106,8 @@ call flow are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 | `app/solve.js` | placement, planning towards a track, and pricing each way out |
 | `app/store.js` | the one log everything reads from, and what the page can honestly say about callers |
 | `app/policy.js` | the student's own limits, held against the agent |
-| `app/tools.js` | the twelve tools, and the strings they return |
+| `app/share.js` | a plan in a link, replayed back through the rules |
+| `app/tools.js` | the thirteen tools, and the strings they return |
 | `app/ui.js` | the screen, rendered from the same log |
 | `gate.html` | the day-one gate that proved the API works at all |
 

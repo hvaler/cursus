@@ -30,8 +30,8 @@ out in their head, and no interface offers to.
 
 ### What Cursus does
 
-Twelve tools, registered with `document.modelContext.registerTool`, that do five things a rendered
-timetable cannot.
+Thirteen tools, registered with `document.modelContext.registerTool`, that do six things a
+rendered timetable cannot.
 
 **They refuse.** Ask an agent to enrol you in Advanced Calculus and the page says no — naming the
 missing prerequisites and, crucially, what would unblock them. That last clause changes the agent's
@@ -69,6 +69,13 @@ that also carries the user's policy lets them say **what they will not have done
 and have it hold while they are not watching. It cost almost nothing to build, because a protection
 is an event like any other — so `undo_to` unwinds it with everything else, and no code was written
 to make that true.
+
+**And they can be handed to someone else.** `share_plan` returns a link, and there is no server
+behind it: the link carries the actions. What makes that more than a persistence trick is what
+happens when it is opened — **every action is replayed through the same tools**, so a link edited by
+hand cannot produce a plan the page would have refused to build, and anything the rules reject is
+named rather than quietly dropped. The rules are the gate on the way in as well as the way through,
+because there is no second path into the state.
 
 ### Why this fits WebMCP rather than an API
 
@@ -125,7 +132,7 @@ The whole thing rests on one decision — **every tool call is an event, and the
 reduction of the events**. Refusing is the reducer rejecting an event before state changes. Undo is
 replaying fewer of them. The audit trail is the list itself.
 
-**138 tests**, none skipped, on Node's own test runner. `npm run eval` puts a real model in front of
+**152 tests**, none skipped, on Node's own test runner. `npm run eval` puts a real model in front of
 the tools and asserts on what it *did*: 5/5, including finding `list_actions → undo_to` unprompted,
 and refusing to invent a course that does not exist.
 
@@ -172,7 +179,9 @@ fork well enough to answer the question, and that is exactly what made reading c
 ### What it does not do
 
 The catalogue is synthetic — real in structure, invented in content, and no registrar has seen it.
-There is no persistence: reload and the plan is empty, which is why there is no auth and no server.
+There is still no storage anywhere: a plan lives in the tab, or in a link somebody was given. That
+is why there is no auth and no server, and it is also why a lost tab is a lost plan unless the link
+was copied.
 The planner is greedy with one repair pass, so a "no" from it means *this planner found no way*,
 not *no way exists*. It has been evaluated against one model family, and only through Chrome: the five
 scored scenarios all ran there. ChatGPT's in-app browser has two real calls to its name, not a

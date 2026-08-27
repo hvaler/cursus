@@ -43,7 +43,7 @@ reasoning behind it.
 - [ ] **Not an Enterprise or Edu workspace.** Site tools do not exist there and no setting
       brings them back, so there is nothing to film. Record in Chrome instead.
 - [ ] <https://hvaler.github.io/cursus/> open in the **in-app browser**, hard-reloaded, plan
-      **empty**, status line green: *WebMCP available — 12 tools registered.*
+      **empty**, status line green: *WebMCP available — 13 tools registered.*
 - [ ] The page pane wide enough that **TOOL CALLS, LIVE** is readable at 1080p. Squint-test it.
 - [ ] A second tab on the repo, for the closing shot.
 - [ ] Sidebar collapsed — the conversation titles are personal.
@@ -133,7 +133,7 @@ reachable tracks all re-render.
 
 **On screen:** second tab, `app/tools.js`, scrolled to a `registerTool` call.
 
-> "Twelve tools, registered with `document dot modelContext dot registerTool`. The thing that shaped
+> "Thirteen tools, registered with `document dot modelContext dot registerTool`. The thing that shaped
 > all of it: `execute` returns **a string the model reads**. These strings are the interface, not a
 > serialisation of it."
 
@@ -182,7 +182,7 @@ Built for The WebMCP Challenge.
 Live:  https://hvaler.github.io/cursus/
 Code:  https://github.com/hvaler/cursus  (Apache-2.0)
 
-Twelve tools registered with document.modelContext.registerTool. Every tool call is an event and
+Thirteen tools registered with document.modelContext.registerTool. Every tool call is an event and
 the plan is the reduction of those events, so undo is the same reducer with a smaller number and
 the audit trail is the list itself. The screen renders from that same log, so there is no second
 source of truth for an agent and a person to disagree about.
@@ -197,7 +197,7 @@ Both environments the challenge rules name were tested and both make real tool c
 Waits between sending a prompt and the tool call landing are sped up; the speed is shown on
 screen. Nothing else is edited.
 
-138 tests, no build step, no dependencies, no server.
+152 tests, no build step, no dependencies, no server.
 ```
 
 **Two things that description does on purpose.** It says both environments were tested and which

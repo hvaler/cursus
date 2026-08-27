@@ -46,7 +46,7 @@ it wrong first. The documentation was found afterwards and agreed.
 1. Open the page in the **in-app browser** (the tab pane beside the conversation), not in an
    ordinary browser and not by asking ChatGPT to browse to it.
 2. Confirm the page says it registered its tools. Ours prints
-   **"WebMCP available - 12 tools registered."**
+   **"WebMCP available - 13 tools registered."**
 3. **Be in Work mode.** This is the step that matters and the one nothing tells you about.
 4. Tell the assistant to *use* the tool, naming it:
 

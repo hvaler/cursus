@@ -23,14 +23,15 @@ npm test        # node --test test/*.test.js
 | Planning towards a goal | `test/solve.test.js` | 11 |
 | Registering when the host attaches late | `test/registration.test.js` | 4 |
 | A limit the student set, and the ways round it | `test/policy.test.js` | 16 |
+| A plan in a link, and links that were edited | `test/share.test.js` | 14 |
 | The documents, against the code they describe | `test/docs.test.js` | 4 |
 | Escaping, and the screen rendering from the log | `test/ui.test.js` | 13 |
-| **Total** | | **138** |
+| **Total** | | **152** |
 
 **Skipped: zero. Failing: zero.** No build step, no dependencies — `package.json` has no
 `dependencies` or `devDependencies` at all, and the whole thing runs on Node's own test runner.
 
-**1,735 lines** across nine modules in `app/`. The shape of them is in
+**1,947 lines** across ten modules in `app/`. The shape of them is in
 [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 ---
@@ -49,9 +50,10 @@ npm test        # node --test test/*.test.js
 | Planning towards a track only proposes legal plans | `app/solve.js:59` `planForTrack` | `solve.test.js` "nothing it proposes would be rejected by the rules" | **yes** |
 | Infeasibility names the blocker and prices each way out | `app/solve.js:109` `explainInfeasible` | `solve.test.js` (4 tests) | **yes** |
 | Caller input is bounded and quoted before reaching a model | `app/rules.js:46` `quoteInput` | `hostile.test.js` (8 tests) | **yes** |
-| Twelve tools registered with WebMCP | `app/tools.js` `TOOLS`, `registerAll` | `docs.test.js` counts them against every document | **yes** |
+| Thirteen tools registered with WebMCP | `app/tools.js` `TOOLS`, `registerAll` | `docs.test.js` counts them against every document | **yes** |
 | A limit the student sets is held against the agent | `app/policy.js:70` `whyNotAllowedByPolicy` | `policy.test.js` (16 tests) | **yes** |
 | Two courses can be weighed in one call, without the two tools disagreeing | `app/tools.js` `compare_options` | `tools.test.js` "it cannot disagree with what_this_closes" | **yes** |
+| A shared link cannot build a plan the rules would refuse | `app/share.js:122` `replay` | `share.test.js` (5 tests on forged links) | **yes** |
 | The catalogue's graph is at least four deep | `app/catalogue.js` | `core.test.js` "at least four levels deep" | **yes** — deepest chain is 6 |
 
 The catalogue also tests **itself**: every prerequisite names a course that exists, and no course
@@ -321,10 +323,15 @@ without any agent at all.
 Gemini, twice. Not GPT, not Claude, not a small local model. The eval harness would take about
 twenty minutes to point at another provider; it has not been done.
 
-### 4.6 The undo is per-session and lives in memory
+### 4.6 Nothing is stored anywhere
 
-There is no persistence. Reloading the page empties the plan. That is a demo's honesty, not a
-product's — and it is why there is no auth, no accounts and no server.
+Reloading empties the plan unless the address carries one. `share_plan` puts the actions in the URL
+and reopening replays them, so a plan can outlive a tab **if somebody copied the link** — and
+cannot otherwise. There is no database, no account, no server and no auth, which is deliberate and
+is also the reason a closed tab is a lost plan.
+
+The link is not a backup either: it is as long as the plan is, and a plan of thirty courses is a
+long URL to paste into a chat window.
 
 ### 4.7 The UI is tested for what matters, not for how it looks
 

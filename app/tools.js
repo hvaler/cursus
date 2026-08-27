@@ -22,6 +22,7 @@ import { log, state, record, caller } from './store.js';
 import {
   PROTECTED, whyNotAllowedByPolicy, whyNotProtect, whyNotRelease, withProtection, describePolicy,
 } from './policy.js';
+import { linkFor } from './share.js';
 import { planForTrack, explainInfeasible } from './solve.js';
 
 /** A newline, named. Building these strings through a shell has mangled the escape twice. */
@@ -443,6 +444,25 @@ export const TOOLS = [
             return `  step ${e.seq}: ${what}`;
           }).join('\n') + `\nundo_to takes any of those step numbers; step 0 empties the plan.`;
       return record('list_actions', {}, out, false);
+    },
+  },
+
+  {
+    name: 'share_plan',
+    description:
+      'Turn the plan into a link that can be sent to somebody — a tutor, an adviser, a friend who ' +
+      'took the course last year. Nothing is stored: the link carries the actions themselves, and ' +
+      'opening it replays them through the same rules, so a link cannot produce a plan this page ' +
+      'would have refused to build.',
+    inputSchema: { type: 'object', properties: {} },
+    execute: () => {
+      const url = linkFor(log.events);
+      const out = url
+        ? `${url}${NL}That link carries ${log.length} action(s) and no data about anyone. Opening ` +
+          `it replays them through the same rules, so anything edited into it that breaks a rule ` +
+          `is refused on the way in and reported.`
+        : `The plan is empty, so there is nothing to share yet. Add something first.`;
+      return record('share_plan', {}, out, false);
     },
   },
 

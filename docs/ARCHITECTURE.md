@@ -1,6 +1,6 @@
 # Architecture
 
-**1,735 lines** across nine modules in `app/`. No build step, no dependencies, no server. This
+**1,947 lines** across ten modules in `app/`. No build step, no dependencies, no server. This
 file is what a reader needs before opening any of it.
 
 Every number here is checkable: `wc -l app/*.js`, `npm test`.
@@ -34,6 +34,7 @@ graph TD
     queries["queries.js<br/><i>reachability, closures, cost</i>"]
     solve["solve.js<br/><i>placement, planning, priced repairs</i>"]
     policy["policy.js<br/><i>the student's own limits</i>"]
+    share["share.js<br/><i>a plan in a link, replayed</i>"]
     store["store.js<br/><i>the single log, call attribution</i>"]
     tools["tools.js<br/><i>the 10 WebMCP tools</i>"]
     ui["ui.js<br/><i>renders from the same log</i>"]
@@ -49,6 +50,9 @@ graph TD
     policy --> rules
     policy --> queries
     solve --> policy
+    share --> policy
+    tools --> share
+    ui --> share
     store --> events
     tools --> policy
     tools --> catalogue
@@ -135,8 +139,9 @@ with neither side able to notice. `describe(state)` is what closes that gap.
 | `app/queries.js` | 145 | `closure`, `canStillPlace`, `trackStatus`, `whatThisCloses`, `requirementChain`, `search` | mutate state |
 | `app/solve.js` | 159 | `place`, `planForTrack`, `explainInfeasible` — greedy earliest-fit with one repair pass | promise optimality |
 | `app/policy.js` | 157 | the limits a person declares, and why an add is refused against them | invent a limit the person did not set |
+| `app/share.js` | 155 | a plan encoded into a link, and replayed back through the tools | write state directly |
 | `app/store.js` | 54 | the one `EventLog`, the change listeners, the call trace, the caller attribution | contain rules |
-| `app/tools.js` | 532 | the 12 tool definitions, `registerAll`, `waitForModelContext` | contain rules |
+| `app/tools.js` | 532 | the 13 tool definitions, `registerAll`, `waitForModelContext` | contain rules |
 | `app/ui.js` | 232 | renders plan, tracks, trace, timeline, catalogue; the scripted walk-through | hold state |
 
 **`tools.js` is the largest file and contains no logic.** It is 532 lines of descriptions and
@@ -151,9 +156,9 @@ an agent hunting for a prerequisite that is not the problem.
 
 ---
 
-## The twelve tools
+## The thirteen tools
 
-Seven answer questions, three change the plan, two work on the history.
+Eight answer questions, three change the plan, two work on the history.
 
 | | Tool | Reads or writes |
 |---|---|---|
@@ -161,6 +166,7 @@ Seven answer questions, three change the plan, two work on the history.
 | | `explain_requirement` | reads |
 | | `what_this_closes` | reads |
 | | `compare_options` | reads — the same question with two answers |
+| | `share_plan` | reads — returns a link, changes nothing |
 | | `plan_status` | reads |
 | | `plan_for_track` | reads — proposes, does not apply |
 | | `explain_infeasibility` | reads |
@@ -172,6 +178,11 @@ Seven answer questions, three change the plan, two work on the history.
 
 `plan_for_track` proposing rather than applying is deliberate: a plan an agent can inspect before
 committing is worth more than one it has already carried out.
+
+`share_plan` returns a link and touches nothing, which is why it sits with the questions. What
+the link carries is **actions, not a plan** — reopening one replays them through these same tools,
+so a link edited by hand cannot build something the rules would have refused. That is the whole
+reason it is not a persistence feature: there is no second way into the state.
 
 `protect_track` is the odd one and the point of the surface. The other two writes add and remove
 courses; this one writes a **limit**, which every later call is then checked against — including
