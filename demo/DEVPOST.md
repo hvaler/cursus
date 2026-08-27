@@ -12,21 +12,27 @@ Every figure below is measured, and re-measurable: `npm test`, `npm run eval`.
 ## Elevator pitch
 
 ```text
-A course planner whose tools refuse, say what a choice closes off two years before it bites, and can be rewound — and that never claims an agent was here when it cannot know.
+A course planner whose tools refuse, say what a choice closes off two years before it bites, and hold a limit you set against the agent — including when you are the one asking.
 ```
 
 ---
 
 ## The long text
 
-### The problem
+### The problem, and who has it
 
-A university course planner shows you what you picked. That is all any timetable shows.
+**A student picks four courses for their third term because those are the ones that fit.** Two
+years later a specialisation they wanted is out of reach — not because anything refused them, but
+because the one course it needed runs in a single term, and that term filled up. No warning
+appeared. The cost landed twenty-one months after the decision, and by then it was not a decision
+any more.
 
-What it cannot show you is what picking it **costs**. Take one course in your third term and a
-specialisation you were counting on becomes unreachable in your sixth — because a prerequisite runs
-in one term only, and that term is now full. The consequence lands two years later. Nobody works it
-out in their head, and no interface offers to.
+An adviser can work this out with the handbook open and twenty minutes. Most students never think
+to ask, and most advisers have more students than twenty-minute slots. **So the calculation that
+decides which doors stay open is the one nobody performs** — not because it is hard to explain, but
+because it has to be redone from scratch whenever anything changes.
+
+A timetable shows what you picked. That is all any timetable shows.
 
 ### What Cursus does
 
@@ -69,6 +75,13 @@ that also carries the user's policy lets them say **what they will not have done
 and have it hold while they are not watching. It cost almost nothing to build, because a protection
 is an event like any other — so `undo_to` unwinds it with everything else, and no code was written
 to make that true.
+
+**And this part is not really about courses.** Anyone handing work to an agent has the same
+question: *how do I let it act for me without it doing the one thing I would have vetoed?* The
+usual answer is a prompt, and a prompt is a request. A page that carries the user's policy and
+enforces it structurally is a different answer — the limit lives with the state it protects,
+survives the conversation that set it, and applies to whoever asks next, including the same person
+in a hurry. Course planning is where we could demonstrate it. It is not where it stops.
 
 **And they can be handed to someone else.** `share_plan` returns a link, and there is no server
 behind it: the link carries the actions. What makes that more than a persistence trick is what

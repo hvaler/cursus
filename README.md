@@ -18,6 +18,28 @@ To watch an agent call them, either environment the rules name works:
 With no agent at all the page still works: the buttons and the scripted walk-through call the same
 tools, by the same contract.
 
+**The page shows its own tool-call log and a timeline, which a course planner for students would
+not.** That is not an unfinished product showing its wiring — it is the argument. You can see which
+calls an agent made, what each returned, what the page assumed about who was asking, and you can
+rewind any of it. A version of this for a real registrar would hide all three. This one is built to
+be checked.
+
+## The problem, and who has it
+
+**A student picks four courses for their third term because those are the ones that fit.** Two
+years later a specialisation they wanted is out of reach — not because anything refused them, but
+because the one course it needed runs in a single term, and that term filled up. No warning
+appeared. The cost landed twenty-one months after the decision, and by then it was not a decision
+any more.
+
+An adviser can work this out with the handbook open and twenty minutes. Most students never think
+to ask, and most advisers have more students than twenty-minute slots. **So the calculation that
+decides which doors stay open is the one nobody performs** — not because it is hard to explain, but
+because it has to be redone from scratch every time anything changes.
+
+That is what these tools do, and it is why they belong to an agent rather than to a button: the
+question is asked in the middle of choosing, in a person's own words, about a plan that is theirs.
+
 ## The argument
 
 Most pages that expose tools to an agent expose compliant ones: `add_thing`, `list_things`. An
@@ -28,6 +50,20 @@ These do five things a rendered timetable cannot.
 **They refuse.** `add_course('ADV-301')` comes back with *why*, and with what would unblock it. On
 2026-08-27 that made `gemini-3.6-flash` stop reporting a failure and start proposing a fix — then
 ask permission before applying it. Nothing instructed it to. See [`docs/GATE.md`](docs/GATE.md).
+
+**They hold a limit you set, against the agent.** Every other rule here belongs to the university:
+prerequisites, clashes, a credit cap, the same for everyone. `protect_track` belongs to the person.
+Say *keep Graphics open* and from then on any course that would close it is refused — **including
+when you ask for it yourself an hour later** — and the refusal cites your own instruction rather
+than the handbook. The planner will not route through it either.
+
+**This is the part that is not really about courses.** Anyone handing work to an agent has the same
+question: *how do I let it act for me without it doing the one thing I would have vetoed?* Prompts
+are the usual answer, and a prompt is a request. A page that carries the user's policy and enforces
+it structurally is a different answer — the limit lives with the state it protects, survives the
+conversation that set it, and applies to whoever asks next. It cost almost nothing to build here,
+because a protection is an event like any other: `undo_to` takes it back out and no code was
+written to make that true.
 
 **They answer what the screen cannot.** `what_this_closes` is forward reachability over the
 prerequisite graph under a credit budget. With terms 1–2 full and six credits left in term 3:
@@ -45,19 +81,8 @@ answer *no*. `explain_infeasibility` names the course that blocks it, the rule b
 way to make room — with what each one costs. In the fixture above there are five ways and **every
 one closes another specialisation**, which is more useful than a solver that shrugs.
 
-**They hold a limit you set, against the agent.** Every rule above belongs to the university:
-prerequisites, clashes, a credit cap, the same for everyone. `protect_track` belongs to the person.
-Say *keep Graphics open* and from then on any course that would close it is refused — **including
-when you ask for it yourself an hour later** — and the refusal cites your own instruction rather
-than the handbook. The planner will not route through it either.
-
-A tool surface that only exposes capability lets an agent do whatever the UI could, faster. One
-that carries the user's policy lets them say **what they will not have done to their plan**, and
-have it hold while they are not watching.
-
 **They can be undone.** Every tool call is an event; the state is the reduction of the events; so
-rewinding is the same reducer with a smaller number, not per-tool inverse logic. A protection is an
-event too, so undo takes it back out and no code was written to make that true. The timeline on the
+rewinding is the same reducer with a smaller number, not per-tool inverse logic. The timeline on the
 page is the log with a cursor.
 
 ## And the page never claims an agent was here
