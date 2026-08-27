@@ -78,7 +78,7 @@ cheaper than calling the tool.** [`docs/FACTS.md §4.4`](docs/FACTS.md) has the 
 ## Running it
 
 ```bash
-npm test          # 118 tests, no build step, no dependencies
+npm test          # 131 tests, no build step, no dependencies
 npm run eval      # puts a real model in front of the tools; needs GEMINI_API_KEY
 ```
 

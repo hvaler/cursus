@@ -6,11 +6,11 @@
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { callFromPage } from '../app/tools.js';
+import { callTool } from '../app/tools.js';
 import { log, trace } from '../app/store.js';
 
 const call = (/** @type {string} */ name, /** @type {any} */ args) =>
-  String(callFromPage(name, args));
+  String(callTool(name, args));
 
 beforeEach(() => {
   log.rewindTo(0);

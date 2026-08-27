@@ -443,7 +443,10 @@ export async function registerAll() {
 }
 
 /** Call a tool by name from the page itself. @param {string} name @param {any} args */
-export function callFromPage(name, args) {
+export function callTool(name, args) {
+  // Deliberately does not attribute the call to the page. That is `asPage`'s job, and the two are
+  // separate because eval.mjs drives these same tools *as an agent* — a call that labelled itself
+  // `page` from in here would be lying in the other direction.
   const t = TOOLS.find((x) => x.name === name);
   if (!t) throw new Error(`no tool named ${name}`);
   return t.execute(args ?? {});

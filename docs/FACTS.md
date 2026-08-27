@@ -24,7 +24,8 @@ npm test        # node --test test/*.test.js
 | Registering when the host attaches late | `test/registration.test.js` | 4 |
 | A limit the student set, and the ways round it | `test/policy.test.js` | 16 |
 | The documents, against the code they describe | `test/docs.test.js` | 4 |
-| **Total** | | **118** |
+| Escaping, and the screen rendering from the log | `test/ui.test.js` | 13 |
+| **Total** | | **131** |
 
 **Skipped: zero. Failing: zero.** No build step, no dependencies — `package.json` has no
 `dependencies` or `devDependencies` at all, and the whole thing runs on Node's own test runner.
@@ -324,10 +325,20 @@ twenty minutes to point at another provider; it has not been done.
 There is no persistence. Reloading the page empties the plan. That is a demo's honesty, not a
 product's — and it is why there is no auth, no accounts and no server.
 
-### 4.7 The UI has no automated test
+### 4.7 The UI is tested for what matters, not for how it looks
 
-`app/ui.js` is exercised by hand and by the scripted walk-through. The logic under it is covered;
-the rendering is not.
+`app/ui.js` used to have no test at all. It now has thirteen, against a fake `document`, and they
+deliberately do not assert on markup: a test that pins class names fails for good reasons and gets
+deleted.
+
+What they do pin is the part that is not cosmetic. **Every string on that screen can originate with
+an agent**, and an agent can be steered by whoever is talking to it, so `esc()` is the only thing
+between a tool argument and `innerHTML`. The tests cover all five escaped characters, the attribute
+position, and the real path — a hostile course code driven through `add_course` and out into the
+trace.
+
+What is still not tested is the browser: clicking, layout, whether it reads well at 1080p. Those
+are checked by looking.
 
 ---
 
@@ -354,4 +365,5 @@ remedy — and why they are tested as carefully as the logic underneath.
 4. The greedy placer's false negatives are documented but not characterised.
 5. Synthetic catalogue, no registrar has seen it.
 6. No persistence, no accounts, no server — deliberate, but it means "your plan" is per-tab.
-7. `app/ui.js` has no automated test.
+7. The UI's markup and layout are checked by eye. `ui.test.js` covers the escaping and the
+   rendering; nothing covers how it looks.

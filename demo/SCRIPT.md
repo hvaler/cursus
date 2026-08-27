@@ -197,7 +197,7 @@ Both environments the challenge rules name were tested and both make real tool c
 Waits between sending a prompt and the tool call landing are sped up; the speed is shown on
 screen. Nothing else is edited.
 
-118 tests, no build step, no dependencies, no server.
+131 tests, no build step, no dependencies, no server.
 ```
 
 **Two things that description does on purpose.** It says both environments were tested and which

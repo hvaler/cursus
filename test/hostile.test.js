@@ -11,11 +11,11 @@
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { callFromPage } from '../app/tools.js';
+import { callTool } from '../app/tools.js';
 import { quoteInput } from '../app/rules.js';
 import { log, trace } from '../app/store.js';
 
-const call = (/** @type {string} */ n, /** @type {any} */ a) => String(callFromPage(n, a));
+const call = (/** @type {string} */ n, /** @type {any} */ a) => String(callTool(n, a));
 
 beforeEach(() => { log.rewindTo(0); trace.length = 0; });
 

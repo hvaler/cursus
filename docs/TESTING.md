@@ -14,7 +14,7 @@ git clone https://github.com/hvaler/cursus && cd cursus
 npm test
 ```
 
-**118 tests, none skipped, no dependencies to install.** `package.json` has no `dependencies` and no
+**131 tests, none skipped, no dependencies to install.** `package.json` has no `dependencies` and no
 `devDependencies`; the runner is Node's own (`node --test`). Node 20 or later.
 
 | Suite | Covers |
@@ -26,6 +26,8 @@ npm test
 | `test/solve.test.js` (11) | planning towards a goal, and pricing the ways out |
 | `test/registration.test.js` (4) | a host that attaches WebMCP late, or never |
 | `test/policy.test.js` (16) | a limit the student set, and the ways round it that must not work |
+| `test/ui.test.js` (13) | escaping, and the screen rendering from the same log |
+| `test/docs.test.js` (4) | the documents, against the code they describe |
 
 If a claim in [FACTS.md](FACTS.md) interests you, its row names the test that backs it and the
 `file:line` that implements it. Those references are checked against the source, not written from
@@ -125,7 +127,7 @@ A call the page did not make itself shows as `AGENT`. That is an assumption, and
 
 | Claim | Command |
 |---|---|
-| 118 tests, none skipped | `npm test` |
+| 131 tests, none skipped | `npm test` |
 | 5/5 on the eval scenarios | `npm run eval` (needs `GEMINI_API_KEY`) |
 | 1,650 lines across nine modules | `wc -l app/*.js` |
 | 40 courses, 4 tracks, 30-credit cap | `node -e "import('./app/catalogue.js').then(m=>console.log(m.COURSES.length, m.TRACKS.length, m.CREDIT_CAP_PER_TERM))"` |

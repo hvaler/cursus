@@ -15,7 +15,7 @@
  *     | GEMINI_API_KEY=$(cat) node tools/eval.mjs
  */
 
-import { TOOLS, callFromPage } from '../app/tools.js';
+import { TOOLS, callTool } from '../app/tools.js';
 import { log, trace } from '../app/store.js';
 
 const KEY = process.env.GEMINI_API_KEY;
@@ -96,7 +96,7 @@ async function converse(prompt, maxTurns = 8) {
       called.push({ tool: c.name, args: c.args ?? {} });
       let result;
       try {
-        result = String(await callFromPage(c.name, c.args ?? {}));
+        result = String(await callTool(c.name, c.args ?? {}));
       } catch (err) {
         result = `The page could not run that: ${String(err)}`;
       }
@@ -215,7 +215,7 @@ console.log(`Evaluating ${TOOLS.length} tools against ${MODEL}\n`);
 for (const sc of [...SCENARIOS, ...ADVERSARIAL]) {
   log.rewindTo(0);
   trace.length = 0;
-  for (const [course, term] of sc.setup ?? []) callFromPage('add_course', { course, term });
+  for (const [course, term] of sc.setup ?? []) callTool('add_course', { course, term });
 
   await sleep(3000);              // the next conversation starts a fresh minute's worth
   process.stdout.write(`  ${sc.name} … `);

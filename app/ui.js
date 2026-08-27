@@ -9,7 +9,7 @@ import { creditsIn } from './rules.js';
 import { trackStatus, totalCredits } from './queries.js';
 import { log, state, trace, onChange, asPage } from './store.js';
 import { protectedTracks } from './policy.js';
-import { TOOLS, callFromPage, registerAll } from './tools.js';
+import { TOOLS, callTool, registerAll } from './tools.js';
 
 const $ = (/** @type {string} */ id) => /** @type {HTMLElement} */ (document.getElementById(id));
 /**
@@ -20,7 +20,7 @@ const $ = (/** @type {string} */ id) => /** @type {HTMLElement} */ (document.get
  * and it reaches the screen through the trace and through refusal text that quotes the code back.
  * Quotes are escaped as well as angle brackets because some of these land inside `title="…"`.
  */
-const esc = (/** @type {unknown} */ s) => String(s).replace(/[<>&"']/g, (c) =>
+export const esc = (/** @type {unknown} */ s) => String(s).replace(/[<>&"']/g, (c) =>
   ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' })[c] ?? c);
 
 /** The plan, per term. */
@@ -91,9 +91,12 @@ function renderTimeline() {
     return;
   }
   el.innerHTML = events.map((e) => {
+    const held = /** @type {any} */ (e).value;
     const what = e.type === 'CourseAdded' ? `added ${e.code} → term ${e.term}`
       : e.type === 'CourseRemoved' ? `removed ${e.code}`
-      : e.type;
+      : e.type === 'ConstraintSet'
+        ? (Array.isArray(held) && held.length ? `protected ${held.join(', ')}` : 'released every protection')
+        : e.type;
     return `<button class="step" data-step="${e.seq}" title="Rewind to just after this step">
         <span class="dim">${e.seq}</span> ${esc(what)}</button>`;
   }).join('') +
@@ -102,7 +105,7 @@ function renderTimeline() {
   for (const b of el.querySelectorAll('.step')) {
     b.addEventListener('click', () => {
       const step = Number(/** @type {HTMLElement} */ (b).dataset.step);
-      asPage(() => callFromPage('undo_to', { step }));
+      asPage(() => callTool('undo_to', { step }));
     });
   }
 }
@@ -123,13 +126,13 @@ function renderCatalogue() {
       const el = /** @type {HTMLElement} */ (b);
       const code = String(el.dataset.code);
       const held = el.classList.contains('held');
-      asPage(() => callFromPage(held ? 'remove_course' : 'add_course',
+      asPage(() => callTool(held ? 'remove_course' : 'add_course',
         { course: code, term: Number(el.dataset.term) }));
     });
   }
 }
 
-function renderAll() {
+export function renderAll() {
   renderPlan();
   renderTracks();
   renderTrace();
@@ -140,7 +143,7 @@ function renderAll() {
 /**
  * The simulated agent. It exists because the most likely way this is seen is in a browser with no
  * WebMCP at all, and a course planner with no agent in it proves nothing. It calls the tools
- * through the same contract an agent uses — `callFromPage` runs the identical `execute` — so it
+ * through the same contract an agent uses — `callTool` runs the identical `execute` — so it
  * cannot drift from the real path. It is labelled `page`, never `AGENT`.
  */
 /** Filling the first terms is setup, not narrative: it runs without pauses. */
@@ -165,14 +168,14 @@ async function runSimulation() {
   btn.textContent = 'Setting up…';
 
   await asPage(async () => {
-    callFromPage('undo_to', { step: 0 });
-    for (const [course, term] of SETUP) callFromPage('add_course', { course, term });
+    callTool('undo_to', { step: 0 });
+    for (const [course, term] of SETUP) callTool('add_course', { course, term });
   });
 
   btn.textContent = 'Running…';
   for (const [name, args] of BEATS) {
     await new Promise((r) => setTimeout(r, 1100));
-    await asPage(() => callFromPage(String(name), args));
+    await asPage(() => callTool(String(name), args));
   }
 
   btn.disabled = false;
