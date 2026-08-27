@@ -104,11 +104,14 @@ from `getTools()`. `executeTool` wants its arguments as a JSON string. The clien
 tools. And the one that shaped the product: `execute` returns a string, so the strings are the
 interface.
 
-The last one came from the environment the rules themselves name. A page reading **"WebMCP
-available — 10 tools registered"** has established that the API exists in that browser and
-nothing more: **registration succeeding is not evidence a model can see the tools.** A page sees
-zero calls whether the host never bridged them or the model considered one and declined, and it
-cannot tell those apart. They are all written up with the error each one produced.
+The eighth came from the environment the rules themselves name, and cost four failed attempts.
+A page reading **"WebMCP available — 10 tools registered"** has established that the API exists
+in that browser and nothing more: **registration succeeding is not evidence a model can call
+anything.** Zero calls is consistent with the host never bridging the tools, with a model seeing
+them and declining, with no agent being present, and — as it turned out here — with a session
+that had no browser tab bound to the agent. **A page sees one number for all four.** So a WebMCP
+page cannot diagnose its own silence, and has to tell the reader what to check on their side
+instead. They are all written up with the error each one produced.
 
 ### The thing we did not expect
 
@@ -133,11 +136,9 @@ fork well enough to answer the question, and that is exactly what made reading c
 The catalogue is synthetic — real in structure, invented in content, and no registrar has seen it.
 There is no persistence: reload and the plan is empty, which is why there is no auth and no server.
 The planner is greedy with one repair pass, so a "no" from it means *this planner found no way*,
-not *no way exists*. It has been evaluated against one model family. And of the two environments the
-rules name, only Chrome-plus-a-WebMCP-client produced a real tool call: ChatGPT's in-app browser
-loads the page and registers all ten tools, but its chat pane could not invoke them — it reaches
-the rendered page, not the live registry. That is written up with what was asked and what came
-back, rather than left blank.
+not *no way exists*. It has been evaluated against one model family: both environments the rules name
+produce real tool calls, but the five scored scenarios all ran through Chrome and the Inspector.
+ChatGPT's in-app browser has one call to its name, not a scenario set.
 
 ---
 

@@ -139,39 +139,36 @@ survive the trip, and must not rely on them for anything it does itself.
 
 `registerTool` resolving, `getTools()` returning what you registered, and a page reading
 **"WebMCP available - 10 tools registered"** all describe one thing: the API exists in this
-browser. **None of them says the host handed those tools to a model.**
+browser. **None of them says a model is in a position to call anything.**
 
-Found on 2026-08-27 in ChatGPT desktop's in-app browser (GPT-5.6 Sol). The page loaded, registered
-all ten tools, and said so. In the same conversation, with the page open beside it:
+Found on 2026-08-27 in ChatGPT desktop's in-app browser, which registered all ten tools and then
+went four prompts without calling one - the fourth after saying it would rely on the page's tools
+and not search the web. Full record in [FACTS 4.4](FACTS.md).
 
-| Asked | What came back | Calls |
-|---|---|---:|
-| `What does taking NUM-201 in term 3 close off?` | the answer, cited to **GitHub** | 0 |
-| `Use the tools this page registers. Do not search the web.` | *"Searching the web"* | 0 |
-| the same instruction again | *"Understood. I will not use web search. I will rely only on the tools the page registers"* | 0 |
+**The cause was none of the things the page could have guessed.** It was not the API, not the
+registration, and not a permission - *Enable site tools*, the setting that governs exactly this, was
+already on. The session simply had no browser tab **bound to the agent**. The page was open beside
+the conversation rather than under it, so the model reached the rendered HTML and not the registry.
+Bind the tab and the same tool call goes through and returns the same string the page's own buttons
+produce.
 
-The third one is the useful one. The model **stated it would use the tools and then called none**.
+So the list of things a page cannot distinguish is longer than it first looks. Zero calls is
+consistent with all of:
 
-And the answers were wrong for the page in front of it. The plan was empty - six terms at 0/30, all
-four specialisations still reachable - so `what_this_closes` had to answer that it closes nothing.
-It described `GEOM-201` and Graphics and Animation instead, which is the worked example written out
-in this repository's README.
+- the host never bridged the tools to a model,
+- the model saw them and declined,
+- **the model was never in a session that could reach them,** and
+- there is no agent here at all.
 
-**The part that is an API observation rather than a model observation:** a page sees zero calls in
-both of these cases and cannot tell them apart.
+A page sees one number for all four. This is [finding 6](#6-the-page-cannot-tell-who-called-a-tool)
+extended: there a page could not tell *who* called, here it cannot tell *why nobody did* - and the
+real reason was the one furthest from anything it can observe.
 
-- the host never exposed the tools to the model, or
-- the host exposed them and the model chose not to call one.
-
-This is [finding 6](#6-the-page-cannot-tell-who-called-a-tool) with the volume turned up. There a
-page could not tell *who* called; here it cannot tell *why nobody did*. A page can measure its own
-registration and it can count calls. Everything between those two - whether a bridge was built,
-whether a model saw a schema, whether it considered a tool and declined - is not observable from
-the page.
-
-So a page should never report the presence of the API as agent readiness. This one says
-**"10 tools registered"**, which is a fact about the page, and separately counts calls, which is a
-fact about what happened. The gap between the two numbers is where this lives.
+**What follows for a page.** Never report the presence of the API as readiness. This one says
+**"10 tools registered"**, a fact about the page, and counts calls separately, a fact about what
+happened. Both numbers are honest and neither is the interesting one. **The gap between them is not
+diagnosable from inside the page**, which means a WebMCP page that wants to be usable has to say
+what the reader should check on their side - the page cannot work it out for them.
 
 ---
 

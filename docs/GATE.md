@@ -85,17 +85,31 @@ Refused.  ADV-301 (Advanced Calculus) requires CALC-101, which is not completed 
 
 `execute` returns a string the model reads, so this is not decoration: it is the whole interface.
 
-## The other environment
+## The other environment, also passed
 
-**ChatGPT's own in-app browser.** The submission asks for a URL reachable from *"ChatGPT's in-app
-browser or Google Chrome with WebMCP enabled"*, and the gate above is the second of those.
+The submission asks for a URL reachable from *"ChatGPT's in-app browser or Google Chrome with
+WebMCP enabled"*. The gate above is the second. The first was passed later the same day, on
+2026-08-27:
 
-The first was tried on 2026-08-27. The in-app browser loads the page and the page registers all
-ten tools in it — **"WebMCP available — 10 tools registered"** — but the chat pane beside that
-tab called none of them across four prompts, and said why: it reaches the rendered page, not the
-live registry. The full record, with what was asked and what came back, is in
-[FACTS §4.4](FACTS.md). Asking `chatgpt.com` in an ordinary tab is a different thing again, and
-cannot work: a web page has no access to another tab's model context.
+```text
+what_this_closes({ course: "NUM-201", term: 3 })
+
+Taking NUM-201 in term 3 closes no track. Every specialisation that is reachable now stays
+reachable.
+```
+
+That is [`app/tools.js:107`](../app/tools.js) with the arguments substituted, character for
+character, and it is the answer for an **empty plan** — the opposite of the worked example every
+document in this repository describes. A model answering from the README says Graphics and
+Animation. This one did not.
+
+**It took four failed attempts to get there**, and what was missing was not the page and not a
+permission: the session needed a browser tab **bound to the agent**. With the tab merely open
+beside the chat, the model answers from whatever it can read. [FACTS §4.4](FACTS.md) has all of
+it — what was asked, what came back, and what had already been ruled out.
+
+Asking `chatgpt.com` in an ordinary tab is a different thing again, and cannot work: a web page
+has no access to another tab's model context.
 
 ## Cost
 

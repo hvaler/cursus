@@ -3,11 +3,22 @@
 A course planner whose tools can **refuse**, can say **what a choice closes off** two years before
 it bites, and can be **rewound**. Built for [The WebMCP Challenge](https://webmcp.devpost.com/).
 
-**Live: <https://hvaler.github.io/cursus/>** — for an agent that actually calls the tools, use
-Chrome 149+ with `chrome://flags/#enable-webmcp-testing` and a WebMCP client. ChatGPT's in-app
-browser loads the page and registers all ten tools, but its chat pane could not invoke them
-([FACTS §4.4](docs/FACTS.md)). Without an agent the page still works: the buttons and the
-scripted walk-through call the same tools, by the same contract.
+**Live: <https://hvaler.github.io/cursus/>**
+
+Both environments the rules name work, and one of them has a catch worth knowing before you
+judge it:
+
+- **ChatGPT's in-app browser** — open the page, then ask **in a session with that tab bound to
+  the agent**. Asking about the page with the tab merely open beside the chat gets you an answer
+  read off this repository rather than a tool call, and it is a convincing one. The tell: with an
+  empty plan, a real call to `what_this_closes` for `NUM-201` says it **closes no track**. Any
+  answer about Graphics and Animation came from reading. [FACTS §4.4](docs/FACTS.md) has the
+  whole episode, including the four attempts it took to work that out.
+- **Chrome 149+** with `chrome://flags/#enable-webmcp-testing` and a WebMCP client — the route in
+  [GATE.md](docs/GATE.md).
+
+Without an agent the page still works: the buttons and the scripted walk-through call the same
+tools, by the same contract.
 
 ## The argument
 
@@ -112,7 +123,7 @@ settles are in [`docs/GATE.md`](docs/GATE.md).
 | An agent chooses the right tool unprompted | **yes** |
 | A refusal reads well enough for the agent to repair the situation | **yes** — the finding |
 | ChatGPT's in-app browser registers the tools | **yes**, all ten |
-| ...and its chat pane calls one | **no** — it reads the page, not the registry ([FACTS §4.4](docs/FACTS.md)) |
+| ...and a model there calls one | **yes**, with the tab bound to the agent — and **no** without it, four times ([FACTS §4.4](docs/FACTS.md)) |
 
 ## Licence
 
