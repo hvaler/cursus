@@ -191,6 +191,11 @@ answering correctly about this page having called nothing at all ([FACTS §4.4](
 the page they are looking at, which is the property that makes WebMCP the right shape here rather
 than an API: there is no key to provision and no account to link.
 
+That is also the whole answer to *why GitHub Pages*. The rules allow any provider, and with nothing
+to compile and nothing to run server-side, a hosting platform would have been a platform rather
+than a capability. What is in the repository is what is served, which is a property worth more here
+than any deployment feature.
+
 **No persistence.** Reload and the plan is empty. That is a demo's honesty rather than a product's,
 and it is why there is no auth: with nothing stored, there is nothing to protect.
 

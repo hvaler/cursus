@@ -2,8 +2,15 @@
 
 Read off the live API on **2026-08-27**, in Chrome 151 and in the Chromium that ships with
 Playwright. **None of the nine findings below is in the Chrome documentation**, and three of them
-were found by getting it wrong first. The last two came from the environment the challenge rules
-name, and are the only ones not reproducible from a button on the page.
+were found by getting it wrong first. The last two came from ChatGPT's in-app browser and are
+the only ones not reproducible from a button on the page.
+
+One qualification on finding 8, since this file is meant to be checked rather than believed: the
+*requirement* that led to it - that the in-app browser exposes site tools to ChatGPT Work and to
+Codex, and not at all in Enterprise or Edu workspaces - **is documented by OpenAI**, at
+[learn.chatgpt.com/docs/webmcp](https://learn.chatgpt.com/docs/webmcp). We found that page after
+four failed attempts, not before. The finding itself is about something else and stands: what a
+page can and cannot observe about its own silence.
 
 Reproduce any of them with the *Inspect the API* button on <https://hvaler.github.io/cursus/>.
 

@@ -36,6 +36,8 @@ minutes.
 
 - [ ] ChatGPT desktop, **Work mode on**. Without it there are no tool calls at all
       ([CHATGPT-WORK-MODE.md](../docs/CHATGPT-WORK-MODE.md)).
+- [ ] **Not an Enterprise or Edu workspace.** Site tools do not exist there and no setting
+      brings them back, so there is nothing to film. Record in Chrome instead.
 - [ ] <https://hvaler.github.io/cursus/> open in the **in-app browser**, hard-reloaded, plan
       **empty**, status line green: *WebMCP available — 10 tools registered.*
 - [ ] The page pane wide enough that **TOOL CALLS, LIVE** is readable at 1080p. Squint-test it.
@@ -162,6 +164,42 @@ that.
 **Do not cut between the prompt going in and the panel updating.** The value of this recording is
 that both are in one frame: the instruction on the left, the `AGENT` line appearing on the right,
 with no cut in between for anyone to wonder about.
+
+---
+
+## YouTube description, ready to paste
+
+```text
+Cursus - a course planner whose WebMCP tools refuse, say what a choice closes off two years
+before it bites, and can be rewound.
+
+Built for The WebMCP Challenge.
+
+Live:  https://hvaler.github.io/cursus/
+Code:  https://github.com/hvaler/cursus  (Apache-2.0)
+
+Ten tools registered with document.modelContext.registerTool. Every tool call is an event and
+the plan is the reduction of those events, so undo is the same reducer with a smaller number and
+the audit trail is the list itself. The screen renders from that same log, so there is no second
+source of truth for an agent and a person to disagree about.
+
+Both environments the challenge rules name were tested and both make real tool calls:
+
+  - Chrome 149+ with chrome://flags/#enable-webmcp-testing and the WebMCP Inspector, where an
+    agent chose the tool unprompted and acted on a refusal.
+  - ChatGPT's desktop in-app browser, which is what this video shows - in Work mode. Site tools
+    are not available in Enterprise or Edu workspaces.
+
+Waits between sending a prompt and the tool call landing are sped up; the speed is shown on
+screen. Nothing else is edited.
+
+89 tests, no build step, no dependencies, no server.
+```
+
+**Two things that description does on purpose.** It says both environments were tested and which
+one you are watching, because the video only shows one. And it says the waits were sped up, in the
+description as well as on screen, because someone who reads before watching should not have to
+discover it.
 
 ---
 

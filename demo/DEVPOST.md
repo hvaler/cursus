@@ -83,10 +83,30 @@ agent can act on.** A tool that refuses with a remedy turns an agent from someth
 succeeds or fails into something that negotiates — it repairs the situation and, in our tests,
 asks before committing. That behaviour was not prompted. It came from the shape of the refusal.
 
+### Where it was tested
+
+**Both environments the rules name, and both produce real tool calls.**
+
+**Chrome 149+** with the WebMCP flag and the Inspector extension: an agent chose the tool on its
+own, was refused, and proposed the fix. That is the gate in `docs/GATE.md`, and it has no plan,
+mode or workspace conditions.
+
+**ChatGPT's in-app browser**: the page registers all ten tools and a model calls them — **in Work
+mode**. Outside it, four different phrasings produced no call at all, and confident answers read off
+our own README instead. Finding that out took an afternoon and is written up in
+`docs/CHATGPT-WORK-MODE.md`, including the part a judge most needs: **site tools are not available
+in Enterprise or Edu workspaces**, no setting changes it, and nothing on screen says so. On those,
+use Chrome.
+
+**The video is recorded in ChatGPT's in-app browser**, because that is the environment the rules
+name first and the one most judges will reach for.
+
 ### How it is built
 
 No build step, no dependencies, no server. Plain ES modules on GitHub Pages: what is in the
-repository is what is served.
+repository is what is served. The rules allow any provider, and with nothing to compile and nothing
+to run server-side, a platform would have been a platform and not a capability — the tools act in
+the user's own tab, which is the whole reason WebMCP fits this better than an API would.
 
 The whole thing rests on one decision — **every tool call is an event, and the state is the
 reduction of the events**. Refusing is the reducer rejecting an event before state changes. Undo is
@@ -141,9 +161,9 @@ fork well enough to answer the question, and that is exactly what made reading c
 The catalogue is synthetic — real in structure, invented in content, and no registrar has seen it.
 There is no persistence: reload and the plan is empty, which is why there is no auth and no server.
 The planner is greedy with one repair pass, so a "no" from it means *this planner found no way*,
-not *no way exists*. It has been evaluated against one model family: both environments the rules name
-produce real tool calls, but the five scored scenarios all ran through Chrome and the Inspector.
-ChatGPT's in-app browser has one call to its name, not a scenario set.
+not *no way exists*. It has been evaluated against one model family, and only through Chrome: the five
+scored scenarios all ran there. ChatGPT's in-app browser has two real calls to its name, not a
+scenario set, and Codex — documented as a third surface — has never been tried.
 
 ---
 

@@ -231,8 +231,15 @@ directly.
 
 The instruction that worked names the tool and its arguments. **Nobody has tried a bare question -
 *"what does taking NUM-201 in term 3 close off?"* - inside Work mode**, so how much of the naming
-was necessary is unknown. Nor is it known whether Work mode is reachable on every plan, or what
-another operating system does. One app version, one afternoon.
+was necessary is unknown. Nor is it known what another operating system does. One app version,
+one afternoon.
+
+**Two things that were open here are now settled, by the documentation rather than by us.**
+[OpenAI's site-tools page](https://learn.chatgpt.com/docs/webmcp) says the built-in browser
+exposes these tools to *"ChatGPT Work and Codex"*, which agrees with what the assistant said
+about itself - and that **site tools are not available in Enterprise or Edu workspaces at all**.
+That last one has no workaround and nothing on screen announces it, which is why it is now the
+second sentence of the README. Codex is a surface we have never tried.
 
 **The practical part, for anyone testing this page.** Open it in the in-app browser, be in **Work
 mode**, and tell the assistant to use the tool rather than to answer about the page. Outside Work

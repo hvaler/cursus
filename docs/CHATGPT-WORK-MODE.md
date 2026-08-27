@@ -15,8 +15,34 @@ Everything below was observed on **2026-08-27**, ChatGPT desktop `OpenAI.ChatGPT
 
 ---
 
+## What the official documentation says
+
+Found **after** the four failed attempts below, not before. It confirms the requirement and adds
+two things we had no way to discover ([Site tools, ChatGPT Learn](https://learn.chatgpt.com/docs/webmcp)):
+
+> *"In the built-in browser in the ChatGPT desktop app, **ChatGPT Work and Codex** can discover and
+> use these tools when they are available."*
+
+> *"You can turn off **Enable site tools** in **Settings > Browser > Permissions**."*
+
+> *"Site tools aren't available in **Enterprise or Edu** workspaces."*
+
+**The last one has no workaround.** A judge on an Enterprise or Edu workspace cannot call this
+page's tools from the in-app browser however they configure it, and nothing on screen will say so.
+They need the Chrome route ([TESTING.md](TESTING.md)).
+
+**And Codex is a second surface**, named in the same sentence as ChatGPT Work. We have not tested
+it. It is listed under what is unknown, below, rather than claimed.
+
+The order matters and is worth saying plainly: everything in this file was established by getting
+it wrong first. The documentation was found afterwards and agreed.
+
+---
+
 ## The short version
 
+0. **Check the workspace is not Enterprise or Edu.** Site tools do not exist there, and no setting
+   brings them back. If it is either, stop and use Chrome instead.
 1. Open the page in the **in-app browser** (the tab pane beside the conversation), not in an
    ordinary browser and not by asking ChatGPT to browse to it.
 2. Confirm the page says it registered its tools. Ours prints
@@ -153,12 +179,15 @@ paragraph of this project's README names the mode.
 - **How much of the naming was necessary.** The instruction that worked names the tool and its
   arguments. A bare question — *"what does taking NUM-201 in term 3 close off?"* — has not been
   tried inside Work mode.
-- **Whether Work mode is reachable on every plan.** The four failures ran on a **Go** plan, the
-  success on **Work**. The plan and the mode changed together.
 - **Whether the model matters.** The failures ran on **GPT-5.6 Sol**, the successes on **5.6 Terra
-  Medio**. Mode and model also changed together. The assistant attributes the difference to the
-  mode; nothing here tests that independently.
+  Medio**. Mode and model changed together. The assistant attributed the difference to the mode and
+  the documentation agrees with it, but nothing here tests the model independently.
+- **Codex.** Documented as able to discover and use site tools. Never tried here.
 - **Any other operating system.** Windows 11 only, one app version, one afternoon.
+
+Two things that *were* unknown when this file was first written are now answered, and by the
+documentation rather than by us: the requirement is **ChatGPT Work**, and **Enterprise and Edu
+workspaces are excluded outright**.
 
 ---
 

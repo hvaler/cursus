@@ -88,6 +88,10 @@ Expected: the agent picks `add_course`, is refused for a missing prerequisite, a
 outside Work mode the assistant cannot reach a page's tool registry, reads the rendered page
 instead, and answers from that — fluently and, in our case, wrongly.
 
+**And if your workspace is Enterprise or Edu, this route is closed to you.** Site tools are not
+available there ([OpenAI's documentation](https://learn.chatgpt.com/docs/webmcp)), no setting
+changes it, and the page will look exactly as it does when everything is fine. Use Chrome.
+
 The runbook, with the failures and what each one looked like:
 [CHATGPT-WORK-MODE.md](CHATGPT-WORK-MODE.md).
 

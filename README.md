@@ -5,8 +5,8 @@ it bites, and can be **rewound**. Built for [The WebMCP Challenge](https://webmc
 
 **Live: <https://hvaler.github.io/cursus/>**
 
-Both environments the rules name work, and one of them has a catch worth knowing before you
-judge it:
+**Both environments the rules name were tested, and both produce real tool calls.** One of them
+has a condition worth knowing before you judge it:
 
 - **ChatGPT's in-app browser** — open the page, **be in Work mode**, and tell the assistant to
   use the tool:
@@ -16,9 +16,16 @@ judge it:
   Outside Work mode the same request gets an answer read off this repository instead of a tool
   call — and a convincing one. The tell: with an empty plan, a real call says `NUM-201`
   **closes no track**; anything about Graphics and Animation came from reading.
-  [FACTS §4.4](docs/FACTS.md) has the four attempts it took to find that out.
+
+  **On an Enterprise or Edu workspace this route is closed** — site tools are not available
+  there at all ([OpenAI's documentation](https://learn.chatgpt.com/docs/webmcp)), and nothing
+  on screen says so. Use Chrome.
 - **Chrome 149+** with `chrome://flags/#enable-webmcp-testing` and a WebMCP client — the route in
-  [GATE.md](docs/GATE.md).
+  [GATE.md](docs/GATE.md). No plan, mode or workspace conditions.
+
+The demo video is recorded in ChatGPT's in-app browser, because that is the one the rules name
+first. The runbook for it, with the four failures it took to find the condition, is in
+[CHATGPT-WORK-MODE.md](docs/CHATGPT-WORK-MODE.md).
 
 Without an agent the page still works: the buttons and the scripted walk-through call the same
 tools, by the same contract.
