@@ -372,6 +372,8 @@ remedy — and why they are tested as carefully as the logic underneath.
 3. One model family.
 4. The greedy placer's false negatives are documented but not characterised.
 5. Synthetic catalogue, no registrar has seen it.
-6. No persistence, no accounts, no server — deliberate, but it means "your plan" is per-tab.
+6. No storage, no accounts, no server — deliberate. A plan is per-tab unless someone copied its
+   link, and a link is neither a backup nor private: it goes in browser history and in whatever it
+   was pasted into.
 7. The UI's markup and layout are checked by eye. `ui.test.js` covers the escaping and the
    rendering; nothing covers how it looks.

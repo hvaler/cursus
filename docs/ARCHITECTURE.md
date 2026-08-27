@@ -216,23 +216,48 @@ answering correctly about this page having called nothing at all ([FACTS §4.4](
 
 ---
 
-## What is deliberately absent
+## What is deliberately absent, and what each absence costs
 
-**No build step.** What is in the repository is what GitHub Pages serves. Plain ES modules,
-`<script type="module">`, no bundler and no transpiler. `package.json` has no `dependencies` and no
-`devDependencies` at all.
+Listing what a project left out is easy. The half worth reading is the price, so each of these says
+both.
 
-**No server and no accounts.** Nothing leaves the tab. The tools act in the user's own session on
-the page they are looking at, which is the property that makes WebMCP the right shape here rather
-than an API: there is no key to provision and no account to link.
+**No build step.** Plain ES modules, `<script type="module">`, no bundler and no transpiler.
+`package.json` has no `dependencies` and no `devDependencies` at all.
 
-That is also the whole answer to *why GitHub Pages*. The rules allow any provider, and with nothing
-to compile and nothing to run server-side, a hosting platform would have been a platform rather
-than a capability. What is in the repository is what is served, which is a property worth more here
-than any deployment feature.
+*What it buys:* **what you read in the repository is byte-for-byte what runs.** There is no bundle
+to differ from the source, so a claim in a document can be checked against a file rather than
+against an artefact nobody has. And with zero dependencies there is no transitive supply chain at
+all — which matters more than usual on a page that renders strings an agent supplied.
 
-**No persistence.** Reload and the plan is empty. That is a demo's honesty rather than a product's,
-and it is why there is no auth: with nothing stored, there is nothing to protect.
+*What it costs:* no minification, no tree-shaking, and nothing from npm. Everything here is
+hand-written, which is most of why it is 1,947 lines.
 
-**No framework.** Types come from JSDoc and `// @ts-check`, so the editor checks them and the
-browser never sees a compile step.
+**No server and no accounts.** Nothing leaves the tab.
+
+*What it buys:* this is the actual argument for WebMCP over an API. The tools act in the user's own
+session, on the page they are looking at, with **no key to provision and no account to link** — and
+because nothing is stored server-side, there is nothing to breach. It is also the whole answer to
+*why GitHub Pages*: the rules allow any provider, and with nothing to compile and nothing to run
+server-side, a hosting platform would have been a platform rather than a capability.
+
+*What it costs:* no second device, no two people on one plan, and no history that outlives the tab.
+
+**No storage anywhere.** Reloading empties the plan unless the address carries one.
+
+*What it buys:* no database, no accounts, and therefore no auth — the chain runs in that order, and
+each link is only load-bearing because the one before it is missing. There is nothing to protect
+because there is nothing kept.
+
+*What it costs:* a closed tab is a lost plan. `share_plan` puts the actions in a link, which is the
+only way one survives — **and a link is not a backup and not private**. It is as long as the plan
+is, it lands in browser history, and it is readable by anyone it was forwarded to. The catalogue
+here is invented, so that costs nothing; against a real registrar it would be the first thing to
+change.
+
+**No framework.** Types come from JSDoc and `// @ts-check`.
+
+*What it buys:* the editor checks them and the browser never sees a compile step.
+
+*What it costs:* the types are advisory. Nothing enforces them at runtime, which is why every
+value arriving from a caller is validated by hand in `rules.js` and `share.js` rather than trusted
+because it was annotated.
