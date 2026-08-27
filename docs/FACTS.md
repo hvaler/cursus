@@ -203,7 +203,7 @@ the rendering is not.
 
 ## 5. What the API actually does
 
-Seven findings, none of them in Chrome's documentation as of this date, three found by getting it
+Eight findings, none of them in Chrome's documentation as of this date, three found by getting it
 wrong first. Full list with the error each produced:
 [`WEBMCP-API-NOTES.md`](WEBMCP-API-NOTES.md).
 

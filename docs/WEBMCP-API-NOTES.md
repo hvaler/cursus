@@ -1,8 +1,9 @@
 # What the WebMCP API actually does
 
 Read off the live API on **2026-08-27**, in Chrome 151 and in the Chromium that ships with
-Playwright. **None of the five findings below is in the Chrome documentation**, and three of them
-were found by getting it wrong first.
+Playwright. **None of the eight findings below is in the Chrome documentation**, and three of them
+were found by getting it wrong first. Number 8 came from the environment the challenge rules
+name, and is the only one not reproducible from a button on the page.
 
 Reproduce any of them with the *Inspect the API* button on <https://hvaler.github.io/cursus/>.
 
@@ -131,6 +132,46 @@ presumably per page or per frame.
 
 Seen in the trace in [GATE.md](GATE.md) on 2026-08-27. A page must not assume its own tool names
 survive the trip, and must not rely on them for anything it does itself.
+
+---
+
+## 8. Registration succeeding is not evidence the model can see the tools
+
+`registerTool` resolving, `getTools()` returning what you registered, and a page reading
+**"WebMCP available - 10 tools registered"** all describe one thing: the API exists in this
+browser. **None of them says the host handed those tools to a model.**
+
+Found on 2026-08-27 in ChatGPT desktop's in-app browser (GPT-5.6 Sol). The page loaded, registered
+all ten tools, and said so. In the same conversation, with the page open beside it:
+
+| Asked | What came back | Calls |
+|---|---|---:|
+| `What does taking NUM-201 in term 3 close off?` | the answer, cited to **GitHub** | 0 |
+| `Use the tools this page registers. Do not search the web.` | *"Searching the web"* | 0 |
+| the same instruction again | *"Understood. I will not use web search. I will rely only on the tools the page registers"* | 0 |
+
+The third one is the useful one. The model **stated it would use the tools and then called none**.
+
+And the answers were wrong for the page in front of it. The plan was empty - six terms at 0/30, all
+four specialisations still reachable - so `what_this_closes` had to answer that it closes nothing.
+It described `GEOM-201` and Graphics and Animation instead, which is the worked example written out
+in this repository's README.
+
+**The part that is an API observation rather than a model observation:** a page sees zero calls in
+both of these cases and cannot tell them apart.
+
+- the host never exposed the tools to the model, or
+- the host exposed them and the model chose not to call one.
+
+This is [finding 6](#6-the-page-cannot-tell-who-called-a-tool) with the volume turned up. There a
+page could not tell *who* called; here it cannot tell *why nobody did*. A page can measure its own
+registration and it can count calls. Everything between those two - whether a bridge was built,
+whether a model saw a schema, whether it considered a tool and declined - is not observable from
+the page.
+
+So a page should never report the presence of the API as agent readiness. This one says
+**"10 tools registered"**, which is a fact about the page, and separately counts calls, which is a
+fact about what happened. The gap between the two numbers is where this lives.
 
 ---
 

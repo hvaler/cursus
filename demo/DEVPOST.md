@@ -98,11 +98,17 @@ and refusing to invent a course that does not exist.
 
 ### What we found out about WebMCP
 
-Seven things, none of them in Chrome's documentation, three found by getting them wrong first.
+Eight things, none of them in Chrome's documentation, three found by getting them wrong first.
 Registration is on `document`, not `navigator`. `registerTool` returns nothing, so the handle comes
 from `getTools()`. `executeTool` wants its arguments as a JSON string. The client renames your
 tools. And the one that shaped the product: `execute` returns a string, so the strings are the
-interface. They are all written up with the error each one produced.
+interface.
+
+The last one came from the environment the rules themselves name. A page reading **"WebMCP
+available — 10 tools registered"** has established that the API exists in that browser and
+nothing more: **registration succeeding is not evidence a model can see the tools.** A page sees
+zero calls whether the host never bridged them or the model considered one and declined, and it
+cannot tell those apart. They are all written up with the error each one produced.
 
 ### The thing we did not expect
 
