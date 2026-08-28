@@ -1,131 +1,131 @@
 1
-00:00:00,000 --> 00:00:03,316
+00:00:00,000 --> 00:00:02,599
 Un planificador de asignaturas,
 dentro del navegador de ChatGPT.
 
 2
-00:00:03,316 --> 00:00:08,105
+00:00:02,599 --> 00:00:06,354
 Enseña lo que un estudiante eligió —
 todo lo que enseña cualquier horario.
 
 3
-00:00:08,105 --> 00:00:14,000
+00:00:06,354 --> 00:00:10,975
 No lo que le costó dos años después, cuando
 una especialización que quería ya no está.
 
 4
-00:00:14,000 --> 00:00:17,000
+00:00:12,475 --> 00:00:13,954
 Relleno mi primer año a mano.
 
 5
-00:00:17,000 --> 00:00:32,000
+00:00:13,954 --> 00:00:21,350
 Cada clic es una llamada a herramienta — las mismas que usaría un agente, etiquetadas
 page, porque una página sólo puede estar segura de las llamadas que hace ella misma.
 
 6
-00:00:32,000 --> 00:00:40,129
+00:00:24,850 --> 00:00:28,475
 Un hueco, dos cursos que caben en él.
 Así que le pido a la página que los sopese.
 
 7
-00:00:40,129 --> 00:00:42,839
+00:00:33,475 --> 00:00:35,606
 Métodos Numéricos cierra
 Graphics and Animation.
 
 8
-00:00:42,839 --> 00:00:45,548
+00:00:35,606 --> 00:00:37,736
 Geometría cierra Data and Machine Learning.
 
 9
-00:00:45,548 --> 00:00:51,419
+00:00:37,736 --> 00:00:42,353
 Ninguno sale gratis — lo que
 cuesta es el hueco, no el curso.
 
 10
-00:00:51,419 --> 00:01:00,000
+00:00:42,353 --> 00:00:49,100
 Eso es alcanzabilidad sobre un grafo de
 prerrequisitos con un tope de créditos, y nadie lo hace de cabeza.
 
 11
-00:01:00,000 --> 00:01:08,571
+00:00:52,600 --> 00:00:55,107
 Ahora la parte que va en la otra dirección.
 
 12
-00:01:08,571 --> 00:01:20,000
+00:00:55,107 --> 00:00:58,450
 Todas las reglas hasta aquí son
 de la universidad. Ésta es mía.
 
 13
-00:01:20,000 --> 00:01:23,795
+00:01:02,950 --> 00:01:05,725
 Así que pido igualmente
 el curso que la cerraría.
 
 14
-00:01:23,795 --> 00:01:28,012
+00:01:10,725 --> 00:01:14,000
 Rechazado — y me cita a mí, no al manual.
 
 15
-00:01:28,012 --> 00:01:36,446
+00:01:14,000 --> 00:01:20,550
 Ofrece la salida y le pone precio: puedo levantar mi
 propio límite, pero la especialización se va, y no vuelve.
 
 16
-00:01:36,446 --> 00:01:39,819
+00:01:23,550 --> 00:01:25,818
 Y esa parte no va realmente de asignaturas.
 
 17
-00:01:39,819 --> 00:01:49,940
+00:01:25,818 --> 00:01:32,623
 Cualquiera que le pase trabajo a un agente tiene la misma
 pregunta, y la respuesta habitual es un prompt — que es una petición.
 
 18
-00:01:49,940 --> 00:01:55,000
+00:01:32,623 --> 00:01:36,025
 Esto es un límite que sobrevive
 a la conversación que lo puso.
 
 19
-00:01:55,000 --> 00:02:06,364
+00:01:38,025 --> 00:01:46,055
 Todo eso está en una línea de tiempo y todo se rebobina —
 incluido el límite, porque un límite es un evento como cualquier otro.
 
 20
-00:02:06,364 --> 00:02:10,000
+00:01:46,055 --> 00:01:48,625
 Deshacer es el mismo
 reductor sobre menos eventos.
 
 21
-00:02:10,000 --> 00:02:11,455
+00:01:50,625 --> 00:01:52,530
 Trece herramientas, registradas con
 document.modelContext.registerTool.
 
 22
-00:02:11,455 --> 00:02:15,818
+00:01:52,530 --> 00:01:58,245
 Lo que le dio forma a todo: execute
 devuelve una cadena que el modelo lee.
 
 23
-00:02:15,818 --> 00:02:17,273
+00:01:58,245 --> 00:02:00,150
 Esas cadenas son la interfaz.
 
 24
-00:02:17,273 --> 00:02:26,000
+00:02:02,150 --> 00:02:09,375
 Así que una herramienta que cambia algo devuelve el plan resultante, nunca
 'ok' — o la idea que el agente tiene del estado se separa de la de la página.
 
 25
-00:02:26,000 --> 00:02:26,582
+00:02:11,375 --> 00:02:11,946
 Última cosa.
 
 26
-00:02:26,582 --> 00:02:35,018
+00:02:11,946 --> 00:02:20,224
 WebMCP no le da a una página forma de saber quién la llamó, así que ésta
 cuenta las llamadas por origen y dice que la atribución es una suposición.
 
 27
-00:02:35,018 --> 00:02:40,836
+00:02:20,224 --> 00:02:25,933
 Eso pilló a un asistente contestando sobre esta página
 correctamente y con detalle — sin haber llamado a ninguna herramienta.
 
 28
-00:02:40,836 --> 00:02:42,000
+00:02:25,933 --> 00:02:27,075
 Había leído el repositorio.

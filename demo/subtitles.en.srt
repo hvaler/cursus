@@ -1,130 +1,130 @@
 1
-00:00:00,000 --> 00:00:02,545
+00:00:00,000 --> 00:00:01,995
 A course planner, inside ChatGPT's browser.
 
 2
-00:00:02,545 --> 00:00:07,212
+00:00:01,995 --> 00:00:05,654
 It shows what a student
 picked — all any timetable shows.
 
 3
-00:00:07,212 --> 00:00:14,000
+00:00:05,654 --> 00:00:10,975
 Not what it cost them two years later, when
 a specialisation they wanted is quietly gone.
 
 4
-00:00:14,000 --> 00:00:18,000
+00:00:12,475 --> 00:00:14,447
 I fill in my first year by hand.
 
 5
-00:00:18,000 --> 00:00:32,000
+00:00:14,447 --> 00:00:21,350
 Each click is a tool call — the same tools an agent would use,
 tagged page, because a page can only be sure about calls it makes itself.
 
 6
-00:00:32,000 --> 00:00:39,368
+00:00:24,850 --> 00:00:28,475
 One slot, two courses that fit
 it. So I ask the page to weigh them.
 
 7
-00:00:39,368 --> 00:00:42,316
+00:00:33,475 --> 00:00:35,707
 Numerical Methods closes
 Graphics and Animation.
 
 8
-00:00:42,316 --> 00:00:45,263
+00:00:35,707 --> 00:00:37,939
 Geometry closes Data and Machine Learning.
 
 9
-00:00:45,263 --> 00:00:51,158
+00:00:37,939 --> 00:00:42,404
 Neither is free — what costs
 is the slot, not the course.
 
 10
-00:00:51,158 --> 00:00:59,1000
+00:00:42,404 --> 00:00:49,100
 That is reachability over a prerequisite graph
 under a credit budget, and nobody does it in their head.
 
 11
-00:01:00,000 --> 00:01:16,000
+00:00:52,600 --> 00:00:57,280
 Now the part that runs the other way.
 Every rule so far belongs to the university.
 
 12
-00:01:16,000 --> 00:01:20,000
+00:00:57,280 --> 00:00:58,450
 This one is mine.
 
 13
-00:01:20,000 --> 00:01:24,375
+00:01:02,950 --> 00:01:05,725
 So I ask for the course
 that would close it anyway.
 
 14
-00:01:24,375 --> 00:01:29,148
+00:01:10,725 --> 00:01:14,000
 Refused — and it quotes me
 back to myself, not the handbook.
 
 15
-00:01:29,148 --> 00:01:38,693
+00:01:14,000 --> 00:01:20,550
 It offers the way out and prices it: I can lift my own
 limit, but the specialisation goes, and it does not come back.
 
 16
-00:01:38,693 --> 00:01:41,875
+00:01:23,550 --> 00:01:25,984
 And that part is not really about courses.
 
 17
-00:01:41,875 --> 00:01:50,625
+00:01:25,984 --> 00:01:32,678
 Anyone handing work to an agent has the same question,
 and the usual answer is a prompt — which is a request.
 
 18
-00:01:50,625 --> 00:01:55,000
+00:01:32,678 --> 00:01:36,025
 This is a limit that outlives
 the conversation that set it.
 
 19
-00:01:55,000 --> 00:02:06,364
+00:01:38,025 --> 00:01:46,055
 All of that is on a timeline and any of it rewinds —
 including the limit, because a limit is an event like any other.
 
 20
-00:02:06,364 --> 00:02:10,000
+00:01:46,055 --> 00:01:48,625
 Undo is the same reducer over fewer events.
 
 21
-00:02:10,000 --> 00:02:12,880
+00:01:50,625 --> 00:01:53,922
 Thirteen tools, registered with
 document dot modelContext dot registerTool.
 
 22
-00:02:12,880 --> 00:02:16,720
+00:01:53,922 --> 00:01:58,318
 What shaped all of it: execute
 returns a string the model reads.
 
 23
-00:02:16,720 --> 00:02:18,320
+00:01:58,318 --> 00:02:00,150
 These strings are the interface.
 
 24
-00:02:18,320 --> 00:02:26,000
+00:02:02,150 --> 00:02:09,375
 So a tool that changes something returns the resulting plan, never
 'ok' — or the agent's picture of the state drifts from the page's.
 
 25
-00:02:26,000 --> 00:02:26,627
+00:02:11,375 --> 00:02:11,991
 Last thing.
 
 26
-00:02:26,627 --> 00:02:34,471
+00:02:11,991 --> 00:02:19,687
 WebMCP gives a page no way to know who called it, so this
 page counts calls by origin and says the attribution is a guess.
 
 27
-00:02:34,471 --> 00:02:40,431
+00:02:19,687 --> 00:02:25,536
 That caught an assistant answering about this page
 correctly and in detail — having called no tool at all.
 
 28
-00:02:40,431 --> 00:02:42,000
+00:02:25,536 --> 00:02:27,075
 It had read the repository.
