@@ -185,6 +185,11 @@ origins side by side, with the page saying it cannot verify the second number.
       cues come from the narration audio, not from the script.
 - [ ] Optionally [`subtitles.es.srt`](subtitles.es.srt) as a Spanish track. Not required by the
       rules, costs nothing.
+- [ ] Upload [`thumbnail.png`](thumbnail.png) as the custom thumbnail — 1280×720, well under the
+      2 MB limit. **This needs a verified channel**, the same thing the description's links need,
+      so do the verification once and both land. Without it YouTube picks a frame, and the frames
+      it picks from are mostly a wait or a cut. Regenerate from
+      [`thumbnail.html`](thumbnail.html) if a refusal is ever reworded.
 - [ ] Open the link in a private window to confirm it really is public.
 
 ## Then the submission

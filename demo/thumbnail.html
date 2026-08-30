@@ -1,0 +1,99 @@
+<!doctype html>
+<!--
+  The video thumbnail, at 1280x720. Regenerate by opening this file at that viewport size and
+  screenshotting it, which is how thumbnail.png was made.
+
+  It exists as a page rather than as an image somebody made once for the same reason
+  make_narration.py does: nothing on it was written for the thumbnail. "Refused." is the prefix
+  every refusal carries from rules.js, "…which you asked to keep open." is the PROTECTED_TRACK
+  refusal in policy.js, and the line along the bottom is what ui.js prints beside a protected
+  track. If one of those is ever reworded this file is where the picture stops being true, and it
+  is grep-able, which a .png is not. The colours are index.html's dark theme, copied.
+
+  The only test that matters for a thumbnail is whether it survives being 168px wide in a YouTube
+  grid. At that size "Refused." and the two quoted lines are all that reads, which is the intended
+  hierarchy — everything else is there to reward looking at it full size.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cursus thumbnail</title>
+<style>
+  /* Palette lifted verbatim from index.html's dark theme. */
+  :root {
+    --ink:#eceae4; --paper:#141417; --line:#32323a; --soft:#1c1c21;
+    --ok:#5ec08d; --no:#e8836f; --dim:#95959f; --accent:#9b8cff;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html,body { width:1280px; height:720px; overflow:hidden; }
+  body {
+    background:var(--paper); color:var(--ink); font-family:var(--mono);
+    display:flex; flex-direction:column; justify-content:space-between;
+    padding:52px 64px 48px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* A faint wash so the flat ground is not quite flat, angled off the refusal colour. */
+  body::before {
+    content:""; position:fixed; inset:0; pointer-events:none;
+    background:radial-gradient(120% 90% at 8% 12%, rgba(232,131,111,.09), transparent 58%);
+  }
+  body > * { position:relative; }
+
+  .eyebrow {
+    display:flex; align-items:center; gap:14px;
+    font-size:22px; letter-spacing:.22em; text-transform:uppercase; color:var(--dim);
+  }
+  .eyebrow .dot { color:var(--accent); }
+
+  /* The call, the refusal, the reason — read top to bottom, each subordinate to the one below. */
+  .call { display:flex; align-items:center; gap:13px; font-size:24px; color:var(--dim); }
+  .badge {
+    background:var(--ok); color:var(--paper); font-weight:700;
+    font-size:19px; letter-spacing:.14em; padding:4px 9px;
+  }
+
+  .block { border-left:6px solid var(--no); padding-left:34px; margin-top:26px; }
+
+  .verdict {
+    font-size:152px; font-weight:700; line-height:.94; letter-spacing:-.035em;
+    color:var(--no); margin-bottom:14px;
+  }
+  .quote {
+    font-size:82px; font-weight:600; line-height:1.14; letter-spacing:-.02em;
+  }
+  .quote .mark { color:var(--dim); }
+
+  footer { border-top:1px solid var(--line); padding-top:20px; }
+  /* One line: a wrap would push text into the corner YouTube stamps the duration on. */
+  .reason { font-size:24px; color:var(--dim); white-space:nowrap; }
+  .reason b { color:var(--ink); font-weight:600; }
+  .lock { color:var(--accent); }
+</style>
+</head>
+<body>
+
+  <div class="eyebrow">CURSUS <span class="dot">&middot;</span> WEBMCP</div>
+
+  <div>
+    <div class="call">
+      <span class="badge">AGENT</span>
+      <span>add_course({"course":"NUM-201","term":3})</span>
+    </div>
+
+    <div class="block">
+      <div class="verdict">Refused.</div>
+      <div class="quote"><span class="mark">&ldquo;</span>&hellip;which you asked<br>to keep open.<span class="mark">&rdquo;</span></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="reason">
+      <span class="lock">&#128274;</span> Graphics and Animation &middot;
+      <b>protected &mdash; the agent cannot close this</b>
+    </div>
+  </footer>
+
+</body>
+</html>
