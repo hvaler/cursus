@@ -36,12 +36,14 @@ W, H = 1600, 1067
 MARGIN, LINE, CAP_TOP = 72, 46, 112
 GROUND, RULE, INK, DIM = "#f2f1ec", "#dcdad3", "#15151a", "#6e6e78"
 
-#: Devpost's caption field cuts off around here. Found by hitting it: a 130-character caption came
-#: back five characters too long. The caption on the plate is under no such limit, which is why
-#: every entry carries two — the long one is burned into the picture, the short one goes in the
-#: field. Where a caption was already short enough both are the same string, deliberately: a second
-#: wording that says the same thing is one more place for them to drift apart.
-FIELD_LIMIT = 125
+#: Devpost's caption field rejects a long caption rather than trimming it. A 145-character paste
+#: came back five over, so the ceiling is 140. Nothing here is close to it except the two diagrams,
+#: which carry an override; everywhere else the field gets the same string as the plate, because a
+#: second wording that says the same thing is one more place for them to drift apart.
+#:
+#: The 145 was self-inflicted: captions.md used to print each caption behind its own label, and the
+#: label got pasted along with it. It is a table now, with one column to copy.
+FIELD_LIMIT = 140
 
 #: `at` is a second into the film; `crop` is w:h:x:y against its 1920x1080 frame. The page lays out
 #: in two columns, so the crops are column-shaped — but it is scrolled to a different place in
@@ -49,69 +51,48 @@ FIELD_LIMIT = 125
 PLATES = [
     (1, 52, "1338:560:566:236", "THE PLAN",
      "Fourteen courses, put there by hand. Term 3 has six credits left, and the page has "
-     "registered its thirteen tools with the browser.",
-     "Fourteen courses, put there by hand. Six credits left in term 3, and thirteen tools "
-     "registered with the browser."),
+     "registered its thirteen tools with the browser.", None),
     (2, 47, "555:760:0:60", "THE QUESTION",
      "The student asks in their own words, naming no tool: what are my options, and what does "
-     "each one cost?",
-     "The student asks in their own words, naming no tool: what are my options, and what does "
-     "each one cost?"),
+     "each one cost?", None),
     (3, 47, "670:460:1234:575", "compare_options",
      "Both futures in one call. Either choice closes a specialisation — the slot is what "
-     "costs, not the course.",
-     "Both futures in one call. Either choice closes a specialisation — the slot is what "
-     "costs, not the course."),
+     "costs, not the course.", None),
     (4, 60, "670:625:1234:236", "protect_track",
      "The student draws a line. Anything that would close Graphics is refused from now on, "
-     "including if they ask for it themselves.",
-     "The student draws a line. Anything that would close Graphics is now refused — "
-     "including if they ask for it."),
+     "including if they ask for it themselves.", None),
     (5, 82, "665:830:566:236", "THE LIMIT, ON THE PLAN",
      "A lock beside the track, and a line naming who it binds. Every other rule here belongs to "
-     "the university. This one belongs to the student.",
-     "A lock beside the track. Every other rule here belongs to the university; this one "
-     "belongs to the student."),
+     "the university. This one belongs to the student.", None),
     (6, 82, "670:625:1234:236", "REFUSED",
      "The agent asks for NUM-201. The page refuses, citing the student's own instruction, and "
-     "names both ways out.",
-     "The agent asks for NUM-201. The page refuses, citing the student's own instruction, and "
-     "names both ways out."),
+     "names both ways out.", None),
     (7, 82, "555:690:0:120", "WHAT THE ASSISTANT SAW",
      "The refusal comes back as prose, so the agent reports it rather than retrying. Nothing "
-     "instructed it to.",
-     "The refusal comes back as prose, so the agent reports it rather than retrying. Nothing "
-     "instructed it to."),
+     "instructed it to.", None),
     (8, 105, "665:830:566:236", "REWIND",
      "Every call is an event and the plan is their reduction, so undo is replaying fewer of "
-     "them. The protection unwinds with the rest.",
-     "Every call is an event and the plan is their reduction, so undo is replaying fewer of "
-     "them."),
+     "them. The protection unwinds with the rest.", None),
     (9, 105, "670:625:1234:236", "THIRTEEN TOOLS",
      "Each description says when to reach for it. That string is the only thing a model has to "
-     "choose on, so the strings are the product.",
-     "Each description says when to reach for it. That string is all a model has to choose on."),
+     "choose on, so the strings are the product.", None),
     (10, 115, "1334:800:566:250", "REGISTRATION",
      "registerAll, on document.modelContext. No build step, no dependencies, no server: what is "
-     "in the repository is what is served.",
-     "registerAll, on document.modelContext. No build step, no dependencies, no server."),
+     "in the repository is what is served.", None),
     (11, 82, "670:100:1234:245", "WHO CALLED",
      "The page counts calls by origin and states plainly that it cannot verify the second "
-     "number. WebMCP gives the handler no caller identity.",
-     "The page counts calls by origin, and says plainly that it cannot verify the second "
-     "number."),
+     "number. WebMCP gives the handler no caller identity.", None),
     (12, 150, "1570:640:350:230", "LIVE",
-     "Apache-2.0, thirteen tools on document.modelContext, and no server behind any of it.",
-     "Apache-2.0, thirteen tools on document.modelContext, and no server behind any of it."),
+     "Apache-2.0, thirteen tools on document.modelContext, and no server behind any of it.", None),
 ]
 
 #: The three that are drawn rather than filmed, recorded here so captions.md is the whole gallery
-#: and not just the part this script makes.
+#: and not just the part this script makes. Two of them are the only captions long enough to need
+#: a shorter form for the field.
 DIAGRAMS = [
     (13, "THE MODULES",
      "Eleven files, no build step and no dependencies. Every import points downward, which is "
-     "the whole reason the layering is worth drawing.",
-     "Eleven files, no build step, no dependencies. Every import points downward."),
+     "the whole reason the layering is worth drawing.", None),
     (14, "THE ONE DECISION",
      "Every tool call is an event, and the plan is the reduction of the events. Refusing, "
      "undoing and auditing all fall out of that; none of them was built.",
@@ -188,8 +169,8 @@ def main() -> None:
 
     shutil.rmtree(work)
 
-    entries = ([(n, label, short) for n, _, _, label, _, short in PLATES]
-               + [(n, label, short) for n, label, _, short in DIAGRAMS])
+    entries = ([(n, label, short or cap) for n, _, _, label, cap, short in PLATES]
+               + [(n, label, short or cap) for n, label, cap, short in DIAGRAMS])
 
     # Checked rather than trusted. The first version of this gallery was written without knowing
     # the field had a limit at all, and the form rejects a long caption rather than trimming it.
@@ -202,10 +183,11 @@ def main() -> None:
     rows = "\n".join(f"| {n:02d} | {label} | {len(s):>3} | {s} |" for n, label, s in entries)
     (OUT / "captions.md").write_text(
         "# Gallery captions\n\n"
-        "The long caption is burned into each plate. These are the short forms, for Devpost's own "
-        f"caption field, which rejects anything past about {FIELD_LIMIT} characters. Upload the "
-        "plates in this order; 13 to 15 come from [diagrams.html](../diagrams.html), "
-        "screenshotted at 1600x1067.\n\n"
+        "Paste the Caption column, and nothing else: the plate already carries its own label, "
+        f"and the field rejects anything past about {FIELD_LIMIT} characters rather than "
+        "trimming it. Almost every one is the same string that is burned into the picture; "
+        "only 14 and 15 needed a shorter wording. Upload in this order; 13 to 15 come from "
+        "[diagrams.html](../diagrams.html), screenshotted at 1600x1067.\n\n"
         "| # | Plate | Len | Caption |\n|---:|---|---:|---|\n" + rows + "\n",
         encoding="utf-8", newline="\n")
 
