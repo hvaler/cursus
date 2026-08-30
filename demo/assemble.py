@@ -67,6 +67,12 @@ SPED_TO_FIT = {"02", "03", "04", "05"}
 
 #: The master is the wav, which is fourteen megabytes and lives outside the repository. The mp3 is
 #: committed so this runs from a clone; either will do, and `make_narration.py` writes both.
+#: Held over the tail of the last shot, in the pause the narration leaves for it. Not appended
+#: after the film: the window already has that time in it, and adding more would leave picture
+#: running with nothing being said over it.
+ENDCARD = HERE / "endcard.png"
+ENDCARD_SECONDS = 4.5
+
 NARRATION = [REPO.parent / "cursus-voz" / "narration.wav",
              REPO.parent / "cursus-voz" / "narration.mp3",
              HERE / "narration.mp3"]
@@ -160,6 +166,7 @@ def build(folder: Path, out: Path, width: int, height: int, fps: int,
     work = folder / "_assembled"
     work.mkdir(exist_ok=True)
     pieces, notes = [], []
+    SHOTS_LAST = shots()[-1][0]
 
     for n, window, title in shots():
         src = find_clip(folder, n)
@@ -260,7 +267,23 @@ def build(folder: Path, out: Path, width: int, height: int, fps: int,
                 "-c:v", "libx264", "-preset", "medium", "-crf", "20",
                 "-pix_fmt", "yuv420p", str(dst))
 
-        pieces.append(dst)
+        if n == SHOTS_LAST and ENDCARD.exists():
+            card = work / "endcard.mp4"
+            run("ffmpeg", "-y", "-v", "error", "-loop", "1", "-i", str(ENDCARD),
+                "-t", f"{ENDCARD_SECONDS:.3f}", "-r", str(fps),
+                "-vf", f"scale={width}:{height}:force_original_aspect_ratio=decrease,"
+                       f"pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color=white,setsar=1",
+                "-c:v", "libx264", "-preset", "medium", "-crf", "20",
+                "-pix_fmt", "yuv420p", str(card))
+            shortened = work / f"{n}-short.mp4"
+            run("ffmpeg", "-y", "-v", "error", "-i", str(dst), "-an",
+                "-t", f"{window - ENDCARD_SECONDS:.3f}", "-c", "copy", str(shortened))
+            pieces.append(shortened)
+            pieces.append(card)
+            notes.append(f"      + end card held {ENDCARD_SECONDS:.1f}s, in the pause the "
+                         f"narration leaves for it")
+        else:
+            pieces.append(dst)
 
     listing = work / "list.txt"
     listing.write_text("".join(f"file '{p.as_posix()}'\n" for p in pieces), encoding="utf-8")
