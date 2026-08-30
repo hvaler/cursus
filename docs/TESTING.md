@@ -99,16 +99,21 @@ from that button.
 Two environments, both tested on 2026-08-27, both working. They fail in different ways, which is
 worth knowing before you decide the page is broken.
 
-### Chrome
+**Start with ChatGPT's in-app browser if you have the choice.** It is the environment the rules
+name first, it is the one the demo video shows, and it asks nothing of you — the Chrome route
+below needs a model key of your own before an agent can say a word. Chrome is the better fallback
+than a workaround: it has no plan, mode or workspace conditions at all.
 
-1. Chrome 149 or later. This was run on **151**.
-2. `chrome://flags/#enable-webmcp-testing` → **Enabled** → restart.
-3. Install the **WebMCP Inspector** extension and give it a model key.
-4. Open the page. The status line should read **WebMCP available - 13 tools registered.**
-5. Ask, in the Inspector: `Enrol me in ADV-301.`
+**A plan to start from.** The questions worth asking — what a slot costs, what protecting a track
+does — need a plan that is nearly full, and the page opens empty. This link replays fourteen
+courses through the same tools an agent would call, leaving term 3 at 24/30 with all four
+specialisations still open:
 
-Expected: the agent picks `add_course`, is refused for a missing prerequisite, and proposes
-`CALC-102` and `NUM-201` before term 5. The full trace is in [GATE.md](GATE.md).
+<https://hvaler.github.io/cursus/#p=W1siKyIsIkNBTEMtMTAxIiwxXSxbIisiLCJBTEctMTAxIiwxXSxbIisiLCJQUk9HLTEwMSIsMV0sWyIrIiwiRElTQy0xMDEiLDFdLFsiKyIsIlBIWVMtMTAxIiwxXSxbIisiLCJDQUxDLTEwMiIsMl0sWyIrIiwiUFJPRy0xMDIiLDJdLFsiKyIsIlNUQVQtMTAxIiwyXSxbIisiLCJMT0dJQy0xMDEiLDJdLFsiKyIsIkNJUkMtMTAxIiwyXSxbIisiLCJEUy0yMDEiLDNdLFsiKyIsIkFSQ0gtMjAxIiwzXSxbIisiLCJBVVRPLTIwMSIsM10sWyIrIiwiU1RBVC0yMDEiLDNdXQ>
+
+The status box should add *"Opened from a shared link: 14 action(s) replayed"*, and the trace
+should label every one of them `page`. Nothing is stored anywhere: the link carries the actions, not a
+plan, and a hand-edited one cannot build something the rules would have refused.
 
 ### ChatGPT's in-app browser
 
@@ -116,12 +121,30 @@ Expected: the agent picks `add_course`, is refused for a missing prerequisite, a
 outside Work mode the assistant cannot reach a page's tool registry, reads the rendered page
 instead, and answers from that — fluently and, in our case, wrongly.
 
+Also check *Settings → Browser → Permissions → Enable site tools*.
+
 **And if your workspace is Enterprise or Edu, this route is closed to you.** Site tools are not
 available there ([OpenAI's documentation](https://learn.chatgpt.com/docs/webmcp)), no setting
 changes it, and the page will look exactly as it does when everything is fine. Use Chrome.
 
 The runbook, with the failures and what each one looked like:
 [CHATGPT-WORK-MODE.md](CHATGPT-WORK-MODE.md).
+
+### Chrome
+
+1. Chrome 149 or later. This was run on **151**.
+2. `chrome://flags/#enable-webmcp-testing` → **Enabled** → restart.
+3. Install **WebMCP - Model Context Tool Inspector**
+   ([webmcp-tools](https://github.com/GoogleChromeLabs/webmcp-tools)), open its side panel, and
+   press **Update Gemini API key** to enter your own. The agent is the extension's, not the page's.
+4. Open the page. The status line should read **WebMCP available - 13 tools registered.**
+5. Ask, in *Interact with the Page*: `Enrol me in ADV-301.`
+
+Expected: the agent picks `add_course`, is refused for a missing prerequisite, and proposes
+`CALC-102` and `NUM-201` before term 5. The full trace is in [GATE.md](GATE.md).
+
+The panel also lists all thirteen tools with their schemas and annotations, so `readOnlyHint` and
+`untrustedContentHint` can be read without calling anything.
 
 ---
 
