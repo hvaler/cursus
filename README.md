@@ -6,7 +6,8 @@ bites, **hold a limit you set** against the agent, and can be **rewound**. Built
 
 **Live: <https://hvaler.github.io/cursus/>** — thirteen tools on `document.modelContext`.
 
-To watch an agent call them, either environment the rules name works:
+**Both of the environments named in the challenge rules were tested, and a model makes real
+tool calls in each.** To watch one happen:
 
 - **ChatGPT's in-app browser, in Work mode.** Open the page and ask the assistant to use a tool.
   Work mode is the requirement, and Enterprise or Edu workspaces cannot do it at all.

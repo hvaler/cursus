@@ -118,7 +118,8 @@ asks before committing. That behaviour was not prompted. It came from the shape 
 
 ### Where it was tested
 
-**Both of the environments named in the rules were tested, and both produce real tool calls.**
+**Both of the environments named in the challenge rules were tested, and both make real tool
+calls.**
 
 **Chrome 149+** with the WebMCP flag and the Inspector extension: an agent chose the tool on its
 own, was refused, and proposed the fix. That is the gate in `docs/GATE.md`, and it has no plan,

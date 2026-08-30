@@ -5,6 +5,11 @@ which is the part with the surprises in it.
 
 **None of them needs an account on this page, a key, or a server.** The page has none of those.
 
+**Both of the environments named in the challenge rules were tested, and both make real tool
+calls** — ways 3 and 4 below. Neither is a claim about registration: a page cannot tell a
+model calling its tools from a model that never saw them, which is why each one says what was
+observed rather than what was available.
+
 ---
 
 ## 1. The logic — 30 seconds
