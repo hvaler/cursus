@@ -248,37 +248,55 @@ will be right and only the clock will be wrong.
 
 The English track is what the rules ask for. The Spanish one is not required and costs nothing.
 
-## YouTube description, ready to paste
+## YouTube, ready to paste
+
+**Title** — 79 characters, inside the 100 YouTube allows. It leads on the thing nothing else in
+this challenge is likely to have, and carries "WebMCP" for anyone searching the term:
 
 ```text
-Cursus - a course planner whose WebMCP tools refuse, say what a choice closes off two years
-before it bites, hold a limit you set against the agent, and can be rewound.
+Cursus — a WebMCP course planner whose page holds your limits against the agent
+```
 
-Built for The WebMCP Challenge.
+**Description.** Only the first two lines show before someone clicks *more*, so the differentiator
+is there rather than the specification:
+
+```text
+The student says "keep Graphics open". From then on the page refuses any course that would
+close it — including when the same person asks for it an hour later.
+
+Cursus is a course planner built for The WebMCP Challenge: thirteen tools registered with
+document.modelContext.registerTool, on a page an agent can reason about rather than click.
 
 Live:  https://hvaler.github.io/cursus/
 Code:  https://github.com/hvaler/cursus  (Apache-2.0)
 
-Thirteen tools registered with document.modelContext.registerTool. Every tool call is an event
-and the plan is the reduction of those events, so undo is the same reducer with a smaller number
-and the audit trail is the list itself. The screen renders from that same log, so there is no
-second source of truth for an agent and a person to disagree about.
+Every tool call is an event and the plan is the reduction of those events, so undo is the same
+reducer with a smaller number and the audit trail is the list itself. A protection is an event
+like any other, which is why undo takes it back out and no code was written to make that true.
+The screen renders from that same log, so there is no second source of truth for an agent and a
+person to disagree about.
 
-The beat in the middle is the one worth watching: the student protects a specialisation, and
-from then on the page refuses any course that would close it - including when the same person
-asks. A protection is an event like any other, so undo takes it back out.
+The page also counts its own calls and says plainly that it cannot verify who made them —
+WebMCP gives the handler no caller identity. That caveat caught an assistant answering about
+this page correctly and in detail, having called no tool at all.
 
 Both environments the challenge rules name were tested and both make real tool calls:
 
   - Chrome 149+ with chrome://flags/#enable-webmcp-testing and the WebMCP Inspector, where an
     agent chose the tool unprompted and acted on a refusal.
-  - ChatGPT's desktop in-app browser, which is what this video shows - in Work mode. Site tools
+  - ChatGPT's desktop in-app browser, which is what this video shows — in Work mode. Site tools
     are not available in Enterprise or Edu workspaces.
 
 Waits between sending a prompt and the tool call landing are sped up; the speed is shown on
 screen. Nothing else is edited.
 
 157 tests, no build step, no dependencies, no server.
+```
+
+**Tags**, if the form asks:
+
+```text
+WebMCP, AI agents, ChatGPT, agentic web, document.modelContext, course planner, open source
 ```
 
 **Two things that description does on purpose.** It says both environments were tested and which one
