@@ -110,14 +110,18 @@ def badge_font() -> str:
     sys.exit("no font found for the speed badge, and the badge is not optional")
 
 
-def longest_freeze(path: Path) -> tuple[float, float] | None:
-    """The longest stretch where the picture does not change, or None.
+def still_stretches(path: Path, total: float, floor: float = 4.0) -> list[tuple[float, float]]:
+    """Every stretch where the picture does not change, longest first.
 
-    A call through ChatGPT's in-app browser leaves the screen still for the best part of a minute.
-    Finding it means only that stretch has to be compressed, so everything a viewer is actually
-    being asked to believe — the typing, the result arriving — stays at the speed it happened.
+    A call through ChatGPT's in-app browser leaves the screen still for anything from nine seconds
+    to a minute, and a shot often has more than one dead patch — before the typing starts, and again
+    while the answer is composed. Compressing all of them keeps the speed off the parts that matter:
+    the typing, the result arriving, the lock appearing.
 
-    Freezes shorter than three seconds are ignored: a person reading is also fairly still.
+    Anything under `floor` is left alone: a person reading is also fairly still, and squeezing that
+    takes away the reading. **A stretch that runs to the end of the clip is left alone too** — it is
+    either the result sitting on screen or footage recorded past the end, and both want cutting
+    rather than compressing. The trim at the end of the shot does that on its own.
     """
     exe = shutil.which("ffmpeg")
     if not exe:
@@ -129,10 +133,11 @@ def longest_freeze(path: Path) -> tuple[float, float] | None:
         if m.group(1) == "start":
             start = float(m.group(2))
         elif start is not None:
-            spans.append((start, float(m.group(2))))
+            end = float(m.group(2))
+            if end - start >= floor and end < total - 1.0:
+                spans.append((start, end))
             start = None
-    return max(spans, key=lambda s: s[1] - s[0]) if spans else None
-
+    return sorted(spans)
 
 
 def find_clip(folder: Path, n: str) -> Path:
@@ -163,52 +168,56 @@ def build(folder: Path, out: Path, width: int, height: int, fps: int) -> None:
         scale = (f"scale={width}:{height}:force_original_aspect_ratio=decrease,"
                  f"pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1")
 
-        # Eight seconds, because a call through the in-app browser takes about a minute and
-        # anything shorter is a person pausing. Badging that 'waiting' would be a caption on
-        # something that did not happen.
-        wait = longest_freeze(src) if n in SPED_TO_FIT and have > window + 0.5 else None
-        if wait and wait[1] - wait[0] < 8:
-            wait = None
+        stills = still_stretches(src, have) if n in SPED_TO_FIT and have > window + 0.5 else []
 
-        if wait:
-            # The clip is long because a tool call took the best part of a minute and the screen sat
-            # still for it. Compress that, and only that: the typing, the scrolling and the result
-            # arriving stay at the speed they happened, which is the part a viewer is being asked to
-            # believe. If squeezing the wait to nothing still leaves the clip over its window, the
-            # remainder is nudged — and that rate is stamped on the picture too.
-            start, end = wait
-            held = end - start
-            live = have - held
-            shown = max(0.5, window - live)
-            wait_rate = held / shown
-            residual = (live + shown) / window
+        if stills:
+            # The clip is long because the screen sat still — for the call, and often again before
+            # the typing began. Compress every one of those and nothing else, so the typing, the
+            # scrolling, the result arriving and the lock appearing all run at the speed they
+            # happened. That is the part a viewer is being asked to believe.
+            HELD = 0.5
+            dead = sum(z - a for a, z in stills)
+            live = have - dead
+            residual = max(1.0, (live + HELD * len(stills)) / window)
 
             font, size = badge_font(), max(18, height // 38)
-            wait_badge = (f"drawtext=fontfile='{font}':text='waiting, x {wait_rate:.0f}':"
-                          f"fontcolor=white:fontsize={size}:box=1:boxcolor=black@0.6:"
-                          f"boxborderw=10:x=w-tw-28:y=28")
-            tail = f",setpts=PTS/{residual:.6f}" if residual > 1.02 else ""
+            parts, filters, at, i = [], [f"[0:v]{scale},split={2 * len(stills) + 1}"], 0.0, 0
+            labels = [f"[s{k}]" for k in range(2 * len(stills) + 1)]
+            filters[0] += "".join(labels) + ";"
+
+            for a_, z_ in stills:
+                filters.append(f"{labels[i]}trim={at:.3f}:{a_:.3f},setpts=PTS-STARTPTS[p{i}];")
+                parts.append(f"[p{i}]")
+                i += 1
+                rate = (z_ - a_) / HELD
+                badge = (f"drawtext=fontfile='{font}':text='still, x {rate:.0f}':fontcolor=white:"
+                         f"fontsize={size}:box=1:boxcolor=black@0.6:boxborderw=10:x=w-tw-28:y=28")
+                filters.append(f"{labels[i]}trim={a_:.3f}:{z_:.3f},"
+                               f"setpts=(PTS-STARTPTS)/{rate:.6f},{badge}[p{i}];")
+                parts.append(f"[p{i}]")
+                i += 1
+                at = z_
+
+            filters.append(f"{labels[i]}trim={at:.3f},setpts=PTS-STARTPTS[p{i}];")
+            parts.append(f"[p{i}]")
+
+            tail = f"setpts=PTS/{residual:.6f}" if residual > 1.02 else "null"
             if residual > 1.05:
                 tail += (f",drawtext=fontfile='{font}':text='x {residual:.1f} speed':fontcolor=white:"
                          f"fontsize={size}:box=1:boxcolor=black@0.6:boxborderw=10:x=28:y=28")
+            filters.append(f"{''.join(parts)}concat=n={len(parts)}:v=1[j];[j]{tail}[v]")
 
-            chain = (
-                f"[0:v]{scale},split=3[a][b][c];"
-                f"[a]trim=0:{start:.3f},setpts=PTS-STARTPTS[p1];"
-                f"[b]trim={start:.3f}:{end:.3f},setpts=(PTS-STARTPTS)/{wait_rate:.6f},{wait_badge}[p2];"
-                f"[c]trim={end:.3f},setpts=PTS-STARTPTS[p3];"
-                f"[p1][p2][p3]concat=n=3:v=1[j];[j]null{tail}[v]")
             run("ffmpeg", "-y", "-v", "error", "-i", str(src), "-an",
-                "-filter_complex", chain, "-map", "[v]", "-r", str(fps), "-t", f"{window:.3f}",
-                "-c:v", "libx264", "-preset", "medium", "-crf", "20",
+                "-filter_complex", "".join(filters), "-map", "[v]", "-r", str(fps),
+                "-t", f"{window:.3f}", "-c:v", "libx264", "-preset", "medium", "-crf", "20",
                 "-pix_fmt", "yuv420p", str(dst))
             extra = f", rest x{residual:.2f}" if residual > 1.02 else ", rest untouched"
             notes.append(f"  {n}  {title[:34]:34s} {have:6.1f}s -> {window:5.1f}s   "
-                         f"wait {held:.0f}s at {start:.0f}s squeezed to {shown:.1f}s{extra}")
+                         f"{len(stills)} still stretch(es), {dead:.0f}s squeezed{extra}")
 
         elif n in SPED_TO_FIT and have > window + 0.5:
-            # Nothing stood still for long enough to be a wait. That is clip 2, which is fourteen
-            # deliberate clicks with no pause in them, so the whole thing is sped instead.
+            # Nothing stood still for four seconds. That is clip 2 — fourteen deliberate clicks with
+            # no pause in them — so the whole thing is sped instead.
             rate = have / window
             vf = (f"{scale},setpts=PTS/{rate:.6f},"
                   f"drawtext=fontfile='{badge_font()}':text='x {rate:.1f} speed':fontcolor=white:"
