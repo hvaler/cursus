@@ -189,6 +189,12 @@ be the only thing standing between a plausible answer and a false conclusion.
 There is an uncomfortable corollary for anyone documenting a tool surface: our README explains that
 fork well enough to answer the question, and that is exactly what made reading cheaper than calling.
 
+**It happened again while we were filming the shot about it.** Asked to add a course the student had
+just protected, the assistant refused — correctly, naming the track — and called nothing. It had set
+that protection itself a turn earlier and answered from remembering it. The counter never moved, and
+that is the only reason anyone noticed. Both takes said no for the right reason; the difference is
+whether the limit was **enforced or merely remembered**, and only the count could tell them apart.
+
 ### What it does not do
 
 The catalogue is synthetic — real in structure, invented in content, and no registrar has seen it.
@@ -212,4 +218,4 @@ webmcp, javascript, es-modules, github-pages, gemini, node, no-build, apache-2.0
 
 - **Live**: https://hvaler.github.io/cursus/
 - **Repository**: https://github.com/hvaler/cursus (Apache-2.0)
-- **Video**: _pending_
+- **Video**: https://youtu.be/HLtEyqxQrPQ

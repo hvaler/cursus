@@ -272,6 +272,36 @@ registered all ten tools in that browser, so late attachment was never what stoo
 waiting is still right — a host is entitled to attach whenever it likes — but it is no longer a
 guess about a failure. It is one ruled out.
 
+### And again, on camera, three days later
+
+**2026-08-30**, recording the video. The shot needed was `add_course` being refused by the page
+under a protection the student had set. The prompt was *"Add NUM-201 to term 3."* and the assistant
+answered:
+
+> *"I can't add NUM-201 under the protection you set: it would close Graphics and Animation. For
+> that protected path, the compatible term-3 choice is GEOM-201."*
+
+Correct, specific, and **it called nothing.** The page's counter stayed at `19 call(s), 5 attributed
+to an agent` from the previous shot to the end of this one, which is the only reason anyone noticed.
+
+This one is different from the episode below and worse in one way. That assistant had read the
+repository. This one had **set the protection itself, one turn earlier**, and answered from
+remembering it — so nothing external had to be consulted for the answer to be right. An agent that
+holds a rule in its context can enforce it convincingly without the page being involved at all, and
+from the outside the two are indistinguishable in the prose.
+
+The shot was retaken with the tool named, and then the page did it:
+
+```text
+AGENT add_course({"course":"NUM-201","term":3})
+      Refused. Adding NUM-201 in term 3 would close "Graphics and Animation", which you asked to
+      keep open. … Rule: PROTECTED_TRACK. The plan was not changed.
+```
+
+`20 call(s), 6 attributed to an agent`. **The difference between the two takes is not what the
+student sees — both said no, both for the right reason. It is whether the limit was enforced or
+merely remembered**, and only the count could tell them apart.
+
 ### The part worth more than the call: an agent that answered without making one
 
 Before that, the same assistant was asked *"what do I close off by taking NUM-201 in term 3?"* and
