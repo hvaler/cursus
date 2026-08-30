@@ -105,15 +105,21 @@ below needs a model key of your own before an agent can say a word. Chrome is th
 than a workaround: it has no plan, mode or workspace conditions at all.
 
 **A plan to start from.** The questions worth asking — what a slot costs, what protecting a track
-does — need a plan that is nearly full, and the page opens empty. This link replays fourteen
-courses through the same tools an agent would call, leaving term 3 at 24/30 with all four
-specialisations still open:
+does — need a plan that is nearly full, and the page opens empty. Press **Run the scripted
+walk-through**. Its setup is the same fourteen courses (`app/ui.js`, `SETUP`), so it leaves term 3
+at 24/30 with all four specialisations open, and everything it does is labelled `page` — which is
+what makes your agent's calls stand out against it afterwards.
+
+It then runs five more calls, two of which are the `what_this_closes` pair. So the trace already
+holds the answer to the first question below before you ask it. That is fine if you are watching
+the `AGENT` label rather than the prose, and if you would rather not, this link replays the
+fourteen courses and nothing else:
 
 <https://hvaler.github.io/cursus/#p=W1siKyIsIkNBTEMtMTAxIiwxXSxbIisiLCJBTEctMTAxIiwxXSxbIisiLCJQUk9HLTEwMSIsMV0sWyIrIiwiRElTQy0xMDEiLDFdLFsiKyIsIlBIWVMtMTAxIiwxXSxbIisiLCJDQUxDLTEwMiIsMl0sWyIrIiwiUFJPRy0xMDIiLDJdLFsiKyIsIlNUQVQtMTAxIiwyXSxbIisiLCJMT0dJQy0xMDEiLDJdLFsiKyIsIkNJUkMtMTAxIiwyXSxbIisiLCJEUy0yMDEiLDNdLFsiKyIsIkFSQ0gtMjAxIiwzXSxbIisiLCJBVVRPLTIwMSIsM10sWyIrIiwiU1RBVC0yMDEiLDNdXQ>
 
-The status box should add *"Opened from a shared link: 14 action(s) replayed"*, and the trace
-should label every one of them `page`. Nothing is stored anywhere: the link carries the actions, not a
-plan, and a hand-edited one cannot build something the rules would have refused.
+Either way the status box should say how it was filled, and nothing is stored anywhere: the link
+carries actions, not a plan, and a hand-edited one cannot build something the rules would have
+refused.
 
 ### ChatGPT's in-app browser
 
