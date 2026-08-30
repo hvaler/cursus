@@ -149,7 +149,8 @@ def find_clip(folder: Path, n: str) -> Path:
     sys.exit(f"clip {n} not found in {folder} — expected {n}.mp4 or similar")
 
 
-def build(folder: Path, out: Path, width: int, height: int, fps: int) -> None:
+def build(folder: Path, out: Path, width: int, height: int, fps: int,
+          starts: dict[str, float]) -> None:
     narration = next((p for p in NARRATION if p.exists()), None)
     if narration is None:
         sys.exit("no narration found. Run demo/make_narration.py, or put "
@@ -162,8 +163,19 @@ def build(folder: Path, out: Path, width: int, height: int, fps: int) -> None:
 
     for n, window, title in shots():
         src = find_clip(folder, n)
-        have = duration(src)
         dst = work / f"{n}.mp4"
+
+        # Trimmed from the front when asked. A clip that opens on two seconds of getting ready
+        # pushes everything after it later in the window, and the narration ends up describing
+        # what is not on screen yet.
+        skip = starts.get(n, 0.0)
+        if skip:
+            trimmed = work / f"{n}-from.mp4"
+            run("ffmpeg", "-y", "-v", "error", "-ss", f"{skip:.3f}", "-i", str(src),
+                "-an", "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
+                "-pix_fmt", "yuv420p", str(trimmed))
+            src = trimmed
+        have = duration(src)
 
         scale = (f"scale={width}:{height}:force_original_aspect_ratio=decrease,"
                  f"pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1")
@@ -175,9 +187,12 @@ def build(folder: Path, out: Path, width: int, height: int, fps: int) -> None:
             # the typing began. Compress every one of those and nothing else, so the typing, the
             # scrolling, the result arriving and the lock appearing all run at the speed they
             # happened. That is the part a viewer is being asked to believe.
-            HELD = 0.5
             dead = sum(z - a for a, z in stills)
             live = have - dead
+            # What each still stretch keeps. When the live footage leaves room, the stretches take
+            # the rest of the window rather than vanishing — a wait squeezed to nothing when there
+            # was space for it leaves the picture shorter than the words.
+            HELD = max(0.5, (window - live) / len(stills))
             residual = max(1.0, (live + HELD * len(stills)) / window)
 
             font, size = badge_font(), max(18, height // 38)
@@ -276,11 +291,18 @@ def main() -> None:
     ap.add_argument("clips", type=Path, help="folder holding 01.mp4 … 08.mp4")
     ap.add_argument("-o", "--out", type=Path, default=REPO / "demo" / "cursus.mp4")
     ap.add_argument("--fps", type=int, default=30)
+    ap.add_argument("--start", action="append", default=[], metavar="NN=SECONDS",
+                    help="drop this many seconds off the front of a clip, e.g. --start 7=2.0")
     args = ap.parse_args()
 
     for tool in ("ffmpeg", "ffprobe"):
         if not shutil.which(tool):
             sys.exit(f"{tool} is not on PATH")
+
+    starts = {}
+    for pair in args.start:
+        k, _, v = pair.partition("=")
+        starts[k.zfill(2)] = float(v)
 
     first = find_clip(args.clips, "01")
     width, height = probe_size(first)
@@ -288,7 +310,7 @@ def main() -> None:
         width, height = round(width * 1080 / height / 2) * 2, 1080
     print(f"{width}x{height} at {args.fps} fps, from {first.name}\n")
 
-    build(args.clips, args.out, width, height, args.fps)
+    build(args.clips, args.out, width, height, args.fps, starts)
     print(f"\n{args.out}")
 
 
