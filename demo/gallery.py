@@ -36,44 +36,72 @@ W, H = 1600, 1067
 MARGIN, LINE, CAP_TOP = 72, 46, 112
 GROUND, RULE, INK, DIM = "#f2f1ec", "#dcdad3", "#15151a", "#6e6e78"
 
+#: Devpost's caption field cuts off around here. Found by hitting it: a 130-character caption came
+#: back five characters too long. The caption on the plate is under no such limit, which is why
+#: every entry carries two — the long one is burned into the picture, the short one goes in the
+#: field. Where a caption was already short enough both are the same string, deliberately: a second
+#: wording that says the same thing is one more place for them to drift apart.
+FIELD_LIMIT = 125
+
 #: `at` is a second into the film; `crop` is w:h:x:y against its 1920x1080 frame. The page lays out
 #: in two columns, so the crops are column-shaped — but it is scrolled to a different place in
 #: every clip, which is why the y values disagree between plates that look alike.
 PLATES = [
     (1, 52, "1338:560:566:236", "THE PLAN",
      "Fourteen courses, put there by hand. Term 3 has six credits left, and the page has "
-     "registered its thirteen tools with the browser."),
+     "registered its thirteen tools with the browser.",
+     "Fourteen courses, put there by hand. Six credits left in term 3, and thirteen tools "
+     "registered with the browser."),
     (2, 47, "555:760:0:60", "THE QUESTION",
+     "The student asks in their own words, naming no tool: what are my options, and what does "
+     "each one cost?",
      "The student asks in their own words, naming no tool: what are my options, and what does "
      "each one cost?"),
     (3, 47, "670:460:1234:575", "compare_options",
-     "Both futures in one call. Either choice closes a specialisation \u2014 the slot is what "
+     "Both futures in one call. Either choice closes a specialisation — the slot is what "
+     "costs, not the course.",
+     "Both futures in one call. Either choice closes a specialisation — the slot is what "
      "costs, not the course."),
     (4, 60, "670:625:1234:236", "protect_track",
      "The student draws a line. Anything that would close Graphics is refused from now on, "
-     "including if they ask for it themselves."),
+     "including if they ask for it themselves.",
+     "The student draws a line. Anything that would close Graphics is now refused — "
+     "including if they ask for it."),
     (5, 82, "665:830:566:236", "THE LIMIT, ON THE PLAN",
      "A lock beside the track, and a line naming who it binds. Every other rule here belongs to "
-     "the university. This one belongs to the student."),
+     "the university. This one belongs to the student.",
+     "A lock beside the track. Every other rule here belongs to the university; this one "
+     "belongs to the student."),
     (6, 82, "670:625:1234:236", "REFUSED",
+     "The agent asks for NUM-201. The page refuses, citing the student's own instruction, and "
+     "names both ways out.",
      "The agent asks for NUM-201. The page refuses, citing the student's own instruction, and "
      "names both ways out."),
     (7, 82, "555:690:0:120", "WHAT THE ASSISTANT SAW",
      "The refusal comes back as prose, so the agent reports it rather than retrying. Nothing "
+     "instructed it to.",
+     "The refusal comes back as prose, so the agent reports it rather than retrying. Nothing "
      "instructed it to."),
     (8, 105, "665:830:566:236", "REWIND",
      "Every call is an event and the plan is their reduction, so undo is replaying fewer of "
-     "them. The protection unwinds with the rest."),
+     "them. The protection unwinds with the rest.",
+     "Every call is an event and the plan is their reduction, so undo is replaying fewer of "
+     "them."),
     (9, 105, "670:625:1234:236", "THIRTEEN TOOLS",
      "Each description says when to reach for it. That string is the only thing a model has to "
-     "choose on, so the strings are the product."),
+     "choose on, so the strings are the product.",
+     "Each description says when to reach for it. That string is all a model has to choose on."),
     (10, 115, "1334:800:566:250", "REGISTRATION",
      "registerAll, on document.modelContext. No build step, no dependencies, no server: what is "
-     "in the repository is what is served."),
+     "in the repository is what is served.",
+     "registerAll, on document.modelContext. No build step, no dependencies, no server."),
     (11, 82, "670:100:1234:245", "WHO CALLED",
      "The page counts calls by origin and states plainly that it cannot verify the second "
-     "number. WebMCP gives the handler no caller identity."),
+     "number. WebMCP gives the handler no caller identity.",
+     "The page counts calls by origin, and says plainly that it cannot verify the second "
+     "number."),
     (12, 150, "1570:640:350:230", "LIVE",
+     "Apache-2.0, thirteen tools on document.modelContext, and no server behind any of it.",
      "Apache-2.0, thirteen tools on document.modelContext, and no server behind any of it."),
 ]
 
@@ -82,13 +110,17 @@ PLATES = [
 DIAGRAMS = [
     (13, "THE MODULES",
      "Eleven files, no build step and no dependencies. Every import points downward, which is "
-     "the whole reason the layering is worth drawing."),
+     "the whole reason the layering is worth drawing.",
+     "Eleven files, no build step, no dependencies. Every import points downward."),
     (14, "THE ONE DECISION",
      "Every tool call is an event, and the plan is the reduction of the events. Refusing, "
-     "undoing and auditing all fall out of that; none of them was built."),
+     "undoing and auditing all fall out of that; none of them was built.",
+     "Every tool call is an event, and the plan is their reduction. Refusing, undoing and "
+     "auditing all fall out of that."),
     (15, "WHERE IT WAS TESTED",
      "Both of the environments named in the challenge rules, and both make real tool calls. "
-     "What separates them is what a page can tell you when they do not."),
+     "What separates them is what a page can tell you when they do not.",
+     "Both environments named in the challenge rules, and both make real tool calls."),
 ]
 
 
@@ -122,7 +154,7 @@ def main() -> None:
     for f in ("consola.ttf", "consolab.ttf"):
         shutil.copy(Path(args.font_dir) / f, work / f)
 
-    for n, at, crop, label, caption in PLATES:
+    for n, at, crop, label, caption, _ in PLATES:
         shot = f"shot{n:02d}.png"
         run(["ffmpeg", "-v", "error", "-ss", str(at), "-i", str(video), "-frames:v", "1",
              "-vf", f"crop={crop}", "-y", shot], work)
@@ -156,16 +188,30 @@ def main() -> None:
 
     shutil.rmtree(work)
 
-    rows = [f"{n:02d}. **{label}** \u2014 {cap}" for n, _, _, label, cap in PLATES]
-    rows += [f"{n:02d}. **{label}** \u2014 {cap}" for n, label, cap in DIAGRAMS]
+    entries = ([(n, label, short) for n, _, _, label, _, short in PLATES]
+               + [(n, label, short) for n, label, _, short in DIAGRAMS])
+
+    # Checked rather than trusted. The first version of this gallery was written without knowing
+    # the field had a limit at all, and the form rejects a long caption rather than trimming it.
+    too_long = [f"{n:02d} {label}: {len(s)} characters" for n, label, s in entries
+                if len(s) > FIELD_LIMIT]
+    if too_long:
+        sys.exit(f"over Devpost's {FIELD_LIMIT}-character caption field:\n  "
+                 + "\n  ".join(too_long))
+
+    rows = "\n".join(f"| {n:02d} | {label} | {len(s):>3} | {s} |" for n, label, s in entries)
     (OUT / "captions.md").write_text(
         "# Gallery captions\n\n"
-        "Burned into each plate already; here as text for Devpost's own caption field, and so "
-        "that the order is written down somewhere. 13 to 15 come from "
-        "[diagrams.html](../diagrams.html), screenshotted at 1600x1067.\n\n"
-        + "\n\n".join(rows) + "\n", encoding="utf-8", newline="\n")
+        "The long caption is burned into each plate. These are the short forms, for Devpost's own "
+        f"caption field, which rejects anything past about {FIELD_LIMIT} characters. Upload the "
+        "plates in this order; 13 to 15 come from [diagrams.html](../diagrams.html), "
+        "screenshotted at 1600x1067.\n\n"
+        "| # | Plate | Len | Caption |\n|---:|---|---:|---|\n" + rows + "\n",
+        encoding="utf-8", newline="\n")
 
     print(f"\n{len(PLATES)} plates and captions.md in {OUT}")
+    print(f"every caption inside {FIELD_LIMIT} characters "
+          f"(longest is {max(len(s) for _, _, s in entries)})")
     print("13-15: screenshot demo/diagrams.html at 1600x1067")
 
 

@@ -199,7 +199,9 @@ origins side by side, with the page saying it cannot verify the second number.
       headings to `##` and turn the one table into a list first: on Devpost the text is the whole
       page rather than a section of one, and its markdown does not render tables reliably.
 - [ ] Image gallery: the fifteen plates in [gallery/](gallery/), in order. Captions are burned in
-      and also written out in [gallery/captions.md](gallery/captions.md) for Devpost's own field.
+      and also written out in [gallery/captions.md](gallery/captions.md) for Devpost's own field,
+      **shortened to fit it** — that field rejects anything past about 125 characters rather than
+      trimming it, which is how the limit was found.
       Regenerate 01-12 with `python demo/gallery.py`; 13-15 come from
       [diagrams.html](diagrams.html) screenshotted at 1600x1067.
 - [ ] Fields: live URL `https://hvaler.github.io/cursus/`, repo `https://github.com/hvaler/cursus`,
