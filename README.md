@@ -155,6 +155,7 @@ call flow are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 | [`ARCHITECTURE.md`](docs/ARCHITECTURE.md) | the modules, the call flow, and the one decision underneath |
 | [`TESTING.md`](docs/TESTING.md) | four ways to test this, cheapest first |
 | [`CHATGPT-WORK-MODE.md`](docs/CHATGPT-WORK-MODE.md) | getting the tools callable from ChatGPT, and the four attempts it took |
+| [`demo/`](demo) | the video: script, checklist, narration, subtitles, and the two scripts that build them |
 | [`FACTS.md`](docs/FACTS.md) | every claim, its code, its test, and what is not verified |
 | [`GATE.md`](docs/GATE.md) | the traces from both environments |
 | [`EVAL.md`](docs/EVAL.md) | a real model in front of the tools, and the limits of that |

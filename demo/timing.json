@@ -1,0 +1,110 @@
+[
+ {
+  "n": 1,
+  "shot": "The problem",
+  "start": 0.0,
+  "end": 10.975,
+  "gap": 1.5,
+  "why": "cut to the empty planner",
+  "text": "A course planner, inside ChatGPT's browser. It shows what a student picked — all any timetable shows. Not what it cost them two years later, when a specialisation they wanted is quietly gone."
+ },
+ {
+  "n": 2,
+  "shot": "The student does the student part",
+  "start": 12.475,
+  "end": 21.35,
+  "gap": 3.5,
+  "why": "hold on the one free slot in term 3",
+  "text": "I fill in my first year by hand. Each click is a tool call — the same tools an agent would use, tagged page, because a page can only be sure about calls it makes itself."
+ },
+ {
+  "n": 3,
+  "shot": "The trade, in one call",
+  "start": 24.85,
+  "end": 28.475,
+  "gap": 5.0,
+  "why": "the sped-up wait for compare_options",
+  "text": "One slot, two courses that fit it. So I ask the page to weigh them."
+ },
+ {
+  "n": 4,
+  "shot": "The trade, in one call",
+  "start": 33.475,
+  "end": 49.1,
+  "gap": 3.5,
+  "why": "the three lines are on screen and have to be read",
+  "text": "Numerical Methods closes Graphics and Animation. Geometry closes Data and Machine Learning. Neither is free — what costs is the slot, not the course. That is reachability over a prerequisite graph under a credit budget, and nobody does it in their head."
+ },
+ {
+  "n": 5,
+  "shot": "The student draws a line",
+  "start": 52.6,
+  "end": 58.45,
+  "gap": 4.5,
+  "why": "'including if you ask for it yourself', and the lock appearing",
+  "text": "Now the part that runs the other way. Every rule so far belongs to the university. This one is mine."
+ },
+ {
+  "n": 6,
+  "shot": "And the page holds it",
+  "start": 62.95,
+  "end": 65.72500000000001,
+  "gap": 5.0,
+  "why": "the sped-up wait for the add that gets refused",
+  "text": "So I ask for the course that would close it anyway."
+ },
+ {
+  "n": 7,
+  "shot": "And the page holds it",
+  "start": 70.72500000000001,
+  "end": 80.55000000000001,
+  "gap": 3.0,
+  "why": "highlight 'which you asked to keep open' — the shot the film is for",
+  "text": "Refused — and it quotes me back to myself, not the handbook. It offers the way out and prices it: I can lift my own limit, but the specialisation goes, and it does not come back."
+ },
+ {
+  "n": 8,
+  "shot": "And the page holds it",
+  "start": 83.55000000000001,
+  "end": 96.025,
+  "gap": 2.0,
+  "why": "cut",
+  "text": "And that part is not really about courses. Anyone handing work to an agent has the same question, and the usual answer is a prompt — which is a request. This is a limit that outlives the conversation that set it."
+ },
+ {
+  "n": 9,
+  "shot": "Undoing it",
+  "start": 98.025,
+  "end": 108.625,
+  "gap": 2.0,
+  "why": "the timeline redrawing",
+  "text": "All of that is on a timeline and any of it rewinds — including the limit, because a limit is an event like any other. Undo is the same reducer over fewer events."
+ },
+ {
+  "n": 10,
+  "shot": "How it is built",
+  "start": 110.625,
+  "end": 120.15,
+  "gap": 2.0,
+  "why": "switch tab to the trace",
+  "text": "Thirteen tools, registered with document dot modelContext dot registerTool. What shaped all of it: execute returns a string the model reads. These strings are the interface."
+ },
+ {
+  "n": 11,
+  "shot": "How it is built",
+  "start": 122.15,
+  "end": 129.375,
+  "gap": 2.0,
+  "why": "cut to the counter",
+  "text": "So a tool that changes something returns the resulting plan, never 'ok' — or the agent's picture of the state drifts from the page's."
+ },
+ {
+  "n": 12,
+  "shot": "What the page will not claim",
+  "start": 131.375,
+  "end": 147.075,
+  "gap": 4.5,
+  "why": "the end card, which is three lines to read",
+  "text": "Last thing. WebMCP gives a page no way to know who called it, so this page counts calls by origin and says the attribution is a guess. That caught an assistant answering about this page correctly and in detail — having called no tool at all. It had read the repository."
+ }
+]

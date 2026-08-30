@@ -33,25 +33,37 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 
-#: Measured from cursus-voz/narration.wav, not chosen. Each entry is the shot's window in seconds:
-#: its narration plus the pause after it, which is the time to read what is on screen.
-SHOTS = [
-    ("01", 12.47, "The problem"),
-    ("02", 12.38, "The student does the student part"),
-    ("03", 27.75, "The trade, in one call"),
-    ("04", 10.35, "The student draws a line"),
-    ("05", 35.08, "And the page holds it"),
-    ("06", 12.59, "Undoing it"),
-    ("07", 20.76, "How it is built"),
-    ("08", 20.19, "What the page will not claim"),
-]
+#: The shot windows, read from what wrote them. `make_narration.py` measures each block of
+#: speech and adds the pause after it; keeping a second copy of those numbers here is how the
+#: two drift apart, and a shot a tenth of a second out puts every word after it on the wrong
+#: picture.
+TIMING = HERE / "timing.json"
+
+
+def shots() -> list[tuple[str, float, str]]:
+    if not TIMING.exists():
+        sys.exit(f"no {TIMING.name} — run demo/make_narration.py first, which writes it")
+    blocks = json.loads(TIMING.read_text(encoding="utf-8"))
+    windows: dict[str, list[float]] = {}
+    order: list[str] = []
+    for b in blocks:
+        if b["shot"] not in windows:
+            windows[b["shot"]] = [b["start"], 0.0]
+            order.append(b["shot"])
+        windows[b["shot"]][1] = b["end"] + b["gap"]
+    return [(f"{i:02d}", z - a, name) for i, name in enumerate(order, 1)
+            for a, z in [windows[name]]]
 
 #: Clips holding a real tool call, which takes about a minute through ChatGPT's in-app browser.
 #: All three prompts are here: comparing, protecting, and the add that gets refused. Each is sped
 #: to fit its window with the rate burned into the frame.
 HAS_WAIT = {"03", "04", "05"}
 
-NARRATION = REPO.parent / "cursus-voz" / "narration.wav"
+#: The master is the wav, which is fourteen megabytes and lives outside the repository. The mp3 is
+#: committed so this runs from a clone; either will do, and `make_narration.py` writes both.
+NARRATION = [REPO.parent / "cursus-voz" / "narration.wav",
+             REPO.parent / "cursus-voz" / "narration.mp3",
+             HERE / "narration.mp3"]
 
 
 def run(*args: str) -> str:
@@ -102,14 +114,17 @@ def find_clip(folder: Path, n: str) -> Path:
 
 
 def build(folder: Path, out: Path, width: int, height: int, fps: int) -> None:
-    if not NARRATION.exists():
-        sys.exit(f"no narration at {NARRATION}")
+    narration = next((p for p in NARRATION if p.exists()), None)
+    if narration is None:
+        sys.exit("no narration found. Run demo/make_narration.py, or put "
+                 "narration.mp3 in demo/. Looked in: "
+                 + ", ".join(str(p) for p in NARRATION))
 
     work = folder / "_assembled"
     work.mkdir(exist_ok=True)
     pieces, notes = [], []
 
-    for n, window, title in SHOTS:
+    for n, window, title in shots():
         src = find_clip(folder, n)
         have = duration(src)
         dst = work / f"{n}.mp4"
@@ -158,12 +173,12 @@ def build(folder: Path, out: Path, width: int, height: int, fps: int) -> None:
     run("ffmpeg", "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", str(listing),
         "-c", "copy", str(silent))
 
-    run("ffmpeg", "-y", "-v", "error", "-i", str(silent), "-i", str(NARRATION),
+    run("ffmpeg", "-y", "-v", "error", "-i", str(silent), "-i", str(narration),
         "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy",
         "-c:a", "aac", "-b:a", "192k", "-shortest", str(out))
 
     print("\n".join(notes))
-    picture, sound, film = duration(silent), duration(NARRATION), duration(out)
+    picture, sound, film = duration(silent), duration(narration), duration(out)
     print(f"\npicture {picture:6.2f}s\nsound   {sound:6.2f}s\nfilm    {film:6.2f}s"
           f"   ({int(film // 60)}:{film % 60:05.2f})")
     if film >= 180:
