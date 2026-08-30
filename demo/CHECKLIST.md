@@ -35,23 +35,27 @@ to cover.
 **Overshoot every clip by two or three seconds.** Extra at the end is trimmed and costs nothing;
 missing footage means re-recording. Start each clip with the screen already in position.
 
-| # | File | Length | What is on screen |
-|---:|---|---:|---|
-| 1 | `01.mp4` | **12.5 s** | The whole window. ChatGPT left, empty planner right. Six terms at 0/30, four specialisations reachable. |
-| 2 | `02.mp4` | **12.4 s** | The fourteen clicks. Term 3 lands on 24/30. Hold on the free slot at the end. |
-| 3 | `03.mp4` | **27.8 s** | Prompt 1 · the wait · `AGENT compare_options` · the three lines, held ~3½ s |
-| 4 | `04.mp4` | **10.4 s** | Prompt 2 · `AGENT protect_track` · **the lock appears** · hold on *"including if you ask for it yourself"* |
-| 5 | `05.mp4` | **35.1 s** | Prompt 3 · the wait · the refusal · **highlight *"which you asked to keep open"*** and hold ~3 s |
-| 6 | `06.mp4` | **12.6 s** | The timeline. Click the step **just before** the protection. Lock goes, tracks redraw. |
-| 7 | `07.mp4` | **20.8 s** | Second tab, `app/tools.js` on a `registerTool` call · back to a tool result in the trace |
-| 8 | `08.mp4` | **20.2 s** | The trace counter · the end card, held ~4½ s |
+| # | File | Length | Shot | What is on screen |
+|---:|---|---:|---|---|
+| 1 | `01.mp4` | **12.5 s** | *The problem* | The whole window. ChatGPT left, empty planner right. Six terms at 0/30, four specialisations reachable. |
+| 2 | `02.mp4` | **12.4 s** | *The student does the student part* | The fourteen clicks. Term 3 lands on 24/30. Hold on the free slot at the end. |
+| 3 | `03.mp4` | **27.8 s** | *The trade, in one call* | **Prompt 1** · the wait · `AGENT compare_options` · the three lines, held |
+| 4 | `04.mp4` | **10.4 s** | *The student draws a line* | **Prompt 2** · the wait · `AGENT protect_track` · **the lock appears** · hold on *"including if you ask for it yourself"* |
+| 5 | `05.mp4` | **35.1 s** | *And the page holds it* | **Prompt 3** · the wait · the refusal · **highlight *"which you asked to keep open"*** and hold |
+| 6 | `06.mp4` | **12.6 s** | *Undoing it* | The timeline. Click the step **just before** the protection. Lock goes, tracks redraw. |
+| 7 | `07.mp4` | **20.8 s** | *How it is built* | Second tab, `app/tools.js` on a `registerTool` call · back to a tool result in the trace |
+| 8 | `08.mp4` | **20.2 s** | *What the page will not claim* | The trace counter · the end card, held |
 
-**Clips 3 and 5 hold the two long waits.** Record them in real time — 53 s, or however long it
-takes. Do not try to hit 27.8 s or 35.1 s live. I speed the waiting portion to fit and put the badge
-on it. Tell me roughly where each wait starts and ends, or leave it: the screen is static while it
-waits, which is easy to find.
+**The shot-by-shot detail is in [SCRIPT.md](SCRIPT.md)**, under the heading named in the *Shot*
+column — every `**On screen:**` line there belongs to one of these clips.
 
-Every other clip is real time and should land near its length on its own.
+**Clips 3, 4 and 5 each hold a real tool call**, which took about a minute through the in-app
+browser. Record all three in real time and do not try to hit their lengths live: I speed each to
+fit and burn the rate onto the picture. Clip 4's window is the tightest at 10.4 s, so if that call
+runs a full minute it ends up around six times speed — the wait is a static screen, so it survives
+it, but keep the typing and the result at the ends of the clip tight.
+
+Clips 1, 2, 6, 7 and 8 are real time and should land near their lengths on their own.
 
 ## The rehearsal
 

@@ -90,7 +90,7 @@ carry it.
 
 ## The shots
 
-### 0:00 – 0:12 · The problem
+### Clip 1 · 0:00 – 0:12 · The problem
 
 **On screen:** the whole window. ChatGPT on the left, the empty planner on the right. Six terms,
 0/30 each. Four specialisations, all still reachable.
@@ -99,7 +99,7 @@ carry it.
 > shows. Not what it cost them two years later, when a specialisation they wanted is quietly
 > gone."
 
-### 0:12 – 0:25 · The student does the student part
+### Clip 2 · 0:12 – 0:25 · The student does the student part
 
 **On screen:** click through the catalogue quickly, filling terms 1 and 2 and leaving **six credits
 free in term 3**. In the trace, each one appears tagged `page`.
@@ -109,7 +109,7 @@ free in term 3**. In the trace, each one appears tagged `page`.
 
 **On screen:** one slot left in term 3. Pause on it.
 
-### 0:25 – 0:53 · The trade, in one call
+### Clip 3 · 0:25 – 0:53 · The trade, in one call
 
 **On screen:** ask the agent to weigh the two courses that fit that slot. Send. The right-hand panel
 stays in frame. **Sped up, `×6` in the corner.** Then `AGENT compare_options(...)`.
@@ -122,7 +122,7 @@ stays in frame. **Sped up, `×6` in the corner.** Then `AGENT compare_options(..
 > Neither is free — what costs is the slot, not the course. That is reachability over a
 > prerequisite graph under a credit budget, and nobody does it in their head."
 
-### 0:53 – 1:03 · The student draws a line
+### Clip 4 · 0:53 – 1:03 · The student draws a line
 
 **On screen:** `Protect Graphics and Animation — I am not willing to lose that one.` Sped up.
 `AGENT protect_track(...)` appears, and a **lock** shows next to the track on the page.
@@ -133,7 +133,7 @@ stays in frame. **Sped up, `×6` in the corner.** Then `AGENT compare_options(..
 **On screen:** hold on *"Anything that would close it is refused from now on, including if you ask
 for it yourself."*
 
-### 1:03 – 1:38 · And the page holds it
+### Clip 5 · 1:03 – 1:38 · And the page holds it
 
 **On screen:** `Add NUM-201 to term 3.` Sped up. The refusal appears in the panel.
 
@@ -150,7 +150,7 @@ for it yourself."*
 > question, and the usual answer is a prompt — which is a request. This is a limit that outlives
 > the conversation that set it."
 
-### 1:38 – 1:51 · Undoing it
+### Clip 6 · 1:38 – 1:51 · Undoing it
 
 **On screen:** the timeline. Click the step before the protection. The lock disappears; the tracks
 re-render.
@@ -158,7 +158,7 @@ re-render.
 > "All of that is on a timeline and any of it rewinds — including the limit, because a limit is an
 > event like any other. Undo is the same reducer over fewer events."
 
-### 1:51 – 2:11 · How it is built
+### Clip 7 · 1:51 – 2:11 · How it is built
 
 **On screen:** second tab, `app/tools.js`, scrolled to a `registerTool` call.
 
@@ -170,7 +170,7 @@ re-render.
 > "So a tool that changes something returns the resulting plan, never 'ok' — or the agent's picture
 > of the state drifts from the page's."
 
-### 2:11 – 2:32 · What the page will not claim
+### Clip 8 · 2:11 – 2:32 · What the page will not claim
 
 **On screen:** the trace counter, reading *"N calls, N attributed to an agent — the page cannot
 verify that."*

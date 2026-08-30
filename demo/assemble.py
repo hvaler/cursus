@@ -46,8 +46,10 @@ SHOTS = [
     ("08", 20.19, "What the page will not claim"),
 ]
 
-#: Clips holding a real, slow tool call. Sped up to fit, with the rate burned into the frame.
-HAS_WAIT = {"03", "05"}
+#: Clips holding a real tool call, which takes about a minute through ChatGPT's in-app browser.
+#: All three prompts are here: comparing, protecting, and the add that gets refused. Each is sped
+#: to fit its window with the rate burned into the frame.
+HAS_WAIT = {"03", "04", "05"}
 
 NARRATION = REPO.parent / "cursus-voz" / "narration.wav"
 
