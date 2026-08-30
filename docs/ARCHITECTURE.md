@@ -36,7 +36,7 @@ graph TD
     policy["policy.js<br/><i>the student's own limits</i>"]
     share["share.js<br/><i>a plan in a link, replayed</i>"]
     store["store.js<br/><i>the single log, call attribution</i>"]
-    tools["tools.js<br/><i>the 10 WebMCP tools</i>"]
+    tools["tools.js<br/><i>the 13 WebMCP tools</i>"]
     ui["ui.js<br/><i>renders from the same log</i>"]
     page["index.html"]
 

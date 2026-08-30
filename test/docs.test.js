@@ -110,8 +110,11 @@ describe('the documents against the code', () => {
         if (HISTORICAL.some((h) => line.includes(h))) continue;
         // Two shapes, because "all ten" slipped past a pattern that only knew "ten tools" —
         // and a check that catches one way of writing a number gives more confidence than it
-        // has earned. This still is not every way; it is the two that have actually occurred.
-        const shapes = /\b(\d{1,2}|ten|eleven|twelve|thirteen|fourteen) tools\b|\ball (\d{1,2}|ten|eleven|twelve|thirteen|fourteen)\b/gi;
+        // has earned. The optional word before "tools" is the third way it got out: "the 10
+        // WebMCP tools", inside a mermaid label in ARCHITECTURE.md, where prose is not being
+        // read and so nobody reread it. This still is not every way; it is the three that have
+        // actually occurred.
+        const shapes = /\b(\d{1,2}|ten|eleven|twelve|thirteen|fourteen)(?: [A-Za-z]+)? tools\b|\ball (\d{1,2}|ten|eleven|twelve|thirteen|fourteen)\b/gi;
         for (const m of line.matchAll(shapes)) {
           const word = (m[1] ?? m[2]).toLowerCase();
           const claimed = WORD[/** @type {keyof typeof WORD} */ (word)] ?? Number(word);
