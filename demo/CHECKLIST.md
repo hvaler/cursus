@@ -16,8 +16,8 @@ second screen while recording.
 - [ ] Status line **green**: *WebMCP available — 13 tools registered.*
 - [ ] Plan **empty**: six terms at 0/30, four specialisations all reachable, *"No tool has been
       called yet"*.
-- [ ] Second browser tab on `github.com/hvaler/cursus/blob/main/app/tools.js`, scrolled to a
-      `registerTool` call — that is clip 7.
+- [ ] Second browser tab **already open and scrolled** on the `registerTool` call — clip 7 is nine
+      seconds on it, not enough to go looking. The permalink is in [SCRIPT.md](SCRIPT.md).
 - [ ] ChatGPT **sidebar collapsed** — the conversation titles are personal.
 - [ ] Notifications off. Taskbar clock checked.
 - [ ] Panes sized so **TOOL CALLS, LIVE** is readable at 1080p. Squint at it.
@@ -43,7 +43,7 @@ missing footage means re-recording. Start each clip with the screen already in p
 | 4 | `04.mp4` | **10.4 s** | *The student draws a line* | **Prompt 2** · the wait · `AGENT protect_track` · **the lock appears** · hold on *"including if you ask for it yourself"* |
 | 5 | `05.mp4` | **35.1 s** | *And the page holds it* | **Prompt 3** · the wait · the refusal · **highlight *"which you asked to keep open"*** and hold |
 | 6 | `06.mp4` | **12.6 s** | *Undoing it* | The timeline. Click the step **just before** the protection. Lock goes, tracks redraw. |
-| 7 | `07.mp4` | **20.8 s** | *How it is built* | Second tab, `app/tools.js` on a `registerTool` call · back to a tool result in the trace |
+| 7 | `07.mp4` | **20.8 s** | *How it is built* | Second tab on **`registerAll` in `app/tools.js`** (permalink in [SCRIPT.md](SCRIPT.md)) — the five keys visible · then back to a **tool result** in the trace, not a refusal |
 | 8 | `08.mp4` | **20.2 s** | *What the page will not claim* | The trace counter · the end card, held |
 
 **The shot-by-shot detail is in [SCRIPT.md](SCRIPT.md)**, under the heading named in the *Shot*

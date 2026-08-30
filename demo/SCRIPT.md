@@ -160,12 +160,21 @@ re-render.
 
 ### Clip 7 · 1:51 – 2:11 · How it is built
 
-**On screen:** second tab, `app/tools.js`, scrolled to a `registerTool` call.
+**On screen:** the second tab, showing **`registerAll` in `app/tools.js`** — the `registerTool`
+call with its five keys visible: `name`, `description`, `inputSchema`, `annotations`, `execute`.
+
+This is the only shot that leaves the page, and it is nine seconds, so it should be open and
+scrolled before the clip starts. A permalink that lands on exactly those lines and cannot drift:
+
+```text
+https://github.com/hvaler/cursus/blob/68ffc8e39444d5fa9408641cebfe61fa53e44fa6/app/tools.js#L558-L582
+```
 
 > "Thirteen tools, registered with `document dot modelContext dot registerTool`. What shaped all of
 > it: `execute` returns **a string the model reads**. These strings are the interface."
 
-**On screen:** back to the page, on a tool result in the trace.
+**On screen:** back to the page, on a **tool result** in the trace — one of the long strings, not a
+refusal. The point is that a mutation answers with the plan rather than with `ok`.
 
 > "So a tool that changes something returns the resulting plan, never 'ok' — or the agent's picture
 > of the state drifts from the page's."
