@@ -280,7 +280,7 @@ The page also counts its own calls and says plainly that it cannot verify who ma
 WebMCP gives the handler no caller identity. That caveat caught an assistant answering about
 this page correctly and in detail, having called no tool at all.
 
-Both environments the challenge rules name were tested and both make real tool calls:
+Both of the environments named in the challenge rules were tested, and both make real tool calls:
 
   - Chrome 149+ with chrome://flags/#enable-webmcp-testing and the WebMCP Inspector, where an
     agent chose the tool unprompted and acted on a refusal.
