@@ -202,9 +202,11 @@ There is still no storage anywhere: a plan lives in the tab, or in a link somebo
 is why there is no auth and no server, and it is also why a lost tab is a lost plan unless the link
 was copied.
 The planner is greedy with one repair pass, so a "no" from it means *this planner found no way*,
-not *no way exists*. It has been evaluated against one model family, and only through Chrome: the five
-scored scenarios all ran there. ChatGPT's in-app browser has two real calls to its name, not a
-scenario set, and Codex — documented as a third surface — has never been tried.
+not *no way exists*. It has been evaluated against one model family through one route: `eval.mjs`
+imports the tools and drives them from Node, so none of the eight scenarios went through a browser
+at all. What the browsers have is smaller and different — Chrome has the gate, one live agent
+interaction, and ChatGPT's in-app browser has real calls to its name, not a scenario set. Codex,
+documented as a third surface, has never been tried.
 
 ---
 

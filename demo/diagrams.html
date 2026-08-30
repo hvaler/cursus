@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cursus gallery diagrams</title>
+<style>
+  /* The page's light theme, so the diagrams and the screenshots are the same object. */
+  :root {
+    --ink:#15151a; --paper:#fcfcfa; --line:#dcdad3; --soft:#f2f1ec;
+    --ok:#1a7f4b; --no:#b03a2e; --dim:#6e6e78; --accent:#5b4bd6;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:#555; font-family:var(--mono); -webkit-font-smoothing:antialiased; }
+
+  .plate {
+    width:1600px; height:1067px; background:var(--soft); color:var(--ink);
+    padding:56px 72px 72px; display:flex; flex-direction:column; margin-bottom:16px;
+  }
+  .label { font-size:27px; font-weight:700; color:var(--dim); }
+  .cap { font-size:30px; line-height:1.53; margin-top:26px; max-width:1400px; }
+  .body { flex:1; display:flex; align-items:center; justify-content:center; margin-top:34px; }
+
+  /* --- 13 · the module graph, as tiers ------------------------------------------------ */
+  .tiers { width:100%; border:1px solid var(--line); background:var(--paper); }
+  .tier { display:flex; align-items:center; gap:20px; padding:15px 26px;
+          border-bottom:1px solid var(--line); }
+  .tier:last-child { border-bottom:0; }
+  .tier .mods { display:flex; gap:14px; flex:0 0 640px; flex-wrap:wrap; }
+  .mod { border:1px solid var(--line); background:var(--soft); padding:7px 13px; font-size:24px; }
+  .mod.hi { border-color:var(--accent); color:var(--accent); }
+  .tier .note { font-size:22px; color:var(--dim); }
+  .down { text-align:center; font-size:23px; color:var(--dim); padding:10px 0 0; }
+
+  /* --- 14 · the one decision ---------------------------------------------------------- */
+  .flow { width:100%; text-align:center; }
+  .node { display:inline-block; border:1px solid var(--line); background:var(--paper);
+          padding:14px 26px; font-size:26px; }
+  .node.no { border-color:var(--no); color:var(--no); }
+  .node.ok { border-color:var(--ok); color:var(--ok); }
+  .arm { font-size:26px; color:var(--dim); margin:12px 0; }
+  .fork { display:flex; justify-content:center; gap:110px; margin-top:6px; }
+  .fork > div { display:flex; flex-direction:column; align-items:center; gap:12px; }
+  .derived { margin-top:40px; border-top:1px solid var(--line); padding-top:26px;
+             display:flex; flex-direction:column; gap:12px; align-items:center; }
+  .derived div { font-size:25px; }
+  .derived b { font-weight:700; }
+  .derived span { color:var(--dim); }
+
+  /* --- 15 · where it was tested ------------------------------------------------------- */
+  .two { display:flex; gap:26px; width:100%; align-items:stretch; }
+  .col { flex:1; border:1px solid var(--line); background:var(--paper); padding:26px 28px;
+         display:flex; flex-direction:column; }
+  .col h3 { font-size:27px; margin-bottom:6px; }
+  .col .where { font-size:21px; color:var(--dim); margin-bottom:20px; }
+  .col ul { list-style:none; display:flex; flex-direction:column; gap:15px; }
+  .col li { font-size:23px; line-height:1.42; padding-left:26px; position:relative; }
+  .col li::before { content:"\2014"; position:absolute; left:0; color:var(--dim); }
+  .col li.warn { color:var(--no); }
+  .col li.good { color:var(--ok); }
+  .foot { margin-top:26px; font-size:25px; line-height:1.5; border-top:1px solid var(--line);
+          padding-top:22px; }
+</style>
+</head>
+<body>
+
+<!-- 13 -->
+<section class="plate" id="d13">
+  <div class="label">THE MODULES</div>
+  <div class="cap">Eleven files, no build step and no dependencies. Every import points downward,
+    which is the whole reason the layering is worth drawing.</div>
+  <div class="body">
+    <div class="tiers">
+      <div class="tier"><div class="mods"><span class="mod">index.html</span></div>
+        <div class="note">one script tag</div></div>
+      <div class="tier"><div class="mods"><span class="mod">ui.js</span><span class="mod">tools.js</span></div>
+        <div class="note">what the browser draws, and what the agent can reach</div></div>
+      <div class="tier"><div class="mods"><span class="mod">solve.js</span><span class="mod">share.js</span><span class="mod">store.js</span></div>
+        <div class="note">planning &middot; a plan in a link &middot; the single log and call attribution</div></div>
+      <div class="tier"><div class="mods"><span class="mod hi">policy.js</span></div>
+        <div class="note">the student's own limits &mdash; the only rules the university did not write</div></div>
+      <div class="tier"><div class="mods"><span class="mod">queries.js</span></div>
+        <div class="note">reachability, closures, what a choice costs</div></div>
+      <div class="tier"><div class="mods"><span class="mod">rules.js</span></div>
+        <div class="note">seven add rules, three remove rules, refuse()</div></div>
+      <div class="tier"><div class="mods"><span class="mod">catalogue.js</span><span class="mod">events.js</span></div>
+        <div class="note">40 courses, 6 terms, 4 tracks &middot; the log and the reducer</div></div>
+    </div>
+  </div>
+  <div class="down">policy.js sits where it does because rules.js cannot import queries.js &mdash;
+    queries.js already imports rules.js. solve.js hit the same wall first.</div>
+</section>
+
+<!-- 14 -->
+<section class="plate" id="d14">
+  <div class="label">THE ONE DECISION</div>
+  <div class="cap">Every tool call is an event, and the plan is the reduction of the events.
+    Refusing, undoing and auditing all fall out of that; none of them was built.</div>
+  <div class="body">
+    <div class="flow">
+      <div class="node">a tool call</div>
+      <div class="arm">&darr;</div>
+      <div class="fork">
+        <div>
+          <div class="node ok">the rules accept it</div>
+          <div class="arm">&darr;</div>
+          <div class="node">an event is appended to the log</div>
+          <div class="arm">&darr;</div>
+          <div class="node">state = reduce(log)</div>
+        </div>
+        <div>
+          <div class="node no">the rules refuse it</div>
+          <div class="arm">&darr;</div>
+          <div class="node no">nothing is written</div>
+          <div class="arm">&darr;</div>
+          <div class="node no">a string naming the rule, the reason,<br>and what would unblock it</div>
+        </div>
+      </div>
+      <div class="derived">
+        <div><b>undo_to(n)</b> <span>is</span> reduce(log.slice(0, n))</div>
+        <div><b>list_actions()</b> <span>is</span> the log itself</div>
+        <div><b>share_plan()</b> <span>is</span> the log in a link, replayed through these same rules</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 -->
+<section class="plate" id="d15">
+  <div class="label">WHERE IT WAS TESTED</div>
+  <div class="cap">Both of the environments named in the challenge rules, and both make real tool
+    calls. What separates them is what a page can tell you when they do not.</div>
+  <div class="body">
+    <div class="two">
+      <div class="col">
+        <h3>Chrome 149+</h3>
+        <div class="where">the WebMCP flag, and the Inspector extension</div>
+        <ul>
+          <li class="good">An agent chose the tool on its own, was refused, and proposed the fix &mdash;
+            then asked permission before applying it. Nothing prompted that.</li>
+          <li>No plan, no mode, no workspace conditions.</li>
+          <li>Written up in <b>docs/GATE.md</b> with the flag and the extension named, so somebody
+            else can run it.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>ChatGPT's in-app browser</h3>
+        <div class="where">where the video was recorded</div>
+        <ul>
+          <li class="good">The page registers, and a model calls &mdash; <b>in Work mode.</b></li>
+          <li>Outside it, four different phrasings produced no call at all, and confident answers
+            read off our own README instead.</li>
+          <li class="warn">Site tools do not exist in Enterprise or Edu workspaces. No setting
+            brings them back, and nothing on screen says so.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><b>The eight scored and adversarial scenarios ran in neither of them.</b>
+    eval.mjs imports the tools and drives them from Node, so 8/8 is a fact about the descriptions
+    and the strings, not about a browser.<br><br>
+    And registration succeeding is not evidence that a model can call anything. Zero calls is
+    consistent with the host never bridging the tools, with a model declining, with no agent
+    present, and with the client being in the wrong mode &mdash; a page sees one number for all
+    four.</div>
+</section>
+
+</body>
+</html>

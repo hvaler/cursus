@@ -195,7 +195,13 @@ origins side by side, with the page saying it cannot verify the second number.
 ## Then the submission
 
 - [ ] Put the video URL into [DEVPOST.md](DEVPOST.md), replacing `_pending_`.
-- [ ] Paste the long text from [DEVPOST.md](DEVPOST.md) into the Devpost form.
+- [ ] Paste the long text from [DEVPOST.md](DEVPOST.md) into the Devpost form. Promote its `###`
+      headings to `##` and turn the one table into a list first: on Devpost the text is the whole
+      page rather than a section of one, and its markdown does not render tables reliably.
+- [ ] Image gallery: the fifteen plates in [gallery/](gallery/), in order. Captions are burned in
+      and also written out in [gallery/captions.md](gallery/captions.md) for Devpost's own field.
+      Regenerate 01-12 with `python demo/gallery.py`; 13-15 come from
+      [diagrams.html](diagrams.html) screenshotted at 1600x1067.
 - [ ] Fields: live URL `https://hvaler.github.io/cursus/`, repo `https://github.com/hvaler/cursus`,
       video link, *Built with* line.
 - [ ] Confirm the repo's **About** block shows **Apache-2.0** and the live link.
