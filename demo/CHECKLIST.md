@@ -174,7 +174,18 @@ origins side by side, with the page saying it cannot verify the second number.
       previous answer on screen — the one the assistant gave from memory before it was asked to use
       the tool — which gives away the refusal early and credits it to the wrong party. Anything
       similar in a future take wants the same treatment, and the number comes from looking.
-- [ ] Nothing to upload yet — the cut comes back first.
+- [ ] Watch the cut through once before it goes anywhere.
+
+## Uploading
+
+- [ ] YouTube, **public**, not unlisted. The rules say publicly visible.
+- [ ] **Title and description** from [SCRIPT.md](SCRIPT.md), section *"YouTube, ready to paste"*.
+      They are separate fields; the title is its own block there.
+- [ ] Upload [`subtitles.en.srt`](subtitles.en.srt) as the English track. **No re-timing** — the
+      cues come from the narration audio, not from the script.
+- [ ] Optionally [`subtitles.es.srt`](subtitles.es.srt) as a Spanish track. Not required by the
+      rules, costs nothing.
+- [ ] Open the link in a private window to confirm it really is public.
 
 ## Then the submission
 
