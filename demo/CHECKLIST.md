@@ -17,33 +17,41 @@ second screen while recording.
 - [ ] Plan **empty**: six terms at 0/30, four specialisations all reachable, *"No tool has been
       called yet"*.
 - [ ] Second browser tab on `github.com/hvaler/cursus/blob/main/app/tools.js`, scrolled to a
-      `registerTool` call, for the 2:05 shot.
+      `registerTool` call — that is clip 7.
 - [ ] ChatGPT **sidebar collapsed** — the conversation titles are personal.
 - [ ] Notifications off. Taskbar clock checked.
 - [ ] Panes sized so **TOOL CALLS, LIVE** is readable at 1080p. Squint at it.
 - [ ] `npm test` run this morning, so any number you say out loud is today's. **157, 0 failing.**
 
-## Record silent, against this clock
+## Record silent — eight clips, one per shot
 
-**The narration already exists** — `cursus-voz/narration.wav`, 2:31.6, `en-GB-Studio-B`. You are
-not reading anything on camera. Put it on one ear if it helps you pace, or just watch the clock.
+**The narration already exists**: `cursus-voz/narration.wav`, 2:31.6, `en-GB-Studio-B`. Nothing is
+read on camera. Every duration below was measured from that file, so each clip has a length it has
+to cover.
 
-Every number below was measured from that file, so a shot is exactly as long as its sentences plus
-the pause after them. **Overshoot rather than undershoot**: extra footage at the end of a shot can
-be trimmed, missing footage cannot.
+**Record each shot as its own file.** A bad take costs one clip, not the whole video. Name them
+`01.mp4` … `08.mp4` — I trim each to its exact window and join them.
 
-| From | To | What is on screen |
-|---|---|---|
-| **0:00** | 0:12 | The whole window. ChatGPT left, empty planner right. Six terms at 0/30. |
-| **0:12** | 0:25 | Click the fourteen courses. Term 3 lands on 24/30. Hold on the free slot. |
-| **0:25** | 0:53 | Prompt 1 sent · the wait, sped up · `AGENT compare_options` · the three lines sit for 3½ s |
-| **0:53** | 1:03 | Prompt 2 sent · `AGENT protect_track` · **the lock appears** · hold on *"including if you ask for it yourself"* |
-| **1:03** | 1:38 | Prompt 3 sent · the wait, sped up · the refusal · **highlight *"which you asked to keep open"*** and hold 3 s |
-| **1:38** | 1:51 | The timeline. Click the step **just before** the protection. Lock goes, tracks redraw. |
-| **1:51** | 2:11 | Second tab, `app/tools.js`, on a `registerTool` call · back to a tool result in the trace |
-| **2:11** | 2:32 | The trace counter · end card, held 4½ s |
+**Overshoot every clip by two or three seconds.** Extra at the end is trimmed and costs nothing;
+missing footage means re-recording. Start each clip with the screen already in position.
 
-The two sped-up waits are the only places the footage is not real time. Everything else is.
+| # | File | Length | What is on screen |
+|---:|---|---:|---|
+| 1 | `01.mp4` | **12.5 s** | The whole window. ChatGPT left, empty planner right. Six terms at 0/30, four specialisations reachable. |
+| 2 | `02.mp4` | **12.4 s** | The fourteen clicks. Term 3 lands on 24/30. Hold on the free slot at the end. |
+| 3 | `03.mp4` | **27.8 s** | Prompt 1 · the wait · `AGENT compare_options` · the three lines, held ~3½ s |
+| 4 | `04.mp4` | **10.4 s** | Prompt 2 · `AGENT protect_track` · **the lock appears** · hold on *"including if you ask for it yourself"* |
+| 5 | `05.mp4` | **35.1 s** | Prompt 3 · the wait · the refusal · **highlight *"which you asked to keep open"*** and hold ~3 s |
+| 6 | `06.mp4` | **12.6 s** | The timeline. Click the step **just before** the protection. Lock goes, tracks redraw. |
+| 7 | `07.mp4` | **20.8 s** | Second tab, `app/tools.js` on a `registerTool` call · back to a tool result in the trace |
+| 8 | `08.mp4` | **20.2 s** | The trace counter · the end card, held ~4½ s |
+
+**Clips 3 and 5 hold the two long waits.** Record them in real time — 53 s, or however long it
+takes. Do not try to hit 27.8 s or 35.1 s live. I speed the waiting portion to fit and put the badge
+on it. Tell me roughly where each wait starts and ends, or leave it: the screen is static while it
+waits, which is easy to find.
+
+Every other clip is real time and should land near its length on its own.
 
 ## The rehearsal
 
