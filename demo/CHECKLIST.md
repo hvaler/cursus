@@ -164,8 +164,16 @@ origins side by side, with the page saying it cannot verify the second number.
 - [ ] Watch it once **with the sound off**. Anything personal on screen? A notification, a tab
       title, the taskbar clock?
 - [ ] Check each shot covers its window. Short is a problem; long is not.
-- [ ] **Send me the file.** I assemble: narration, the two sped-up segments, the speed badge, the
-      subtitles. They are already timed to the audio and need no adjusting.
+- [ ] **Send me the files.** Assembly is one command:
+
+      ```bash
+      python demo/assemble.py <folder> --start 5=5.0 -o cursus.mp4
+      ```
+
+      The `--start` drops five seconds off clip 5. That is not tuning: those seconds still had the
+      previous answer on screen — the one the assistant gave from memory before it was asked to use
+      the tool — which gives away the refusal early and credits it to the wrong party. Anything
+      similar in a future take wants the same treatment, and the number comes from looking.
 - [ ] Nothing to upload yet — the cut comes back first.
 
 ## Then the submission
