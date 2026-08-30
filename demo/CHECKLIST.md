@@ -20,7 +20,11 @@ second screen while recording.
       seconds on it, not enough to go looking. The permalink is in [SCRIPT.md](SCRIPT.md).
 - [ ] ChatGPT **sidebar collapsed** — the conversation titles are personal.
 - [ ] Notifications off. Taskbar clock checked.
-- [ ] Panes sized so **TOOL CALLS, LIVE** is readable at 1080p. Squint at it.
+- [ ] **Zoom the page out (`Ctrl` `-`) until it splits into two columns** — the plan on the left,
+      **TOOL CALLS, LIVE** on the right. Below 860 CSS pixels the layout stacks and the call panel
+      ends up behind forty courses of catalogue, which is where it hid on the first attempt. The
+      `AGENT` line appearing beside the action is the whole reason for recording in this browser.
+- [ ] Check the chat side is still wide enough to read a fifteen-line answer without scrolling.
 - [ ] `npm test` run this morning, so any number you say out loud is today's. **157, 0 failing.**
 
 ## Record silent — eight clips, one per shot
@@ -45,6 +49,11 @@ missing footage means re-recording. Start each clip with the screen already in p
 | 6 | `06.mp4` | **12.6 s** | *Undoing it* | The timeline. Click the step **just before** the protection. Lock goes, tracks redraw. |
 | 7 | `07.mp4` | **20.8 s** | *How it is built* | Second tab on **`registerAll` in `app/tools.js`** (permalink in [SCRIPT.md](SCRIPT.md)) — the five keys visible · then back to a **tool result** in the trace, not a refusal |
 | 8 | `08.mp4` | **20.2 s** | *What the page will not claim* | The trace counter · the end card, held |
+
+**Not every clip sits at the same scroll position.** Clips 1, 3, 4, 5 and 8 want the two-column view
+above — plan and specialisations left, `TOOL CALLS` right. Clip 2 has to be down at the catalogue to
+click, which pushes the trace off screen; that is fine, since what it narrates is the plan filling
+by hand. Clip 6 needs the timeline. **Scroll back up before clip 3.**
 
 **The shot-by-shot detail is in [SCRIPT.md](SCRIPT.md)**, under the heading named in the *Shot*
 column — every `**On screen:**` line there belongs to one of these clips.
