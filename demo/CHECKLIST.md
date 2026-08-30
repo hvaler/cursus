@@ -38,7 +38,7 @@ missing footage means re-recording. Start each clip with the screen already in p
 | # | File | Length | Shot | What is on screen |
 |---:|---|---:|---|---|
 | 1 | `01.mp4` | **12.5 s** | *The problem* | The whole window. ChatGPT left, empty planner right. Six terms at 0/30, four specialisations reachable. |
-| 2 | `02.mp4` | **12.4 s** | *The student does the student part* | The fourteen clicks. Term 3 lands on 24/30. Hold on the free slot at the end. |
+| 2 | `02.mp4` | **12.4 s** | *The student does the student part* | The fourteen clicks — **click steadily, not fast**; I speed this one to fit. Term 3 lands on 24/30. Hold on the free slot. |
 | 3 | `03.mp4` | **27.8 s** | *The trade, in one call* | **Prompt 1** · the wait · `AGENT compare_options` · the three lines, held |
 | 4 | `04.mp4` | **10.4 s** | *The student draws a line* | **Prompt 2** · the wait · `AGENT protect_track` · **the lock appears** · hold on *"including if you ask for it yourself"* |
 | 5 | `05.mp4` | **35.1 s** | *And the page holds it* | **Prompt 3** · the wait · the refusal · **highlight *"which you asked to keep open"*** and hold |
@@ -83,14 +83,24 @@ answers before you ask for them.
 - [ ] Term 3 reads **24/30 cr**. Six credits free, four specialisations open.
 - [ ] Every one shows as `page` in the trace, never `AGENT`.
 
-Thirteen seconds for fourteen clicks is brisk. Click steadily rather than fast — I can speed this
-segment in the edit, and a misclick costs more than a slow hand.
+**Click steadily, not fast.** Twelve seconds for fourteen courses is not a pace anyone is accurate
+at, so this clip is sped to fit like the ones holding a call — take twenty or twenty-five seconds
+and get them right. A misclick here cost two clips on the first attempt: `NUM-201` went in where
+`AUTO-201` should have, and NUM-201 is the course the agent has to be asked about later, so it
+cannot already be in the plan.
 
 ---
 
 ## The three prompts
 
-**1 — the trade** (0:25)
+**1 — the trade** (clip 3). Vague on purpose: recording showed a model works out for itself which
+two courses compete for the slot, which is a better shot than handing it the codes.
+
+```text
+I have one slot left in term 3. What are my options, and what does each one cost me?
+```
+
+If it does not get there, fall back to naming them — the narration survives either:
 
 ```text
 One slot left in term 3. Compare NUM-201 and GEOM-201 for it — what does each one cost?
@@ -100,7 +110,7 @@ One slot left in term 3. Compare NUM-201 and GEOM-201 for it — what does each 
 > *Taking GEOM-201 in term 3 closes "Data and Machine Learning".*
 > *Both cost a specialisation … **the slot is what costs, not the course.***
 
-**2 — the line the student draws** (0:53)
+**2 — the line the student draws** (clip 4)
 
 ```text
 Protect Graphics and Animation — I am not willing to lose that one.
@@ -111,7 +121,7 @@ Protect Graphics and Animation — I am not willing to lose that one.
 
 A **lock** appears beside that track. If it does not, the call did not happen.
 
-**3 — and the page holds it** (1:03)
+**3 — and the page holds it** (clip 5)
 
 ```text
 Add NUM-201 to term 3.

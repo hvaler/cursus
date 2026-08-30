@@ -54,10 +54,15 @@ def shots() -> list[tuple[str, float, str]]:
     return [(f"{i:02d}", z - a, name) for i, name in enumerate(order, 1)
             for a, z in [windows[name]]]
 
-#: Clips holding a real tool call, which takes about a minute through ChatGPT's in-app browser.
-#: All three prompts are here: comparing, protecting, and the add that gets refused. Each is sped
-#: to fit its window with the rate burned into the frame.
-HAS_WAIT = {"03", "04", "05"}
+#: Clips that may run longer than their window and are sped to fit, with the rate burned into the
+#: frame. Three of them hold a real tool call, which takes about a minute through ChatGPT's in-app
+#: browser: comparing, protecting, and the add that gets refused.
+#:
+#: Clip 2 is here for a different reason. Fourteen courses clicked by hand does not fit in 12.4
+#: seconds at a pace anyone can be accurate at, and rushing it is how NUM-201 got clicked instead of
+#: AUTO-201 on the first attempt — which cost two clips. Click it steadily; the speed is honest and
+#: it is stamped on the picture either way.
+SPED_TO_FIT = {"02", "03", "04", "05"}
 
 #: The master is the wav, which is fourteen megabytes and lives outside the repository. The mp3 is
 #: committed so this runs from a clone; either will do, and `make_narration.py` writes both.
@@ -132,7 +137,7 @@ def build(folder: Path, out: Path, width: int, height: int, fps: int) -> None:
         scale = (f"scale={width}:{height}:force_original_aspect_ratio=decrease,"
                  f"pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1")
 
-        if n in HAS_WAIT and have > window + 0.5:
+        if n in SPED_TO_FIT and have > window + 0.5:
             # The clip is longer than its window because it contains a real wait. Speed the whole
             # clip rather than guessing where the wait starts: the rest of it is a person typing
             # and reading, which survives being a little quicker, and the badge tells the truth

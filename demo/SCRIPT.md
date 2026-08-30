@@ -111,8 +111,25 @@ free in term 3**. In the trace, each one appears tagged `page`.
 
 ### Clip 3 · 0:25 – 0:53 · The trade, in one call
 
-**On screen:** ask the agent to weigh the two courses that fit that slot. Send. The right-hand panel
-stays in frame. **Sped up, `×6` in the corner.** Then `AGENT compare_options(...)`.
+**Type this**, and nothing more specific:
+
+```text
+I have one slot left in term 3. What are my options, and what does each one cost me?
+```
+
+**Deliberately vague.** Recording found that a model asked this way works out for itself which two
+courses compete for the slot — and with the plan set up correctly those are `NUM-201` and
+`GEOM-201`, the two the narration names. A model reaching that on its own is a better shot than one
+handed the codes.
+
+*If it does not*, the named form still gets there, and the narration survives it:
+
+```text
+One slot left in term 3. Compare NUM-201 and GEOM-201 for it — what does each one cost?
+```
+
+**On screen:** the prompt goes in, the right-hand panel stays in frame through the wait, then
+`AGENT compare_options(...)`.
 
 > "One slot, two courses that fit it. So I ask the page to weigh them."
 
@@ -124,8 +141,14 @@ stays in frame. **Sped up, `×6` in the corner.** Then `AGENT compare_options(..
 
 ### Clip 4 · 0:53 – 1:03 · The student draws a line
 
-**On screen:** `Protect Graphics and Animation — I am not willing to lose that one.` Sped up.
-`AGENT protect_track(...)` appears, and a **lock** shows next to the track on the page.
+**Type this:**
+
+```text
+Protect Graphics and Animation — I am not willing to lose that one.
+```
+
+**On screen:** `AGENT protect_track(...)` appears, and a **lock** shows next to that track on the
+page. If no lock appears, the call did not happen.
 
 > "Now the part that runs the other way. Every rule so far belongs to the university. This one is
 > mine."
@@ -135,7 +158,14 @@ for it yourself."*
 
 ### Clip 5 · 1:03 – 1:38 · And the page holds it
 
-**On screen:** `Add NUM-201 to term 3.` Sped up. The refusal appears in the panel.
+**Type this:**
+
+```text
+Add NUM-201 to term 3.
+```
+
+**On screen:** the refusal appears in the panel. Not a polite decline in prose — the four-part
+string, with `Rule: PROTECTED_TRACK` at the end of it.
 
 > "So I ask for the course that would close it anyway."
 
