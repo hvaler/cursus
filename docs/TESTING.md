@@ -110,16 +110,9 @@ walk-through**. Its setup is the same fourteen courses (`app/ui.js`, `SETUP`), s
 at 24/30 with all four specialisations open, and everything it does is labelled `page` — which is
 what makes your agent's calls stand out against it afterwards.
 
-It then runs five more calls, two of which are the `what_this_closes` pair. So the trace already
-holds the answer to the first question below before you ask it. That is fine if you are watching
-the `AGENT` label rather than the prose, and if you would rather not, this link replays the
-fourteen courses and nothing else:
-
-<https://hvaler.github.io/cursus/#p=W1siKyIsIkNBTEMtMTAxIiwxXSxbIisiLCJBTEctMTAxIiwxXSxbIisiLCJQUk9HLTEwMSIsMV0sWyIrIiwiRElTQy0xMDEiLDFdLFsiKyIsIlBIWVMtMTAxIiwxXSxbIisiLCJDQUxDLTEwMiIsMl0sWyIrIiwiUFJPRy0xMDIiLDJdLFsiKyIsIlNUQVQtMTAxIiwyXSxbIisiLCJMT0dJQy0xMDEiLDJdLFsiKyIsIkNJUkMtMTAxIiwyXSxbIisiLCJEUy0yMDEiLDNdLFsiKyIsIkFSQ0gtMjAxIiwzXSxbIisiLCJBVVRPLTIwMSIsM10sWyIrIiwiU1RBVC0yMDEiLDNdXQ>
-
-Either way the status box should say how it was filled, and nothing is stored anywhere: the link
-carries actions, not a plan, and a hand-edited one cannot build something the rules would have
-refused.
+It then runs five more calls of its own, two of them the `what_this_closes` pair, so the trace
+already holds the answer to the first question below before you ask it. Watch the `AGENT` label
+rather than the prose and it does not matter: the label is the thing under test, not the sentence.
 
 ### ChatGPT's in-app browser
 
