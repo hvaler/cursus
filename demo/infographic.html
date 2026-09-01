@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Cursus</title><style>
+  :root {
+  --paper:#fcfcfa; --soft:#f2f1ec; --line:#dcdad3; --ink:#15151a;
+  --dim:#6e6e78; --no:#b03a2e; --ok:#1a7f4b; --accent:#5b4bd6;
+
+    --mono: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { width:1600px; background:var(--paper); color:var(--ink); font-family:var(--mono);
+         -webkit-font-smoothing:antialiased; }
+  .sheet { padding:64px 72px 56px; display:flex; flex-direction:column; gap:44px; }
+
+  header h1 { font-size:64px; letter-spacing:-.03em; }
+  header p { font-size:26px; line-height:1.5; color:var(--dim); margin-top:14px; max-width:1180px; }
+  header p b { color:var(--ink); font-weight:700; }
+  .urls { margin-top:18px; font-size:20px; color:var(--accent); }
+
+  section { border-top:2px solid var(--ink); padding-top:20px; }
+  h2 { font-size:21px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim);
+        font-weight:700; margin-bottom:20px; }
+  .lede { font-size:27px; line-height:1.45; max-width:1300px; margin-bottom:24px; }
+  .lede em { font-style:normal; color:var(--no); }
+
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+  .card { border:1px solid var(--line); background:var(--soft); padding:22px 24px; }
+  .card .k { font-size:22px; font-weight:700; margin-bottom:8px; }
+  .card .v { font-size:21px; line-height:1.5; color:var(--dim); }
+  .card.shut { border-color:var(--no); }
+  .card.shut .k { color:var(--no); }
+
+  ul { list-style:none; display:flex; flex-wrap:wrap; gap:10px; }
+  li { border:1px solid var(--line); background:var(--soft); padding:8px 14px; font-size:22px; }
+  li.w { border-color:var(--accent); color:var(--accent); }
+  .grouplabel { font-size:20px; color:var(--dim); margin:0 0 12px; }
+
+  .quote { border-left:6px solid var(--no); background:var(--soft); padding:22px 26px;
+            font-size:22px; line-height:1.75; }
+  .quote .p1 { color:var(--no); }
+  .quote .p2 { color:var(--ok); }
+  .quote .p3 { color:var(--accent); font-weight:700; }
+  .key { display:flex; gap:34px; margin-top:16px; font-size:19px; color:var(--dim); }
+  .key i { font-style:normal; font-weight:700; }
+  .key .k1 { color:var(--no); } .key .k2 { color:var(--ok); } .key .k3 { color:var(--accent); }
+
+  .fork { display:grid; grid-template-columns:280px 60px 1fr; align-items:center;
+           gap:0 0; border:1px solid var(--line); background:var(--soft); }
+  .fork .slot { padding:26px; border-right:1px solid var(--line); align-self:stretch;
+                 display:flex; flex-direction:column; justify-content:center; }
+  .fork .slot b { font-size:30px; display:block; }
+  .fork .slot span { font-size:20px; color:var(--dim); display:block; margin-top:6px; }
+  .fork .arms { display:flex; flex-direction:column; justify-content:center; height:100%;
+                 color:var(--dim); font-size:26px; align-items:center; gap:44px; }
+  .fork .ends { display:flex; flex-direction:column; gap:0; }
+  .fork .end { padding:20px 26px; font-size:21px; line-height:1.5; }
+  .fork .end + .end { border-top:1px solid var(--line); }
+  .fork .end b { color:var(--no); }
+  .fork .end .t { font-size:23px; display:block; margin-bottom:4px; }
+
+  .rule { display:inline-block; border:1px solid var(--line); background:var(--soft);
+           padding:7px 13px; font-size:20px; margin:0 8px 8px 0; }
+  .rule.own { border-color:var(--accent); color:var(--accent); font-weight:700; }
+
+  .flow { display:flex; align-items:center; gap:16px; font-size:23px; flex-wrap:wrap; }
+  .flow b { border:1px solid var(--line); background:var(--soft); padding:10px 18px;
+             font-weight:400; }
+  .flow i { font-style:normal; color:var(--dim); }
+  .derived { margin-top:22px; font-size:23px; line-height:1.9; }
+  .derived code { font-weight:700; }
+  .derived span { color:var(--dim); }
+
+  .nums { display:grid; grid-template-columns:repeat(5,1fr); gap:20px; }
+  .num b { display:block; font-size:52px; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+  .num span { font-size:20px; color:var(--dim); line-height:1.4; display:block; margin-top:6px; }
+
+  footer { border-top:1px solid var(--line); padding-top:22px; font-size:20px;
+            line-height:1.6; color:var(--dim); }
+  footer b { color:var(--ink); }
+</style></head><body><div class="sheet">
+
+<header>
+  <h1>Cursus</h1>
+  <p>A course planner whose tools <b>refuse</b>, say <b>what a choice closes off</b> two years
+     before it bites, <b>hold a limit you set</b> against the agent, and can be <b>rewound</b>.
+     Built on WebMCP. A worked example, not a product for one university.</p>
+  <div class="urls">hvaler.github.io/cursus &nbsp;·&nbsp; github.com/hvaler/cursus</div>
+</header>
+
+<section>
+  <h2>One slot, two futures</h2>
+  <p class="lede">Terms 1 and 2 are full. Term 3 has six credits left and two courses want them.
+     Both run in term 3 <em>and nowhere else</em>, so the slot is what costs, not the course.</p>
+  <div class="fork">
+    <div class="slot"><b>one slot</b><span>6 credits<br>term 3</span></div>
+    <div class="arms"><span>&#8599;</span><span>&#8600;</span></div>
+    <div class="ends">
+      <div class="end"><span class="t">take <b>NUM-201</b></span>
+        closes <b>Graphics and Animation</b> &mdash; GEOM-201 has nowhere else to go</div>
+      <div class="end"><span class="t">take <b>GEOM-201</b></span>
+        closes <b>Data and Machine Learning</b> &mdash; NUM-201 is required by everything after</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>13 tools on document.modelContext</h2>
+  <p class="grouplabel">9 answer a question and change nothing:</p>
+  <ul><li>search_courses</li><li>explain_requirement</li><li>what_this_closes</li><li>compare_options</li><li>plan_status</li><li>propose_plan_for_track</li><li>explain_infeasibility</li><li>list_actions</li><li>share_plan</li></ul>
+  <p class="grouplabel" style="margin-top:20px">4 change the plan:</p>
+  <ul><li class="w">add_course</li><li class="w">remove_course</li><li class="w">protect_track</li><li class="w">undo_to</li></ul>
+</section>
+
+<section>
+  <h2>Every refusal has the same shape</h2>
+  <p class="lede">A tool that only fails leaves the agent reporting failure. One that names the
+     rule, the reason and the remedy leaves it repairing the situation — and in our tests, asking
+     before it applied the fix.</p>
+  <div class="quote"><span class="p1">Refused. ADV-301 (Advanced Calculus) requires CALC-102 (Calculus II) and NUM-201 (Numerical Methods), and NUM-201 (Numerical Methods) is not in the plan.</span>
+     <span class="p2">To unblock it: place NUM-201 in a term before 5.</span>
+     <span class="p3">Rule: PREREQ_NOT_MET.</span> The plan was not changed.</div>
+  <div class="key"><span><i class="k1">the reason</i> — what the rules found</span>
+     <span><i class="k2">the remedy</i> — what would unblock it</span>
+     <span><i class="k3">the rule</i> — which one, by name</span></div>
+</section>
+
+<section>
+  <h2>9 rules belong to the university. One belongs to the student.</h2>
+  <div><span class="rule">UNKNOWN_COURSE</span><span class="rule">ALREADY_IN_PLAN</span><span class="rule">NO_SUCH_TERM</span><span class="rule">NOT_OFFERED_IN_TERM</span><span class="rule">PREREQ_NOT_MET</span><span class="rule">SCHEDULE_CLASH</span><span class="rule">CREDIT_CAP_EXCEEDED</span><span class="rule">NOT_IN_PLAN</span><span class="rule">DEPENDENT_IN_PLAN</span><span class="rule own">PROTECTED_TRACK</span></div>
+  <p class="lede" style="margin-top:24px">A prerequisite, a clash, a credit cap — those are the
+     same for everyone. <b>protect_track</b> is the student's own: say <em>do not close Graphics
+     and Animation</em>, and from then on anything that would close it is refused, including when
+     you ask for it yourself an hour later. The refusal cites your instruction, not the handbook.</p>
+</section>
+
+<section>
+  <h2>One decision, and the rest falls out</h2>
+  <div class="flow">
+    <b>a tool call</b><i>→</i><b>the rules accept it</b><i>→</i><b>an event is appended</b>
+    <i>→</i><b>state = reduce(log)</b>
+  </div>
+  <div class="derived">
+    <code>undo_to(n)</code> <span>is</span> reduce(log.slice(0, n))<br>
+    <code>list_actions()</code> <span>is</span> the log itself<br>
+    <code>share_plan()</code> <span>is</span> the log in a link, replayed through these same rules<br>
+    <code>a refusal</code> <span>is</span> the reducer never being reached. Nothing is written.
+  </div>
+</section>
+
+<section>
+  <h2>What it is made of</h2>
+  <div class="nums">
+    <div class="num"><b>10</b><span>files of plain ES modules</span></div>
+    <div class="num"><b>1,993</b><span>lines of JavaScript</span></div>
+    <div class="num"><b>157</b><span>tests, none skipped, on Node's own runner</span></div>
+    <div class="num"><b>0</b><span>dependencies, build steps and servers</span></div>
+    <div class="num"><b>40</b><span>courses, 6 terms, 4 specialisations, 30 credits a term</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Adapting it to another institution</h2>
+  <p class="lede">Two files. <b>catalogue.js</b> is the courses, terms and specialisations;
+     <b>rules.js</b> is what that university will not allow. The 13 tools, the event
+     log, the shape of a refusal and the layer that holds a student's own limits against the agent
+     do not change.</p>
+</section>
+
+<footer>
+  <b>The catalogue is invented and no registrar has seen it.</b> Every figure on this page was read
+  out of the code when the page was written, and the refusal above is the string the tool returns —
+  <b>demo/infographic.py</b> regenerates it. Nothing here was transcribed by hand.
+</footer>
+
+</div></body></html>
